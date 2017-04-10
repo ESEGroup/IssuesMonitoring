@@ -1,0 +1,12 @@
+# python
+__pycache__
+*.pyc
+
+# vim
+.*.sw*
+
+# virtualenv
+.env
+
+# files with secret
+config.py
