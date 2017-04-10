@@ -7,13 +7,13 @@ from requests import post as post_request
 from requests.exceptions import RequestException
 from datetime import datetime, timedelta
 from imaplib import IMAP4_SSL
-from config import (DEBUG, HOST, USERNAME, PASSWORD,
+from config import (DEBUG, HOST, USERNAME, PASSWORD, WAIT_FOR,
                     API_ENDPOINT, MAIL_FROM, AUTH_TOKEN)
 
 TIME_REGEXP = r"\d\d\/\d\d/\d\d\d\d\ \d\d:\d\d"
 EVENT_REGEXP = r"\[[a-zA-Z0-9]+(-?[a-zA-Z0-9]+)?\]"
 
-wait_for = 5 # minutes
+wait_for = WAIT_FOR # minutes
 
 def parse_emails(messages):
     data = []

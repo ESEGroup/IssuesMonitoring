@@ -8,6 +8,8 @@ PASSWORD = ""
 
 AUTH_TOKEN = ""
 
+WAIT_FOR = 5 # minutes
+
 MAIL_FROM = "noreply@denox.com.br"
 
 API_ENDPOINT = "http://localhost/parser"
