@@ -1,0 +1,13 @@
+#!/bin/python3
+
+DEBUG = True
+
+HOST = "imap.gmail.com"
+USERNAME = ""
+PASSWORD = ""
+
+AUTH_TOKEN = ""
+
+MAIL_FROM = "noreply@denox.com.br"
+
+API_ENDPOINT = "http://localhost/parser"
