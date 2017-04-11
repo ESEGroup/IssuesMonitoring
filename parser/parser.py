@@ -13,7 +13,7 @@ from config import (DEBUG, HOST, USERNAME, PASSWORD, WAIT_FOR,
 TIME_REGEXP = r"\d\d\/\d\d/\d\d\d\d\ \d\d:\d\d"
 EVENT_REGEXP = r"\[[a-zA-Z0-9]+(-?[a-zA-Z0-9]+)?\]"
 
-wait_for = WAIT_FOR # minutes
+wait_for = WAIT_FOR
 
 def parse_emails(messages):
     data = []
