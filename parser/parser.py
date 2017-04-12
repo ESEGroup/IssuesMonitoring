@@ -29,7 +29,7 @@ def log(*msgs, **kwargs):
         kwargs["file"] = stderr
         print(message, **kwargs)
     else:
-        with open(LOG_FILE, 'w') as f:
+        with open(LOG_FILE, 'a') as f:
             kwargs["file"] = f
             print(message, **kwargs)
 
