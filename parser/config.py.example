@@ -8,7 +8,15 @@ PASSWORD = ""
 
 AUTH_TOKEN = ""
 
-WAIT_FOR = 5 # minutes
+LOG_TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+# Empty to assume stderr (forces stderr during DEBUG)
+LOG_FILE = ""
+
+# In minutes
+WAIT_FOR = 5
+MAX_WAITING_PERIOD = 60
+
 
 MAIL_FROM = "noreply@denox.com.br"
 
