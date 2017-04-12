@@ -13,7 +13,7 @@ from config import (DEBUG, HOST, USERNAME, PASSWORD, WAIT_FOR,
                     MAX_WAITING_PERIOD, LOG_FILE, LOG_TIMESTAMP_FORMAT)
 
 TIME_REGEXP = r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}"
-EVENT_REGEXP = r"\[[\w_^]+(-[\w_^]+)?\]"
+EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?\]"
 
 wait_for = WAIT_FOR
 
@@ -107,6 +107,12 @@ def work():
     except OSError:
         log("Failed to connect with e-mail server to parse MyDenox messages.")
 
+        debug("Waiting for {} minutes before running again.".format(wait_for))
+        Timer(60.0 * wait_for, work).start()
+        return
+
+    if len(messages) == 0:
+        debug("No messages to parse.")
         debug("Waiting for {} minutes before running again.".format(wait_for))
         Timer(60.0 * wait_for, work).start()
         return
