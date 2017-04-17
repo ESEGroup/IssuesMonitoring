@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /home/yago/UFRJ/DSOO/IssuesMonitoring/parser
+
+python3 run.py

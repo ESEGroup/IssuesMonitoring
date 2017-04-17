@@ -1,12 +1,12 @@
 #!/bin/python3
 
-from time import sleep
-from json import dumps as to_json
+from time     import sleep
+from json     import dumps as to_json
 from requests import post as post_request
 from requests.exceptions import RequestException
-from config import (DEBUG, WAIT_FOR, API_ENDPOINT, AUTH_TOKEN,
+from config   import (DEBUG, WAIT_FOR, API_ENDPOINT, AUTH_TOKEN,
                     MAX_WAITING_PERIOD)
-from lib.log import debug, log
+from lib.log   import debug, log
 from lib.email import fetch_new_emails, mark_as_unread, NoMessages 
 from lib.parse import parse_messages
 
