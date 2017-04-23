@@ -13,7 +13,11 @@ class Views:
     @app.route('/parser', methods=['GET', 'POST'])
     def parser():
         if request.method == 'POST':
-            json = request.args or request.form
-            print (json)
+            json = request.get_json()
+            if (json):
+                for entry in json['data']:
+                    print (entry)
+            else:
+                print("Couldn't get json from POST request")
             return "7"
         return "I can hear you!"
