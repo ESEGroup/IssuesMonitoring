@@ -13,5 +13,7 @@ class Views:
     @app.route('/parser', methods=['GET', 'POST'])
     def parser():
         if request.method == 'POST':
-            return "5 minutes"
+            json = request.args or request.form
+            print (json)
+            return "7"
         return "I can hear you!"
