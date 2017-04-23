@@ -6,10 +6,12 @@ class Views:
     def hello_world():
         return 'Hello, World!'
 
-    @app.route('/login')
+    @app.route('/login', methods=['GET', 'POST'])
     def login():
         return 'Login Page!'
 
-    @app.route('/parser')
+    @app.route('/parser', methods=['GET', 'POST'])
     def parser():
-        return 'Parser! :D'
+        if request.method == 'POST':
+            return "5 minutes"
+        return "I can hear you!"
