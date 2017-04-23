@@ -9,3 +9,7 @@ class Views:
     @app.route('/login')
     def login():
         return 'Login Page!'
+
+    @app.route('/parser')
+    def parser():
+        return 'Parser! :D'
