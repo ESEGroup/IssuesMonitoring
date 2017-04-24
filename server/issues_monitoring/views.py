@@ -21,3 +21,7 @@ class Views:
                 print("Couldn't get json from POST request")
             return "7"
         return "I can hear you!"
+
+    @app.route('/robots.txt')
+    def robots_txt():
+        return "User-Agent: *\nDisallow: /"
