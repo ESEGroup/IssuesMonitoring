@@ -7,7 +7,7 @@ from requests.exceptions import RequestException
 from config   import (DEBUG, WAIT_FOR, API_ENDPOINT, AUTH_TOKEN,
                     MAX_WAITING_PERIOD)
 from lib.log   import debug, log
-from lib.email import fetch_new_emails, mark_as_unread, NoMessages 
+from lib.email import fetch_new_emails, mark_as_unread, NoMessages
 from lib.parse import parse_messages
 
 wait_for = WAIT_FOR
@@ -33,6 +33,7 @@ def work():
     try:
         debug("Connecting to Server to register parsed events.")
         response = post_request(API_ENDPOINT,
+                                headers={'Content-Type': 'application/json'},
                                 data=request_data)
         debug("Events registered.")
 
