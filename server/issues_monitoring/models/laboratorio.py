@@ -62,7 +62,7 @@ class Laboratorio:
         pass
 
     def obter_intervalo_parser():
-        pass
+        return "7"
 
     def obter_intervalo_arduino():
         pass
