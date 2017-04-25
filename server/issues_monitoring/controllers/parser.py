@@ -1,3 +1,5 @@
+from datetime import datetime
+from time import sleep
 from ..models import Laboratorio, Evento, UsuarioLab
 
 def obter_intervalo_parser():
@@ -13,3 +15,20 @@ def registrar_presenca(dict_eventos):
         except KeyError:
             pass
     return UsuarioLab.registrar_presenca(eventos)
+
+def enviar_email_presenca_zerada(emails):
+    pass
+
+def reset_presencas_meia_noite():
+    while True:
+        hoje = datetime.today()
+        proxima_execucao = hoje.replace(day=hoje.day+1,
+                                        hour=0,
+                                        minute=0,
+                                        second=0,
+                                        microsecond=0)
+        delta_t = proxima_execucao - hoje
+        segundos_ate = delta_t.seconds + 1
+        sleep(segundos_ate)
+        emails = Laboratorio.reset_lista_presenca()
+        enviar_email_presenca_zerada(emails)
