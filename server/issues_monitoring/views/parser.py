@@ -1,12 +1,15 @@
 from flask import request
-from .. import app, Config
+from .. import app, Config, controllers
 
 @app.route('/parser', methods=['POST'])
 def parser():
     json = request.get_json()
     if json is not None:
-        for entry in json['data']:
-            print (entry)
+        try:
+            token = json['token']
+            controllers.registrar_presenca(json['data'])
+        except KeyError:
+            pass
     else:
         print("Couldn't get json from POST request")
-    return "7"
+    return controllers.obter_intervalo_parser()

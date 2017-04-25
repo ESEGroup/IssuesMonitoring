@@ -24,6 +24,12 @@ class Equipamento:
     def cadastrar(self):
         pass
 
+class Evento:
+    def __init__(self, epoch, evento, user_id):
+        self.epoch = epoch
+        self.evento = evento
+        self.user_id = user_id
+
 class Laboratorio:
     def __init__(self, nome, endereco, zona_conforto_lab,
                  intervalo_parser, intervalo_arduino, MACs = None,
@@ -53,4 +59,10 @@ class Laboratorio:
         pass
 
     def reset_lista_presenca():
+        pass
+
+    def obter_intervalo_parser():
+        pass
+
+    def obter_intervalo_arduino():
         pass

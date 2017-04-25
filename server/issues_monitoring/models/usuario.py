@@ -9,7 +9,8 @@ class UsuarioLab:
         self.email = email
         self.data_aprovacao = data_aprovacao
 
-    def registrar_presenca(evento, user_id):
+    def registrar_presenca(eventos):
+        # eventos = lista de objetos da class Evento
         pass
 
     def cadastrar(self):
