@@ -1,0 +1,15 @@
+class URI(object):
+    def __init__(self, host, port, protocol="http"):
+        self.host     = host
+        self.port     = port
+        self.protocol = protocol
+
+    def __str__(self):
+        return self.protocol + "://" + self.host + ":" + str(self.port)
+
+class Config:
+    debug = True
+
+    issues_monitoring = URI("0.0.0.0", 80)
+
+    secret_key = ""
