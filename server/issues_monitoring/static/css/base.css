@@ -35,6 +35,14 @@ input:focus {
     text-align: center
 }
 
+#register-button {
+    text-align: center;
+}
+
+#login-fields {
+    text-align: center
+}
+
 #back-button {
     text-align: center;
 }

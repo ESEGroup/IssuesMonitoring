@@ -27,9 +27,14 @@ class UsuarioSistema:
 
     def autenticar(login, senha):
         # Obter hash do usuário do banco de dados, se usuário não
-        # existir, retornar falso
+        # existir ou autenticação falhar, retornar None, se autenticar,
+        # retornar 'user_id', obtida do banco de dados
+        user_id = ""
         _hash = "" 
-        return UsuarioSistema.__hash_senha(senha, _hash) == _hash
+        if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
+            return user_id
+        return None
+
 
     def __hash_senha(senha, _hash = None):
         if isinstance(senha, str):

@@ -1,0 +1,44 @@
+{% extends 'menu.html' %}
+{% block content %}
+<div id="titulo">
+    <h2 align="center">Issues Monitoring</h2>
+</div>
+
+<div id="barra-horizontal">
+    <hr>
+</div>
+
+<br>
+<br>
+
+<div id="login-fields">
+    <form class="login-form" method="POST" action="/login">
+        <div>
+            <label for="nome">Usuário:</label>
+            <input type="text" name="login" />
+        </div>
+
+        <br>
+
+        <div>
+            <label for="senha">Senha:</label>
+            <input type="password" name="password" />
+        </div>
+
+        <br>
+
+        <div id="login-button" class="button">
+            <button type="submit">Enviar</button>
+        </div>
+    </form>
+
+    <br>
+
+</div>
+
+<br>
+
+<form id="register-button" action="/cadastro-usuario-lab">
+    <button type="submit">Cadastrar novo usuário do laboratório (MyDenox)</button>
+</form>
+{% endblock %}
