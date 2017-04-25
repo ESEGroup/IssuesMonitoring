@@ -16,7 +16,9 @@ class UsuarioLab:
         pass
 
 class UsuarioSistema:
-    def __init__(self, login, senha, email, nome, hash = None):
+    def __init__(self, login, senha, email, nome, hash = None,
+                 id = None):
+        self.id = id
         self.login = login
         self.senha = hash or UsuarioSistema.__hash_senha(senha)
         self.email = email
@@ -28,11 +30,11 @@ class UsuarioSistema:
     def autenticar(login, senha):
         # Obter hash do usuário do banco de dados, se usuário não
         # existir ou autenticação falhar, retornar None, se autenticar,
-        # retornar 'user_id', obtida do banco de dados
-        user_id = ""
-        _hash = "" 
+        # retornar 'id', obtida do banco de dados
+        _id = None
+        _hash = None
         if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
-            return user_id
+            return _id
         return None
 
 
@@ -45,7 +47,7 @@ class UsuarioSistema:
         elif isinstance(_hash, str):
             _hash = bytes(_hash, 'utf-8')
 
-        return bcrypt.hashpw(senha, _hash)
+        return bcrypt.hashpw(senha, _hash).decode('utf-8')
 
 def AdministradorSistema(UsuarioSistema):
     def autorizar_usuario_lab(user_id):
