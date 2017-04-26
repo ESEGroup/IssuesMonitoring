@@ -12,6 +12,8 @@ class Config:
 
     issues_monitoring = URI("0.0.0.0", 80)
 
+    token_parser = ""
+
     secret_key = ""
 
     session_duration = 60 * 30 # in seconds

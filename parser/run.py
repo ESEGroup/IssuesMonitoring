@@ -5,7 +5,7 @@ from json     import dumps as to_json
 from requests import post as post_request
 from requests.exceptions import RequestException
 from config   import (DEBUG, WAIT_FOR, API_ENDPOINT, AUTH_TOKEN,
-                    MAX_WAITING_PERIOD)
+                      MAX_WAITING_PERIOD, USERNAME, PASSWORD)
 from lib.log   import debug, log
 from lib.email import fetch_new_emails, mark_as_unread, NoMessages
 from lib.parse import parse_messages
@@ -39,6 +39,13 @@ def work():
 
         # Server returns wait_for until next run (in minutes)
         received_wait_for = int(response.text)
+
+        if received_wait_for == -1:
+            log("Invalid token.")
+            if not DEBUG:
+                mark_as_unread(ids)
+            return
+
         debug("Received {} (minutes) from the server, "
               "to wait until next execution.".format(
               received_wait_for))
@@ -58,6 +65,10 @@ def work():
             "to wait for (in minutes)".format(response.text))
 
 if __name__ == '__main__':
+    if "" in [USERNAME, PASSWORD]:
+        log("Please provide the correct username and password to access the e-mail.")
+        exit()
+
     try:
         while True:
             work()
