@@ -3,7 +3,7 @@ from time import sleep
 from ..models import Laboratorio, Evento, UsuarioLab
 
 def obter_intervalo_parser():
-    return Laboratorio.obter_invervalo_parser()
+    return Laboratorio.obter_intervalo_parser()
 
 def registrar_presenca(dict_eventos):
     eventos = []
