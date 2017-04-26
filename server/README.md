@@ -32,6 +32,4 @@ Copy **config.py.example** to **config.py** and fill with the proper config info
 
 ## Run server (at server folder)
 
-**Use sudo if the port in the config file is 80**
-
-`sudo env FLASK_APP=issues_monitoring/server.py flask run`
+`env FLASK_APP=issues_monitoring/server.py flask run`
