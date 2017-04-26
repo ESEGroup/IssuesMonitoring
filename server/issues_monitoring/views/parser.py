@@ -6,8 +6,10 @@ def parser():
     json = request.get_json()
     if json is not None:
         try:
-            token = json['token']
-            controllers.registrar_presenca(json['data'])
+            if json['token'] == Config.token_parser:
+                controllers.registrar_presenca(json['data'])
+            else:
+                return "-1"
         except KeyError:
             pass
     else:
