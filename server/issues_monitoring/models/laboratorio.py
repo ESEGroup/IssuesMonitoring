@@ -52,7 +52,10 @@ class Laboratorio:
     def editar_zona_conforto(_id, zona_conforto_lab):
         pass
 
-    def editar_intervalos(_id, intervalo_parser, intervalo_arduino):
+    def obter_informacoes()
+        pass
+
+    def editar_laboratorio(_id, nome, endereco, intervalo_parser, intervalo_arduino):
         pass
 
     def obter_medidas(_id):

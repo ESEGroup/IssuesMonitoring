@@ -1,0 +1,103 @@
+{% extends 'menu.html' %}
+{% block content %}
+<div id="titulo">
+    <h2 align="center">Issues Monitoring</h2>
+</div>
+
+<div id="barra-horizontal">
+    <hr>
+</div>
+
+<br>
+<br>
+
+<div id="login-fields">
+    <form class="login-form" method="POST">
+        <div>
+            <label for="nome-lab">Nome do Laboratório:</label>
+            <input type="text" name="nome-lab" value="{{nome_lab}}" readonly/>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="endereco-lab">Endereço:</label>
+            <input type="text" name="endereco-lab" value="{{endereco_lab}}" readonly/>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="lista-membros">Lista de membros:</label>
+            <table name="lista-membros">
+                <thead>
+                    <tr>
+                        <th>Membro</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for m in membros %}
+                    <tr>
+                        <td>{{m}}</td>
+                        <td><input type="submit" value="[X]" formaction="/remover-usuario-lab"></td>                    
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <td><input type="text" name="membro"></td>
+                        <td><input type="submit" value="Adicionar" formaction="/adicionar-usuario-lab></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div>
+            <label for="intervalo-parser">Intervalo de coleta do parser:</label>
+            <input type="text" name="intervalo-parser" value="{{intervalo_parser}}" readonly/>
+        </div>
+
+        <div>
+            <label for="intervalo-arduino">Intervalo de coleta do Arduino:</label>
+            <input type="text" name="intervalo-arduino" value="{{intervalo_arduino}}" readonly/>
+        </div>
+
+
+        <div>
+            <label for="lista-enderecos-macs">Lista de endereços MAC:</label>
+            <table name="lista-enderecos-macs">
+                <thead>
+                    <tr>
+                        <th>Endereço MAC</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for e in enderecos_mac %}
+                    <tr>
+                        <td>{{e}}</td>
+                        <td><input type="submit" value="[X]" formaction="/remover-endereco-mac"></td>                    
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <td><input type="text" name="endereco-mac"></td>
+                        <td><input type="submit" value="Adicionar" formaction="/adicionar-endereco-mac"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        {% if admin %}
+        <div id="login-button" class="button">
+            <input type="submit" value="Editar" formaction="/">
+        </div>
+        {% endif %}
+    </form>
+
+    <br>
+
+</div>
+
+
+{% endblock %}

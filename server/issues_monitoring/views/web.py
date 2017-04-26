@@ -4,9 +4,38 @@ from .. import app, Config, controllers
 
 @app.route('/')
 def manage():
+    #if not autenticado():
+    #    redirect(url_for('login'))
+    (nome_lab,
+     endereco_lab,
+     membros,
+     intervalo_parser,
+     intervalo_arduino,
+     enderecos_mac) = controllers.obter_informacoes_lab()
+    return render_template('manage.html',
+                           nome_lab,
+                           endereco_lab,
+                           membros,
+                           intervalo_parser,
+                           intervalo_arduino
+                           enderecos_mac)
+
+@app.route('/', methods=["POST"])
+def manage_post():
     if not autenticado():
         redirect(url_for('login'))
-    return 'Hello, World!'
+    user_id = session["id"]
+    nome = request.form.get("nome-lab") or ""
+    endereco = request.form.get("endereco-lab") or ""
+    intervalo_parser = request.form.get("intervalo-parser")
+    intervalo_arduino = request.form.get("intervalo-arduino")
+    controllers.atualizar_informacoes_lab(user_id,
+                                          nome,
+                                          endereco,
+                                          intervalo_parser,
+                                          intevalo_arduino)
+    return redirect(url_for("manage"))
+    
 
 @app.route('/login')
 def login():
