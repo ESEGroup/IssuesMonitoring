@@ -1,0 +1,58 @@
+{% extends 'menu.html' %}
+{% block content %}
+<div id="titulo">
+    <h2 align="center">Cadastro de usuário</h2>
+</div>
+
+<div id="barra-horizontal">
+    <hr>
+</div>
+
+<br>
+<br>
+
+<div id="login-fields">
+    
+    <form class="login-form" method="POST" action="/cadastro-usuario-lab">
+        <div>
+            <label for="login">Login</label>
+            <input type="text" name="login" />
+        </div>
+
+        <br>
+
+       <div>
+            <label for="senha">Senha</label>
+            <input type="text" name="senha" />
+        </div>
+
+        <br>
+
+        <div>
+            <label for="email">E-mail:</label>
+            <input type="text" name="email" />
+        </div>
+
+        <br>
+
+        <div>
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" />
+        </div>
+
+        <br>
+        <div id="login-button" class="button">
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
+
+    <br>
+
+</div>
+
+<br>
+
+<form id="back-button" action="/login">
+    <button type="submit">Cancelar</button>
+</form>
+{% endblock %}
