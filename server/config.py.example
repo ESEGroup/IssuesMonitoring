@@ -10,7 +10,7 @@ class URI(object):
 class Config:
     debug = True
 
-    issues_monitoring = URI("0.0.0.0", 80)
+    issues_monitoring = URI("0.0.0.0", 8080)
 
     token_parser = ""
 
