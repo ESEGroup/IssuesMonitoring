@@ -1,0 +1,138 @@
+{% extends 'menu.html' %}
+{% block content %}
+<div id="titulo">
+    <h2 align="center">Issues Monitoring</h2>
+</div>
+
+<div id="barra-horizontal">
+    <hr>
+</div>
+
+<br>
+<br>
+
+{% for lab in laboratorios %}
+<div id="fields">
+    <form class="form" method="POST">
+        <div>
+            <label for="nome-lab">Nome do Laboratório:</label>
+            <input type="text" name="nome-lab" value="{{lab.nome}}" {% if not admin %}readonly{% endif %}/>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="endereco-lab">Endereço:</label>
+            <input type="text" name="endereco-lab" value="{{lab.endereco}}" {% if not admin %}readonly{% endif %}/>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="lista-membros">Lista de membros:</label>
+            <table name="lista-membros">
+                <thead>
+                    <tr>
+                        <th>Id de usuário</th>
+                        <th>Nome</th>
+                        <th>Laboratório</th>
+                        <th>E-mail</th>
+                        <th>Data de aprovação</th>
+                        {% if admin %}
+                        <th>Excluir</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for m in lab.membros %}
+                    <tr>
+                        <td>{{m.user_id}}</td>
+                        <td>{{m.nome}}</td>
+                        <td>{{m.laboratorio}}</td>
+                        <td>{{m.email}}</td>
+                        <td>{{m.data_aprovacao|data}}</td>
+                        {% if admin %}
+                        <input type="hidden" value="{{lab.id}}" name="id_lab">
+                        <input type="hidden" value="{{m.user_id}}" name="user_id">
+                        <td><input type="submit" value="[X]" formaction="{{url_for('remover_usuario_lab')}}"></td>                    
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                    {% if admin %}
+                    <tr>
+                        <td><input type="text" name="user_id"></td>
+                        <td><input type="text" name="nome"></td>
+                        <td><input type="text" name="laboratorio"></td>
+                        <td><input type="text" name="email"></td>
+                        <td><input type="checkbox" name="aprovar"></td>
+                        <td><input type="submit" value="Adicionar" formaction="{{url_for('registrar_usuario_lab')}}"></td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <div>
+            <label for="intervalo-parser">Intervalo de coleta do parser:</label>
+            <input type="text" name="intervalo-parser" value="{{intervalo_parser}}" {% if not admin %}readonly{% endif %}/>
+        </div>
+
+        <div>
+            <label for="intervalo-arduino">Intervalo de coleta do Arduino:</label>
+            <input type="text" name="intervalo-arduino" value="{{intervalo_arduino}}" {% if not admin %}readonly{% endif %}/>
+        </div>
+
+
+        <div>
+            <label for="lista-equipamentos">Lista de equipamentos:</label>
+            <table name="lista-equipamentos">
+                <thead>
+                    <tr>
+                        <th>Endereço MAC</th>
+                        <th>Temperatura mínima</th>
+                        <th>Temperatura máxima</th>
+                        {% if admin %}
+                            <th>Excluir</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for e in equipamentos %}
+                        <tr>
+                            <td>{{e.MAC}}</td>
+                            <td>{{e.temp_min}}</td>
+                            <td>{{e.temp_max}}</td>
+                            {% if admin %}
+                            <input type="hidden" value="{{e.id}}" name="equipamento-id">
+                            <td><input type="submit" value="[X]" formaction="{{url_for('remover_equipamento')}}"></td>                    
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                        {% if admin %}
+                        <tr>
+                            <td><input type="text" name="endereco-mac"></td>
+                            <td><input type="text" name="temp-min"></td>
+                            <td><input type="text" name="temp-max"></td>
+                            <td><input type="submit" value="Adicionar" formaction="{{url_for('registrar_equipamento')}}"></td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+
+        {% if admin %}
+        <div class="button">
+            <input type="submit" value="Editar" formaction="{{url_for('gerenciar')}}">
+        </div>
+        {% endif %}
+    </form>
+
+    <br>
+
+</div>
+{% endfor %}
+
+
+{% endblock %}

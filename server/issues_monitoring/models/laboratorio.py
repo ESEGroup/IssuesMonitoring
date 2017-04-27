@@ -24,6 +24,9 @@ class Equipamento:
     def cadastrar(self):
         pass
 
+    def remover(_id):
+        pass
+
 class Evento:
     def __init__(self, epoch, evento, user_id):
         self.epoch = epoch
@@ -33,7 +36,7 @@ class Evento:
 class Laboratorio:
     def __init__(self, nome, endereco, zona_conforto_lab,
                  intervalo_parser, intervalo_arduino, MACs = None,
-                 equipamentos = None, id = None):
+                 equipamentos = None, id = None, membros = []):
         self.id = id
         self.nome = nome
         self.endereco = endereco
@@ -42,17 +45,18 @@ class Laboratorio:
         self.zona_conforto_lab = zona_conforto_lab
         self.equipamentos = equipamentos
         self.MACs = MACs
+        self.membros = membros
 
     def registrar_medidas(_id, temperatura, luminosidade, umidade):
         data_registro = int(datetime.now().timestamp())
 
-    def cadastrar_laboratorio(self):
+    def cadastrar(self):
         pass
 
     def editar_zona_conforto(_id, zona_conforto_lab):
         pass
 
-    def obter_informacoes()
+    def obter_informacoes():
         pass
 
     def editar_laboratorio(_id, nome, endereco, intervalo_parser, intervalo_arduino):

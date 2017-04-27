@@ -11,19 +11,26 @@
 <br>
 <br>
 
-<div id="login-fields">
+<div id="fields">
     
-    <form class="login-form" method="POST" action="/cadastro-usuario-lab">
+    <form class="form" method="POST" action="/cadastro-usuario-lab">
+        <div>
+            <label for="laboratorio">Laboratório:</label>
+            <select name="laboratorio">
+                {% for lab in laboratorios %}
+                <option value="{{lab.id}}">{{lab.nome}}</option>
+                {% endfor %}
+            </select>
         <div>
             <label for="user_id">Id de usuário:</label>
-            <input type="text" name="user_id" />
+            <input type="text" name="user_id">
         </div>
 
         <br>
 
        <div>
             <label for="nome">Nome Completo:</label>
-            <input type="text" name="nome" />
+            <input type="text" name="nome">
         </div>
 
         <br>
@@ -35,7 +42,7 @@
 
         <br>
 
-        <div id="login-button" class="button">
+        <div class="button">
             <button type="submit">Registrar</button>
         </div>
     </form>

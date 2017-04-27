@@ -2,7 +2,7 @@ body {
     background-color : #e8f0fc;
 }
 
-.login-form {
+.form {
     /* Apenas para centralizar o form na página */
     margin: 0 auto;
     width: 400px;
@@ -31,7 +31,7 @@ input:focus {
     border-color: #000;
 }
 
-#login-fields {
+#fields {
     text-align: center
 }
 
@@ -39,7 +39,7 @@ input:focus {
     text-align: center;
 }
 
-#login-fields {
+#fields {
     text-align: center
 }
 

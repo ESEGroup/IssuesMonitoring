@@ -1,8 +1,9 @@
 import bcrypt
 
 class UsuarioLab:
-    def __init__(self, user_id, nome, email, data_aprovacao = None,
+    def __init__(self, lab_id, user_id, nome, email, data_aprovacao = None,
                  laboratorio = None):
+        self.lab_id = lab_id
         self.user_id = user_id
         self.nome = nome
         self.laboratorio = laboratorio
@@ -14,6 +15,9 @@ class UsuarioLab:
         pass
 
     def cadastrar(self):
+        pass
+
+    def remover(id_lab, user_id):
         pass
 
 class UsuarioSistema:
@@ -31,12 +35,13 @@ class UsuarioSistema:
     def autenticar(login, senha):
         # Obter hash do usuário do banco de dados, se usuário não
         # existir ou autenticação falhar, retornar None, se autenticar,
-        # retornar 'id', obtida do banco de dados
+        # retornar 'id' e flag 'admin', obtidas do banco de dados
         _id = None
         _hash = None
+        admin = False
         if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
-            return _id
-        return None
+            return _id, admin
+        return None, False
 
 
     def __hash_senha(senha, _hash = None):
