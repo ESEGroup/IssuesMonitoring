@@ -1,58 +1,51 @@
 {% extends 'menu.html' %}
+{% block title %}
+Cadastro Usuario Sistema
+{% endblock %}
+
+{% block menu %}
+    {% if autenticado %}
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    {% else %}
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    {% endif %}
+    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+{% endblock %}
+
 {% block content %}
-<div id="titulo">
-    <h2 align="center">Cadastro de usuário</h2>
-</div>
+<h2 class="center">Cadastro de usuário</h2>
 
-<div id="barra-horizontal">
-    <hr>
-</div>
+<hr>
 
-<br>
-<br>
-
-<div id="fields">
-    
-    <form class="form" method="POST" action="/cadastro-usuario-lab">
+<div class="campos cadastro">
+    <form class="form" method="POST" action="{{url_for('cadastro')}}">
         <div>
-            <label for="login">Login</label>
-            <input type="text" name="login" />
+            <p>Login</p>
+            <input type="text" name="login">
         </div>
-
-        <br>
 
        <div>
-            <label for="senha">Senha</label>
-            <input type="text" name="senha" />
+            <p>Senha</p>
+            <input type="text" name="senha">
         </div>
 
         <br>
 
         <div>
-            <label for="email">E-mail:</label>
-            <input type="text" name="email" />
+            <p>E-mail:</p>
+            <input type="text" name="email">
         </div>
 
         <br>
 
         <div>
-            <label for="nome">Nome:</label>
-            <input type="text" name="nome" />
+            <p>Nome:</p>
+            <input type="text" name="nome">
         </div>
 
-        <br>
-        <div class="button">
-            <button type="submit">Registrar</button>
+        <div>
+            <input type="submit" value="Registrar">
         </div>
     </form>
-
-    <br>
-
 </div>
-
-<br>
-
-<form id="back-button" action="/login">
-    <button type="submit">Cancelar</button>
-</form>
 {% endblock %}

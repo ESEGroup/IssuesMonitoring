@@ -1,3 +1,4 @@
+from datetime import datetime
 from ..models import UsuarioSistema, UsuarioLab
 
 def autenticar(usuario, senha):
