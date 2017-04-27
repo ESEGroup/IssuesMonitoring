@@ -1,4 +1,6 @@
 import bcrypt
+import sqlite3
+from ...db import DB
 
 class UsuarioLab:
     def __init__(self, user_id, nome, email, data_aprovacao = None,
