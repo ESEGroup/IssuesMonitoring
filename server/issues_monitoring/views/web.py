@@ -10,10 +10,6 @@ def gerenciar():
 
     admin = admin_autenticado()
     laboratorios = controllers.obter_informacoes_labs(session['id'])
-    from ..models import Laboratorio, ZonaConforto, Equipamento, UsuarioLab
-    laboratorios = [Laboratorio("oq é software", "I-216",
-        ZonaConforto(0,10,0,10,0,10), 5, 5, [Equipamento(0, 10,
-            "jorgin", 1)], 2, [UsuarioLab(1, "pcab", "Paulo Cabral Sanz", "psanz@gogle.com")])]
     return render_template('gerenciar.html',
                            admin=admin,
                            laboratorios=laboratorios)
@@ -58,7 +54,7 @@ def login_post():
         return redirect(url_for('gerenciar'))
 
     usuario = request.form.get('login') or ''
-    senha = request.form.get('password') or ''
+    senha = request.form.get('senha') or ''
     if '' in [usuario, senha]:
         return redirect(url_for('login'))
 

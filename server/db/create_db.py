@@ -12,7 +12,7 @@ cursor.execute("PRAGMA foreign_keys")
 
 cursor.execute("""
 CREATE TABLE Zona_de_Conforto_Lab(
-        zona_conforto_id INT NOT NULL PRIMARY KEY,
+        zona_conforto_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         temp_min FLOAT NOT NULL,
         temp_max FLOAT NOT NULL,
         umid_min FLOAT NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE Zona_de_Conforto_Lab(
 
 cursor.execute("""
 CREATE TABLE Lab(
-        lab_id INT NOT NULL PRIMARY KEY,
-        zona_conforto_id INT NOT NULL REFERENCES Zona_de_Conforto_Lab(zona_conforto_id),
+        lab_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        zona_conforto_id INTEGER NOT NULL REFERENCES Zona_de_Conforto_Lab(zona_conforto_id),
         nome CHAR(20) NOT NULL,
         endereco CHAR(30) NOT NULL,
         intervalo_parser INT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE Log_Lab(
 
 cursor.execute("""
 CREATE TABLE Equip(
-        equip_id INT NOT NULL PRIMARY KEY,
+        equip_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         lab_id INT NOT NULL REFERENCES Lab(lab_id),
         temp_min FLOAT NOT NULL,
         temp_max FLOAT NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE User_Lab(
 
 cursor.execute("""
 CREATE TABLE Presenca(
-        presenca_id INT PRIMARY KEY,
+        presenca_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         user_id CHAR(4) NOT NULL REFERENCES User_Labs(user_id),
         lab_id INT NOT NULL REFERENCES Lab(lab_id),
         presente BOOLEAN NOT NULL);
@@ -82,7 +82,7 @@ CREATE TABLE Log_Presenca(
 
 cursor.execute("""
 CREATE TABLE User_Sys(
-        user_id INT NOT NULL PRIMARY KEY,
+        user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         login CHAR(10) NOT NULL,
         senha CHAR(16) NOT NULL,
         email CHAR(30) NOT NULL,
@@ -90,4 +90,5 @@ CREATE TABLE User_Sys(
         admin BOOLEAN NOT NULL);
 """)
 
+conn.commit()
 conn.close()
