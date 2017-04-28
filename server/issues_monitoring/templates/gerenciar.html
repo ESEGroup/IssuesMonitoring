@@ -18,24 +18,57 @@ Gerenciar
 {% for lab in laboratorios %}
 <div class="campos">
     <form method="POST" action="{{url_for('gerenciar')}}">
+        <input type="hidden" name="id-lab" value="{{lab.id}}">
         <div>
             <p>Nome do Laboratório:</p>
-            <input type="text" name="nome-lab" value="{{lab.nome}}" {% if not admin %}readonly{% endif %}/>
+            <input type="text" name="nome-lab" value="{{lab.nome}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-                <p>Endereço:</p>
-            <input type="text" name="endereco-lab" value="{{lab.endereco}}" {% if not admin %}readonly{% endif %}/>
+            <p>Endereço:</p>
+            <input type="text" name="endereco-lab" value="{{lab.endereco}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
             <p>Intervalo de coleta do parser:</p>
-            <input type="text" name="intervalo-parser" value="{{lab.intervalo_parser}}" {% if not admin %}readonly{% endif %}/>
+            <input type="text" name="intervalo-parser" value="{{lab.intervalo_parser}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
             <p>Intervalo de coleta do Arduino:</p>
-            <input type="text" name="intervalo-arduino" value="{{lab.intervalo_arduino}}" {% if not admin %}readonly{% endif %}/>
+            <input type="text" name="intervalo-arduino" value="{{lab.intervalo_arduino}}" {% if not admin %}readonly{% endif %}>
+        </div>
+
+        <h3>Zona de Conforto do laboratório</h3>
+
+        <div>
+            <p>Temperatura mínima:</p>
+            <input type="text" name="temp-min" value="{{lab.zona_conforto_lab.temp_min}}" {% if not admin %}readonly{% endif %}>
+        </div>
+
+        <div>
+            <p>Temperatura máxima:</p>
+            <input type="text" name="temp-max" value="{{lab.zona_conforto_lab.temp_max}}" {% if not admin %}readonly{% endif %}>
+        </div>
+
+        <div>
+            <p>Umidade mínima:</p>
+            <input type="text" name="umid-min" value="{{lab.zona_conforto_lab.umidade_min}}" {% if not admin %}readonly{% endif %}>
+        </div>
+
+        <div>
+            <p>Umidade máxima:</p>
+            <input type="text" name="umid-max" value="{{lab.zona_conforto_lab.umidade_max}}" {% if not admin %}readonly{% endif %}>
+        </div>
+
+        <div>
+            <p>Luminosidade mínima:</p>
+            <input type="text" name="lumin-min" value="{{lab.zona_conforto_lab.lumin_min}}" {% if not admin %}readonly{% endif %}>
+        </div>
+
+        <div>
+            <p>Luminosidade máxima:</p>
+            <input type="text" name="lumin-max" value="{{lab.zona_conforto_lab.lumin_max}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         {% if admin %}
@@ -63,7 +96,15 @@ Gerenciar
                     <td>{{m.user_id}}</td>
                     <td>{{m.nome}}</td>
                     <td>{{m.email}}</td>
-                    <td>{{m.data_aprovacao|data}}</td>
+                    {% if m.data_aprovacao is not None and not admin %}
+                        <td>{{m.data_aprovacao|data}}</td>
+                    {% elif admin %}
+                        <form method="POST" action="{{url_for('autorizar_usuario_lab')}}">
+                            <input type="hidden" value="{{lab.id}}" name="id-lab">
+                            <input type="hidden" value="{{m.user_id}}" name="id-user">
+                            <td><input type="submit" value="Aprovar"></td>
+                        </form>
+                    {% endif %}
                     {% if admin %}
                     <form method="POST" action="{{url_for('remover_usuario_lab')}}">
                         <input type="hidden" value="{{lab.id}}" name="id-lab">

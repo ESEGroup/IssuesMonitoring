@@ -11,16 +11,16 @@ class UsuarioLab:
         self.data_aprovacao = data_aprovacao
 
     def registrar_presenca(eventos):
-        user_ids = tupla_eventos = []
+        usuarios_presenca = tupla_eventos = []
         for e in eventos:
-            users_id += e.user_id
-            tupla_eventos += (e.epoch, e.user_id, e.lab_id, e.evento)
-        users_id = tuple(users_id)
+            usuarios_presenca += [(e.evento == "IN", e.user_id)]
+            tupla_eventos += [(e.epoch, e.user_id, e.lab_id, e.evento)]
+
         db.executemany("""
             UPDATE Presenca
-            SET presente = 1
+            SET presente = ?
             WHERE user_id = ?;""",
-            users_id)
+            usuarios_presenca)
         db.executemany("""
             INSERT INTO Log_Presenca
             (data, user_id, lab_id, evento)
@@ -32,10 +32,11 @@ class UsuarioLab:
                   self.nome,
                   self.email,
                   self.data_aprovacao)
-        if not db.fetchone("""
+        user_id = db.fetchone("""
             SELECT user_id
             FROM User_lab
-            WHERE user_id = ?;""", (self.user_id,)) == self.user_id:
+            WHERE user_id = ?;""", (self.user_id,))
+        if user_id == self.user_id:
             db.execute("""
                 INSERT INTO User_Lab
                 (user_id, nome, email, data_aprov)
