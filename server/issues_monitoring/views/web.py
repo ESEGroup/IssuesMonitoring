@@ -103,7 +103,7 @@ def cadastro_usuario_lab_post():
     if autenticado():
         url = 'gerenciar'
     else:
-        url = 'cadastro_lab_post'
+        url = 'cadastro_usuario_lab'
     return redirect(url_for(url))
 
 @app.route('/remover-usuario-lab', methods=["POST"])
