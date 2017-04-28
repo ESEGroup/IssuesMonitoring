@@ -28,4 +28,3 @@ class Equipamento:
         db.execute("""
             DELETE FROM Equip
             WHERE equip_id = ?;""", (_id,))
-

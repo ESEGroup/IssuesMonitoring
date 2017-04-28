@@ -7,4 +7,3 @@ class ZonaConforto:
         self.umidade_max = umidade_max
         self.lumin_min = lumin_min
         self.lumin_max = lumin_max
-

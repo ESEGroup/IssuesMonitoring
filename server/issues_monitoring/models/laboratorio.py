@@ -136,12 +136,12 @@ class Laboratorio:
 
     def obter_intervalo_parser(lab_id):
         return db.fetchone("""
-            select intervalo_parser
-            from lab
-            where lab_id = ?;""", (lab_id,))
+            SELECT intervalo_parser
+            FROM Lab
+            WHERE lab_id = ?;""", (lab_id,))
 
     def obter_intervalo_arduino(lab_id):
         return db.fetchone("""
-            select intervalo_arduino
-            from lab
-            where lab_id = ?;""", (lab_id,))
+            SELECT intervalo_arduino
+            FROM Lab
+            WHERE lab_id = ?;""", (lab_id,))

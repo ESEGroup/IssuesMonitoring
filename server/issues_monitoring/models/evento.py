@@ -4,4 +4,3 @@ class Evento:
         self.evento = evento
         self.user_id = user_id
         self.lab_id = lab_id
-

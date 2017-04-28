@@ -24,13 +24,17 @@ class UsuarioSistema:
             VALUES (?, ?, ?, ?, ?);""", values)
 
     def autenticar(login, senha):
-        (_id, _hash, _admin) = db.fetchone("""
+        args = db.fetchone("""
             SELECT user_id, senha, admin
             FROM User_Sys
             WHERE login = ?;""", (login,)) 
 
-        if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
-            return _id, _admin
+        if args is not None and len(args) == 3:
+            (_id, _hash, _admin) = args
+
+            if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
+                return _id, _admin
+
         return None, False
 
     def __hash_senha(senha, _hash = None):
