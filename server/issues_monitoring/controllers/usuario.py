@@ -9,7 +9,11 @@ def cadastrar_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
         data_aprovacao = int(datetime.now().timestamp())
     else:
         data_aprovacao = None
-    usuario = UsuarioLab(lab_id, user_id, nome, email, data_aprovacao)
+    usuario = UsuarioLab(user_id,
+                         nome,
+                         email,
+                         data_aprovacao,
+                         lab_id=lab_id)
     return usuario.cadastrar()
 
 def remover_usuario_lab(id_lab, user_id):

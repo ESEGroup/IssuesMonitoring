@@ -6,6 +6,7 @@ Cadastro Usuario Sistema
 {% block menu %}
     {% if autenticado %}
     <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
     {% else %}
     <li><a href="{{url_for('login')}}">Login</a></li>
     {% endif %}

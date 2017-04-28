@@ -9,7 +9,7 @@ def gerenciar():
         return redirect(url_for('login'))
 
     admin = admin_autenticado()
-    laboratorios = controllers.obter_informacoes_labs(session['id'])
+    laboratorios = controllers.obter_informacoes_labs()
     return render_template('gerenciar.html',
                            admin=admin,
                            laboratorios=laboratorios)
@@ -19,13 +19,11 @@ def gerenciar_post():
     if not autenticado():
         return redirect(url_for('login'))
 
-    user_id = session["id"]
     nome = request.form.get("nome-lab") or ''
     endereco = request.form.get("endereco-lab") or ''
     intervalo_parser = request.form.get("intervalo-parser") or ''
     intervalo_arduino = request.form.get("intervalo-arduino") or ''
-    args = [user_id,
-            nome,
+    args = [nome,
             endereco,
             intervalo_parser,
             intervalo_arduino]
@@ -41,9 +39,6 @@ def logout():
  
 @app.route('/login')
 def login():
-    session['id'] = 1
-    session['expiration'] = datetime.now().timestamp() + 10000
-    session['admin'] = True
     if autenticado():
         return redirect(url_for('gerenciar'))
     return render_template('login.html')
@@ -129,10 +124,11 @@ def cadastrar_equipamento():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
 
+    lab_id = request.form.get('id-lab')
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
-    args = [temp_min, temp_max, MAC]
+    args = [lab_id, temp_min, temp_max, MAC]
     if "" not in args:
         controllers.cadastrar_equipamento(*args)
 

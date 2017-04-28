@@ -9,6 +9,18 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = getenv('SECRET_KEY') or "7612367hfyy8923u4dryr12ybri2bi8yniis1b"
 
+@app.after_request
+def no_cache_dynamic(response):
+    if 'text/html' in response.headers.get('Content-Type', []):
+        response.headers['Cache-Control'] = ('private,'
+                                             'no-cache,'
+                                             'no-store,'
+                                             'must-revalidate,'
+                                             'max-age=0')
+        response.headers['Expire'] = '-1'
+        response.headers['Pragma'] = 'no-cache'
+    return response
+
 # Reset presenças as 00
 thread = Thread(target=reset_presencas_meia_noite)
 thread.daemon = True
