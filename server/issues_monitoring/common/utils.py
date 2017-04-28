@@ -6,8 +6,7 @@ from .. import app, Config
 def data(timestamp):
     if timestamp is None:
         return "-"
-    else:
-        timestamp = float(timestamp)
+    timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
 
 def autenticado():

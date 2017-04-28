@@ -4,6 +4,7 @@ Gerenciar
 {% endblock %}
 
 {% block menu %}
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
     <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
     <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
     <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
@@ -91,19 +92,20 @@ Gerenciar
                 </tr>
             </thead>
             <tbody>
+            {% if lab.membros %}
             {% for m in lab.membros %}
                 <tr>
                     <td>{{m.user_id}}</td>
                     <td>{{m.nome}}</td>
                     <td>{{m.email}}</td>
-                    {% if m.data_aprovacao is not None and not admin %}
-                        <td>{{m.data_aprovacao|data}}</td>
-                    {% elif admin %}
+                    {% if (m.data_aprovacao|data) == "-" and admin %}
                         <form method="POST" action="{{url_for('autorizar_usuario_lab')}}">
                             <input type="hidden" value="{{lab.id}}" name="id-lab">
                             <input type="hidden" value="{{m.user_id}}" name="id-user">
                             <td><input type="submit" value="Aprovar"></td>
                         </form>
+                    {% else %}
+                        <td>{{m.data_aprovacao|data}}</td>
                     {% endif %}
                     {% if admin %}
                     <form method="POST" action="{{url_for('remover_usuario_lab')}}">
@@ -114,6 +116,7 @@ Gerenciar
                     {% endif %}
                 </tr>
             {% endfor %}
+            {% endif %}
             {% if admin %}
             <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
                 <tr>

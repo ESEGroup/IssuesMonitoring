@@ -76,7 +76,6 @@ class Laboratorio:
 
             usuarios_id.add(usuario_lab.user_id)
             equipamentos_id.add(equipamento.id)
-
         return sorted(_dict.values(), key=lambda d: d.id)
 
     def editar(self):

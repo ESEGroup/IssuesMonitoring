@@ -36,7 +36,7 @@ class UsuarioLab:
             SELECT user_id
             FROM User_lab
             WHERE user_id = ?;""", (self.user_id,))
-        if user_id == self.user_id:
+        if user_id is None:
             db.execute("""
                 INSERT INTO User_Lab
                 (user_id, nome, email, data_aprov)

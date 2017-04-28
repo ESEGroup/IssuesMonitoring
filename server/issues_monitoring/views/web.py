@@ -165,6 +165,7 @@ def autorizar_usuario_lab():
     lab_id = request.form.get('id-lab')
     user_id = request.form.get('id-user')
     controllers.autorizar_usuario_lab(lab_id, user_id)
+    return redirect(url_for('gerenciar'))
 
 @app.route('/cadastrar-equipamento', methods=["POST"])
 def cadastrar_equipamento():
