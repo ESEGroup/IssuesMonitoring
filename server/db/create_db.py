@@ -35,7 +35,7 @@ def work():
     cursor.execute("""
     CREATE TABLE Log_Lab(
             data INT NOT NULL PRIMARY KEY,
-            lab_id INT NOT NULL REFERENCES Lab(lab_id),
+            lab_id INT REFERENCES Lab(lab_id),
             temp FLOAT NOT NULL,
             umid FLOAT NOT NULL,
             lum FLOAT NOT NULL);

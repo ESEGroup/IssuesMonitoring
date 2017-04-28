@@ -19,14 +19,21 @@ def gerenciar_post():
     if not autenticado():
         return redirect(url_for('login'))
 
+    lab_id = request.form.get("id-lab") or ''
     nome = request.form.get("nome-lab") or ''
     endereco = request.form.get("endereco-lab") or ''
     intervalo_parser = request.form.get("intervalo-parser") or ''
     intervalo_arduino = request.form.get("intervalo-arduino") or ''
-    args = [nome,
-            endereco,
-            intervalo_parser,
-            intervalo_arduino]
+    temp_min = request.form.get("temp-min") or ''
+    temp_max = request.form.get("temp-max") or ''
+    umid_min = request.form.get("umid-min") or ''
+    umid_max = request.form.get("umid-max") or ''
+    lumin_min = request.form.get("lumin-min") or ''
+    lumin_max = request.form.get("lumin-max") or ''
+
+    args = [lab_id, nome, endereco, intervalo_parser,
+            intervalo_arduino, temp_min, temp_max, umid_min, umid_max,
+            lumin_min, lumin_max]
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
@@ -39,6 +46,9 @@ def logout():
  
 @app.route('/login')
 def login():
+    session['id'] = '1'
+    session['expiration'] = int(datetime.now().timestamp()) + 1000000
+    session['admin'] = True
     if autenticado():
         return redirect(url_for('gerenciar'))
     return render_template('login.html')
@@ -80,6 +90,34 @@ def cadastro_post():
         controllers.cadastrar_usuario_sistema(login, senha, email, nome)
     return redirect(url_for('login'))
 
+@app.route('/cadastro-lab')
+def cadastro_lab():
+    if not admin_autenticado():
+        return redirect(url_for('login'))
+    return render_template('cadastro_lab.html')
+
+@app.route('/cadastro-lab', methods=["POST"])
+def cadastro_lab_post():
+    if not admin_autenticado():
+        return redirect(url_for('login'))
+
+    nome = request.form.get("nome") or ""
+    endereco = request.form.get("endereco") or ""
+    intervalo_parser = request.form.get("intervalo-parser") or ""
+    intervalo_arduino = request.form.get("intervalo-arduino") or ""
+    temp_min = request.form.get("temp-min") or ""
+    temp_max = request.form.get("temp-max") or ""
+    umid_min = request.form.get("umid-min") or ""
+    umid_max = request.form.get("umid-max") or ""
+    lumin_min = request.form.get("lumin-min") or ""
+    lumin_max = request.form.get("lumin-max") or ""
+    args = [nome, endereco, intervalo_parser, intervalo_arduino,
+            temp_min, temp_max, umid_min, umid_max, lumin_min,
+            lumin_max]
+    if "" not in args:
+        controllers.cadastrar_laboratorio(*args)
+    return redirect(url_for('gerenciar'))
+
 @app.route('/cadastro-usuario-lab')
 def cadastro_usuario_lab():
     laboratorios = controllers.listar_laboratorios()
@@ -118,6 +156,15 @@ def remover_usuario_lab():
         controllers.remover_usuario_lab(*args)
 
     return redirect(url_for('gerenciar'))
+
+@app.route('/autorizar-usuario-lab', methods=["POST"])
+def autorizar_usuario_lab():
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    lab_id = request.form.get('id-lab')
+    user_id = request.form.get('id-user')
+    controllers.autorizar_usuario_lab(lab_id, user_id)
 
 @app.route('/cadastrar-equipamento', methods=["POST"])
 def cadastrar_equipamento():

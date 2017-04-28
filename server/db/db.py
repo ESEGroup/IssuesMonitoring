@@ -8,12 +8,20 @@ class DB:
         conn = sqlite3.connect(self.name)
         return conn
 
-    def execute(self, query, arguments=tuple()):
+    def execute(self, query, arguments=tuple(), return_id=False):
+        pk = None
+
         conn = self.connect()
         cursor = conn.cursor()
         cursor.execute(query, arguments)
+
+        if return_id:
+            cursor.execute("SELECT last_insert_rowid();")
+            pk = cursor.fetchone()[0]
+
         conn.commit()
         conn.close()
+        return pk
 
     def executemany(self, query, list_of_arguments=[tuple()]):
         conn = self.connect()
@@ -37,11 +45,3 @@ class DB:
         data = cursor.fetchall()
         conn.close()
         return data
-
-    def get_pk(self):
-        conn = self.connect()
-        cursor = conn.cursor()
-        cursor.execute("SELECT last_insert_rowid();")
-        data = cursor.fetchone()
-        conn.close()
-        return data[0]

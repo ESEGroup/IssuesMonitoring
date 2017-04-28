@@ -1,0 +1,80 @@
+{% extends 'menu.html' %}
+{% block title %}
+Cadastro Laboratório
+{% endblock %}
+
+{% block menu %}
+    {% if autenticado %}
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+    {% else %}
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    {% endif %}
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Cadastrar Laboratório</h2>
+
+<hr>
+
+<div class="campos cadastro">
+    <form method="POST" action="{{url_for('cadastro_lab')}}">
+        <div>
+            <p>Nome:</p>
+            <input type="text" name="nome">
+        </div>
+
+        <div>
+            <p>Endereço:</p>
+            <input type="text" name="endereco">
+        </div>
+
+        <div>
+            <p>Intervalo Parser:</p>
+            <input type="text" name="intervalo-parser">
+        </div>
+
+        <div>
+            <p>Intervalo Arduino:</p>
+            <input type="text" name="intervalo-arduino">
+        </div>
+
+        <h3>Zona de Conforto do laboratório</h3>
+
+        <div>
+            <p>Temperatura mínima:</p>
+            <input type="text" name="temp-min">
+        </div>
+
+        <div>
+            <p>Temperatura máxima:</p>
+            <input type="text" name="temp-max">
+        </div>
+
+        <div>
+            <p>Umidade mínima:</p>
+            <input type="text" name="umid-min">
+        </div>
+
+        <div>
+            <p>Umidade máxima:</p>
+            <input type="text" name="umid-max">
+        </div>
+
+        <div>
+            <p>Luminosidade mínima:</p>
+            <input type="text" name="lumin-min">
+        </div>
+
+        <div>
+            <p>Luminosidade máxima:</p>
+            <input type="text" name="lumin-max">
+        </div>
+
+        <div>
+            <input type="submit" value="Registrar">
+        </div>
+    </form>
+</div>
+{% endblock %}

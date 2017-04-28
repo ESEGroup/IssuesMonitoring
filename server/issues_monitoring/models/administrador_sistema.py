@@ -5,9 +5,12 @@ from . import db
 def AdministradorSistema(UsuarioSistema):
     admin = True
 
-    def autorizar_usuario_lab(user_id):
+    def autorizar_usuario_lab(lab_id, user_id):
         data_aprovacao = int(datetime.now().timestamp())
         db.execute("""
             UPDATE User_Lab
             SET data_aprov = ?
-            WHERE user_id = ?;""", (data_aprovacao, user_id))
+            WHERE user_id = ?
+                  AND lab_id = ?;""", (data_aprovacao,
+                                       user_id,
+                                       lab_id))
