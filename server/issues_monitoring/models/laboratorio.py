@@ -1,51 +1,7 @@
 from . import db
-from .usuario import UsuarioLab
-
-class ZonaConforto:
-    def __init__(self, temp_min, temp_max, umidade_min, umidade_max,
-                 lumin_min, lumin_max):
-        self.temp_min = temp_min
-        self.temp_max = temp_max
-        self.umidade_min = umidade_min
-        self.umidade_max = umidade_max
-        self.lumin_min = lumin_min
-        self.lumin_max = lumin_max
-
-class Equipamento:
-    def __init__(self, lab_id, temp_min, temp_max, MAC, id = None):
-        self.id = id
-        self.lab_id = lab_id
-        self.temp_min = temp_min
-        self.temp_max = temp_max
-        self.MAC = MAC
-
-    def obter_medidas(_id):
-        pass
-
-    def registrar_medidas(_id, temperatura):
-        data_registro = int(datetime.now().timestamp())
-
-    def cadastrar(self):
-        db.execute("""
-            INSERT INTO Equip
-            (lab_id, temp_min, temp_max, end_mac)
-            VALUES (?, ?, ?, ?)""",
-            (self.lab_id,
-            self.temp_min,
-            self.temp_max,
-            self.MAC))
-
-    def remover(_id):
-        db.execute("""
-            DELETE FROM Equip
-            WHERE equip_id = ?;""", (_id,))
-
-class Evento:
-    def __init__(self, epoch, evento, user_id, lab_id):
-        self.epoch = epoch
-        self.evento = evento
-        self.user_id = user_id
-        self.lab_id = lab_id
+from .usuario_lab import UsuarioLab
+from .equipamento import Equipamento
+from .zona_conforto import ZonaConforto
 
 class Laboratorio:
     def __init__(self, nome, endereco, intervalo_parser,
