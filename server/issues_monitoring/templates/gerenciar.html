@@ -182,5 +182,10 @@ Gerenciar
     {% endif %}
 </div>
 {% endfor %}
+{% else %}
+    <h3 class="center">Não há laboratórios</h3>
+    {% if admin %}
+    <a href="{{url_for('cadastro_lab')}}"><button class="center"><h3>Cadastrar laboratório</h3></button></a>
+    {% endif %}
 {% endif %}
 {% endblock %}

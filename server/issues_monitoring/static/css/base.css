@@ -69,6 +69,12 @@ input:focus {
     border-color: #000;
 }
 
+button.center {
+    width: 20%;
+    min-width: 200px;
+    margin: 0 40%;
+}
+
 .center {
     text-align: center;
 }

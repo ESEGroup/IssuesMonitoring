@@ -121,6 +121,8 @@ def cadastro_lab_post():
 @app.route('/cadastro-usuario-lab')
 def cadastro_usuario_lab():
     laboratorios = controllers.listar_laboratorios()
+    if len(laboratorios) == 0:
+        return redirect(url_for("cadastro_lab"))
     return render_template('cadastro_usuario_lab.html',
                            laboratorios=laboratorios,
                            autenticado=autenticado())

@@ -12,7 +12,10 @@ if Config.token_parser == "":
 app = Flask(__name__)
 
 from .common.utils import random_string
-app.config['SECRET_KEY'] = getenv('SECRET_KEY') or random_string(32)
+if Config.debug:
+    app.config['SECRET_KEY'] = 'cmsodna oskawa j0iwjdeoj20n'
+else:
+    app.config['SECRET_KEY'] = getenv('SECRET_KEY') or random_string(32)
 
 @app.after_request
 def no_cache_dynamic(response):
