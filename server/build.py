@@ -1,7 +1,7 @@
-import bcrypt
+import sqlite3
 from getpass import getpass
 from os import getcwd
-from os.path import join
+from os.path import join, isfile
 from subprocess import Popen, DEVNULL
 from db.create_db import work as create_db
 
@@ -11,28 +11,28 @@ Popen(["virtualenv",
        ".env"],
        stderr=DEVNULL).wait()
 
-with open(join(getcwd(), ".env/bin/activate_this.py"), "r") as f:
-    exec(f.read())
-
 Popen([".env/bin/pip",
        "install",
        "-r",
        "requirements.txt"]).wait()
 
-Popen(["mv",
+Popen(["cp",
        "config.py.example",
        "config.py"]).wait()
 
-import sqlite3
+__file__ = join(".env", "bin", "activate_this.py")
+with open(join(".env", "bin", "activate_this.py"), "r") as f:
+    exec(f.read())
 
-try:
+import bcrypt
+
+if not isfile("db/Issues.db"):
     create_db()
-    Popen(["cp",
+    Popen(["mv",
            "Issues.db",
            "db/Issues.db"]).wait()
-except sqlite3.Error:
-    pass
 
+print("")
 print("Crie um usuário administrador")
 print("Usuário:")
 usuario = input()
