@@ -46,9 +46,6 @@ def logout():
  
 @app.route('/login')
 def login():
-    session['id'] = '1'
-    session['expiration'] = int(datetime.now().timestamp()) + 1000000
-    session['admin'] = True
     if autenticado():
         return redirect(url_for('gerenciar'))
     return render_template('login.html')
@@ -69,9 +66,11 @@ def login_post():
     if session['id'] is not None:
         now = int(datetime.now().timestamp())
         session['expiration'] = now + Config.session_duration
+        kwargs = {}
     else:
         session.pop('id', None)
-    return redirect(url_for('login'))
+        kwargs = {"e": "Usuário ou senha incorretos."}
+    return redirect(url_for('login', **kwargs))
 
 @app.route('/cadastro')
 def cadastro():
