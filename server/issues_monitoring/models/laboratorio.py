@@ -63,8 +63,8 @@ class Laboratorio:
             usuario_lab = UsuarioLab(*d[-4:])
             equipamento = Equipamento(*d[-9:-4])
             zona_conforto = ZonaConforto(*d[5:-9])
-            _dict.setdefault(d[0], Laboratorio(*d[1:5],
-                                               zona_conforto,
+            lab_info = d[-4:] + [zona_conforto]
+            _dict.setdefault(d[0], Laboratorio(*lab_info,
                                                membros=[],
                                                equipamentos=[],
                                                id=d[0]))
