@@ -68,6 +68,9 @@ if __name__ == '__main__':
     if "" in [USERNAME, PASSWORD]:
         log("Please provide the correct username and password to access the e-mail.")
         exit()
+    elif AUTH_TOKEN == "":
+        print("Please change the AUTH_TOKEN at `config.py` (remember to update at the server too)")
+        exit()
 
     try:
         while True:

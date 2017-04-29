@@ -5,9 +5,14 @@ from time import sleep
 from ..config import Config
 from .controllers import reset_presencas_meia_noite
 
+if Config.token_parser == "":
+    print("Please change the token_parser at `config.py` (remember to update at the parser client too)")
+    exit()
+
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = getenv('SECRET_KEY') or "7612367hfyy8923u4dryr12ybri2bi8yniis1b"
+from .common.utils import random_string
+app.config['SECRET_KEY'] = getenv('SECRET_KEY') or random_string(32)
 
 @app.after_request
 def no_cache_dynamic(response):

@@ -17,8 +17,6 @@ class Config:
 
     token_parser = ""
 
-    secret_key = ""
-
     session_duration = 60 * 30 # in seconds
 
     db_path = join(getcwd(), "db", "Issues.db")

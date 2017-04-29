@@ -1,5 +1,7 @@
 from datetime import datetime
 from flask import session
+from random import choice
+from string import ascii_letters, digits
 from .. import app, Config
 
 @app.template_filter('data')
@@ -23,3 +25,7 @@ def autenticado():
 
 def admin_autenticado():
     return autenticado() and session.get('admin') == True
+
+def random_string(n):
+    alfabeto = ascii_letters + digits
+    return ''.join(choice(alfabeto) for i in range(n))
