@@ -14,7 +14,7 @@ def registrar_presenca(dict_eventos):
                                e['user_id'])]
         except KeyError:
             pass
-    return UsuarioLab.registrar_presenca(eventos)
+    UsuarioLab.registrar_presenca(eventos)
 
 def enviar_email_presenca_zerada(emails):
     pass

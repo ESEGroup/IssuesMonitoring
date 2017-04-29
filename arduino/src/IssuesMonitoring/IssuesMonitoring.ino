@@ -4,8 +4,8 @@
 #include "MathBox.h"
 
 // Pins
-const byte LDR_PIN = A0;
-const byte DHT_PIN = A1;
+const byte LDR_PIN = 2;
+const byte DHT_PIN = 3;
 
 // DHT sensor
 DHT dht(DHT_PIN, DHT11);
@@ -49,7 +49,7 @@ void printDHT(float humidity, float temperature, float heat_index) {
 // Callbacks
 void readLDR() {
   Serial.println("==== LDR ====");
-  byte ldr = digitalRead(LDR_PIN);
+  byte ldr = !digitalRead(LDR_PIN);
 
   ldr_signal.add(ldr);
 

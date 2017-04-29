@@ -1,17 +1,23 @@
-class URI(object):
+from os import getcwd
+from os.path import join
+
+class URI:
     def __init__(self, host, port, protocol="http"):
-        self.host     = host
-        self.port     = port
+        self.host = host
+        self.port = port
         self.protocol = protocol
 
     def __str__(self):
-        return self.protocol + "://" + self.host + ":" + str(self.port)
+        return "{}://{}:{}".format(self.protocol, self.host, self.port)
 
 class Config:
     debug = True
 
-    issues_monitoring = URI("0.0.0.0", 80)
+    issues_monitoring = URI("0.0.0.0", 8080)
 
-    secret_key = ""
+    # Provide the same token the client is using (not empty)
+    token_parser = ""
 
     session_duration = 60 * 30 # in seconds
+
+    db_path = join(getcwd(), "db", "Issues.db")

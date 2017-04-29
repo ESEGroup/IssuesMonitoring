@@ -10,9 +10,28 @@ HTTPS:
 
 `git clone https://github.com/ESEGroup/IssuesMonitoring.git`
 
-## Create virtualenv (at server folder)
+## Install python 3 and virtualenv
 
-`virtualenv -p python3 .env`
+Ubuntu:
+
+`sudo apt-get install python3 python3-pip virtualenv`
+
+## Run build script
+
+`python3 build.py`
+
+## Configure server
+
+Necessary changes:
+
+- 'token_parser' (also change at parser client)
+
+In production:
+
+- 'debug' to False
+
+- 'issues_monitoring' port from 8080 to 80 
+
 
 ## Join the virtualenv
 
@@ -22,16 +41,12 @@ HTTPS:
 
 `deactivate`
 
-## Install requirements (inside virtualenv)
+## Run server (inside virtualenv)
 
-`pip install -r requirements.txt`
+GNU/Linux:
 
-## Config server
+`bash run`
 
-Copy **config.py.example** to **config.py** and fill with the proper config information
+General:
 
-## Run server (at server folder)
-
-**Use sudo if the port in the config file is 80**
-
-`sudo env FLASK_APP=issues_monitoring/server.py flask run`
+`env FLASK_APP=issues_monitoring/server.py flask run`

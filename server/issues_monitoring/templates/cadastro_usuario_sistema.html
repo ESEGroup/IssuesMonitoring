@@ -1,0 +1,53 @@
+{% extends 'menu.html' %}
+{% block title %}
+Cadastro Usuario Sistema
+{% endblock %}
+
+{% block menu %}
+    {% if autenticado %}
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+    {% else %}
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    {% endif %}
+    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Cadastro de usuário</h2>
+
+<hr>
+
+<div class="campos cadastro">
+    <form class="form" method="POST" action="{{url_for('cadastro')}}">
+        <div>
+            <p>Login</p>
+            <input type="text" name="login">
+        </div>
+
+       <div>
+            <p>Senha</p>
+            <input type="password" name="senha">
+        </div>
+
+        <br>
+
+        <div>
+            <p>E-mail:</p>
+            <input type="text" name="email">
+        </div>
+
+        <br>
+
+        <div>
+            <p>Nome:</p>
+            <input type="text" name="nome">
+        </div>
+
+        <div>
+            <input type="submit" value="Registrar">
+        </div>
+    </form>
+</div>
+{% endblock %}

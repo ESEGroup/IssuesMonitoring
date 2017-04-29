@@ -1,52 +1,55 @@
 {% extends 'menu.html' %}
+{% block title %}
+Cadastro Usuario Laboratório
+{% endblock %}
+
+{% block menu %}
+    {% if autenticado %}
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+    {% else %}
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    {% endif %}
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+{% endblock %}
+
 {% block content %}
-<div id="titulo">
-    <h2 align="center">Issues Monitoring</h2>
-</div>
+<h2 class="center">Cadastrar Usuário do Laboratório</h2>
 
-<div id="barra-horizontal">
-    <hr>
-</div>
+<hr>
 
-<br>
-<br>
-
-<div id="login-fields">
-    
-    <form class="login-form" method="POST" action="/cadastro-usuario-lab">
+<div class="campos cadastro">
+    <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
         <div>
-            <label for="user_id">Id de usuário:</label>
-            <input type="text" name="user_id" />
+            <p>Laboratório:</p>
+            <select name="id-lab">
+                {% if laboratorios %}
+                {% for lab in laboratorios %}
+                <option value="{{lab.id}}">{{lab.nome}}</option>
+                {% endfor %}
+                {% endif %}
+            </select>
         </div>
 
-        <br>
-
-       <div>
-            <label for="nome">Nome Completo:</label>
-            <input type="text" name="nome" />
+        <div>
+            <p>Id de usuário:</p>
+            <input type="text" name="id-user">
         </div>
 
-        <br>
+        <div>
+            <p>Nome Completo:</p>
+            <input type="text" name="nome">
+        </div>
 
         <div>
-            <label for="email">E-mail:</label>
+            <p>E-mail:</p>
             <input type="text" name="email" />
         </div>
 
-        <br>
-
-        <div id="login-button" class="button">
-            <button type="submit">Registrar</button>
+        <div>
+            <input type="submit" value="Registrar">
         </div>
     </form>
-
-    <br>
-
 </div>
-
-<br>
-
-<form id="back-button" action="/login">
-    <button type="submit">Cancelar</button>
-</form>
 {% endblock %}

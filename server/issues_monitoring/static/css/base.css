@@ -1,16 +1,54 @@
 body {
     background-color : #e8f0fc;
+    color: #000000;
+    margin: 0;
 }
 
-.login-form {
-    /* Apenas para centralizar o form na página */
-    margin: 0 auto;
-    width: 400px;
-    /* Para ver as bordas do formulário */
-    padding: 1em;
-    border: 1px solid #CCC;
-    border-radius: 1em;
-    background-color : #ddeaff;
+a {
+    color: #0000FF;
+}
+
+.menu {
+    background-color: #333;
+    color: #9d9d9d;
+    min-height: 26px;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul > li {
+    display: inline-block;
+}
+
+ul > div.links_menu {
+    margin: 0;
+    width: 80%;
+    display: inline-block;
+    position: absolute;
+    top: 2.5vmin;
+}
+
+ul > div.links_menu > li {
+    font-family: "mono";
+    font-size: 2.5vmin;
+    display: inline;
+    margin: 10px 20px;
+    float: left;
+}
+
+ul > div.links_menu > li:hover {
+    color: white;
+}
+
+ul > div.links_menu > li > a {
+    color: inherit;
+    text-decoration: none;
+    margin: 5px 0;
 }
 
 input {
@@ -18,7 +56,7 @@ input {
     font: 1em sans-serif;
 
     /* Para dar o mesmo tamanho a todos os campo de texto */
-    width: 200px;
+
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
@@ -31,40 +69,80 @@ input:focus {
     border-color: #000;
 }
 
-#login-fields {
-    text-align: center
+button.center {
+    width: 20%;
+    min-width: 200px;
+    margin: 0 40%;
 }
 
-#register-button {
+.center {
     text-align: center;
 }
 
-#login-fields {
-    text-align: center
+.campos {
+    text-align: center;
+    /* Apenas para centralizar o form na página */
+    margin: 0 auto;
+    width: 70%;
+    /* Para ver as bordas do formulário */
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+    background-color: #ddeaff;
 }
 
-#back-button {
-    text-align: center;
+.cadastro {
+    width: 40% !important;
+    min-width: 200px;
+    max-width: 100%;
+}
+
+form > div > p {
+    width: 30%;
+    font-weight: 600;
+}
+
+form > div > input, form > div > select {
+    width: 55%;
 }
 
 hr {
   border: 0;
-  clear:both;
-  display:block;
   width: 50%;               
   background-color:#cbd0d8;
   height: 1px;
 }
 
-#icon-link {
-  width: 27%;
-  margin-top: 5px;
+.logo {
+    margin: 0;
+    padding: 0;
+    width: 20%;
+    max-width: 170px;
 }
 
-.navbar-nav > li > a, .navbar-brand {
-    padding-top:10px !important; 
-    padding-bottom:0 !important;
-    height: 40px;
+.logo img {
+    padding: 5px 0;
+    width: 100%;
 }
-.navbar {min-height:28px !important;}
 
+input[type="submit"] {
+    margin: 10px 0;
+}
+
+.right {
+    float: right !important;
+}
+
+table {
+    width: 100%;
+}
+
+.error_message {
+    width: 100%;
+    text-align: center;
+    padding: 0.5px;
+    font-size: 15pt;
+    margin: 0;
+    background-color: #840808;
+    color: #ccc;
+}
