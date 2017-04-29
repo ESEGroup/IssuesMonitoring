@@ -5,8 +5,8 @@ from .zona_conforto import ZonaConforto
 
 class Laboratorio:
     def __init__(self, nome, endereco, intervalo_parser,
-                 intervalo_arduino, zona_conforto_lab, id = None,
-                 equipamentos = [], membros = []):
+                 intervalo_arduino, zona_conforto_lab = None,
+                 id = None, equipamentos = [], membros = []):
         self.nome = nome
         self.endereco = endereco
         self.intervalo_parser = intervalo_parser
@@ -23,39 +23,21 @@ class Laboratorio:
         pass
 
     def cadastrar(self):
-        args = (zona_conforto_id,
-                nome,
-                endereco,
-                intervalo_parser,
-                intervalo_arduino)
-        db.execute("""
+        args = (self.zona_conforto_lab.id,
+                self.nome,
+                self.endereco,
+                self.intervalo_parser,
+                self.intervalo_arduino)
+        self.id = db.execute("""
             INSERT INTO Lab
             (zona_conforto_id, nome, endereco, intervalo_parser,
              intervalo_arduino)
-            VALUES (?, ?, ?, ?, ?);""", args)
+            VALUES (?, ?, ?, ?, ?);""", args,
+            return_id=True)
 
     def listar_todos():
         data = db.fetchall("SELECT nome, lab_id FROM Lab")
         return [Laboratorio(d[0], None, None, None, None, d[1]) for d in data]
-
-    def editar_zona_conforto(_id, zona_conforto_lab):
-        db.execute("""
-            UPDATE FROM Zona_de_Conforto_Lab as zc
-            SET temp_min = ?,
-                temp_max = ?,
-                umid_min = ?,
-                umid_max = ?,
-                lum_min = ?,
-                lum_max = ?
-            INNER JOIN Lab as l
-              ON l.zona_conforto_id = zc.zona_conforto_id
-            WHERE l.lab_id = ?;""",
-            (zona_conforto_lab.temp_min,
-             zona_conforto_lab.temp_max,
-             zona_conforto_lab.umid_max,
-             zona_conforto_lab.umid_min,
-             zona_conforto_lab.lum_max,
-             zona_conforto_lab.lum_max))
 
     def obter_informacoes():
         data = db.fetchall("""
@@ -94,20 +76,21 @@ class Laboratorio:
 
             usuarios_id.add(usuario_lab.user_id)
             equipamentos_id.add(equipamento.id)
-
         return sorted(_dict.values(), key=lambda d: d.id)
 
-    def editar_laboratorio(nome, endereco, intervalo_parser, intervalo_arduino):
+    def editar(self):
         db.execute("""
             UPDATE Lab
             SET nome = ?,
                 endereco = ?,
                 intervalo_parser = ?,
-                intervalo_arduino = ?;""",
-            (nome,
-            endereco,
-            intervalo_parser,
-            intervalo_arduino))
+                intervalo_arduino = ?
+            WHERE lab_id = ?;""",
+            (self.nome,
+             self.endereco,
+             self.intervalo_parser,
+             self.intervalo_arduino,
+             self.id))
 
     def reset_lista_presenca():
         data = db.fetchall("""
@@ -118,27 +101,27 @@ class Laboratorio:
             WHERE presente = 1;""")
 
         events = []
+        emails = []
+        now = int(datetime.now().timestamp())
         for d in data:
             events += [(now, d[0], d[2], "OUT")]
             emails += [d[1]]
 
         db.execute("""
             UPDATE Presenca
-            SET presenca = 0;""")
+            SET presente = 0;""")
 
-        now = int(datetime.now().timestamp())
         db.executemany("""
-            INSERT  INTO Log_Presenca
+            INSERT INTO Log_Presenca
             (data, user_id, lab_id, evento)
             VALUES (?, ?, ?, ?);""",
             events)
         return emails
 
-    def obter_intervalo_parser(lab_id):
+    def obter_intervalo_parser():
         return db.fetchone("""
             SELECT intervalo_parser
-            FROM Lab
-            WHERE lab_id = ?;""", (lab_id,))
+            FROM Lab;""")[0]
 
     def obter_intervalo_arduino(lab_id):
         return db.fetchone("""

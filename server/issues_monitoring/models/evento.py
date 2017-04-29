@@ -1,5 +1,5 @@
 class Evento:
-    def __init__(self, epoch, evento, user_id, lab_id):
+    def __init__(self, epoch, evento, user_id, lab_id = None):
         self.epoch = epoch
         self.evento = evento
         self.user_id = user_id

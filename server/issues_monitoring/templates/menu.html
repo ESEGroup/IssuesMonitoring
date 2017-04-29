@@ -20,6 +20,11 @@
             </div>
         </ul>
     </div>
+    {% if request.args.get("e", "") != "" %}
+    <div class="error_message">
+        <p>{{request.args.get("e")}}</p>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 </body>

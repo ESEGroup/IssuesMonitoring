@@ -35,7 +35,7 @@ ul > div.links_menu {
 
 ul > div.links_menu > li {
     font-family: "mono";
-    font-size: 3vmin;
+    font-size: 2.5vmin;
     display: inline;
     margin: 10px 20px;
     float: left;
@@ -129,4 +129,14 @@ input[type="submit"] {
 
 table {
     width: 100%;
+}
+
+.error_message {
+    width: 100%;
+    text-align: center;
+    padding: 0.5px;
+    font-size: 15pt;
+    margin: 0;
+    background-color: #840808;
+    color: #ccc;
 }

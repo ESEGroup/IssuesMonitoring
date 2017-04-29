@@ -45,6 +45,10 @@ def work():
             if not DEBUG:
                 mark_as_unread(ids)
             return
+        elif received_wait_for == -2:
+            log("Database error.")
+            if not DEBUG:
+                mark_as_unread(ids)
 
         debug("Received {} (minutes) from the server, "
               "to wait until next execution.".format(
