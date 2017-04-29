@@ -11,7 +11,8 @@ class UsuarioLab:
         self.data_aprovacao = data_aprovacao
 
     def registrar_presenca(eventos):
-        usuarios_presenca = tupla_eventos = []
+        usuarios_presenca = []
+        tupla_eventos = []
         for e in eventos:
             usuarios_presenca += [(e.evento == "IN", e.user_id)]
             tupla_eventos += [(e.epoch, e.user_id, e.lab_id, e.evento)]

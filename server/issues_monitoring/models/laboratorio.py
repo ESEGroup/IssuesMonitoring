@@ -100,7 +100,8 @@ class Laboratorio:
               ON p.user_id = u.user_id
             WHERE presente = 1;""")
 
-        events = emails = []
+        events = []
+        emails = []
         now = int(datetime.now().timestamp())
         for d in data:
             events += [(now, d[0], d[2], "OUT")]
@@ -117,11 +118,10 @@ class Laboratorio:
             events)
         return emails
 
-    def obter_intervalo_parser(lab_id):
+    def obter_intervalo_parser():
         return db.fetchone("""
             SELECT intervalo_parser
-            FROM Lab
-            WHERE lab_id = ?;""", (lab_id,))
+            FROM Lab;""")[0]
 
     def obter_intervalo_arduino(lab_id):
         return db.fetchone("""

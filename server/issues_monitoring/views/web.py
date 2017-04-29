@@ -94,7 +94,8 @@ def cadastro_post():
 def cadastro_lab():
     if not admin_autenticado():
         return redirect(url_for('login'))
-    return render_template('cadastro_lab.html')
+    return render_template('cadastro_lab.html',
+                           autenticado=autenticado())
 
 @app.route('/cadastro-lab', methods=["POST"])
 def cadastro_lab_post():
