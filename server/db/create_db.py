@@ -53,7 +53,8 @@ def work():
 
     cursor.execute("""
     CREATE TABLE Log_Equip(
-            data INT NOT NULL PRIMARY KEY,
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            data INT,
             equip_id INT NOT NULL REFERENCES Equip(equip_id),
             temp FLOAT NOT NULL);
     """)
@@ -63,7 +64,7 @@ def work():
             user_id CHAR(4) NOT NULL PRIMARY KEY,
             nome CHAR(30) NOT NULL,
             email CHAR(30) NOT NULL,
-            data_aprov TIMESTAMP);
+            data_aprov INT);
     """)
 
     cursor.execute("""
@@ -89,6 +90,7 @@ def work():
             senha CHAR(16) NOT NULL,
             email CHAR(30) NOT NULL,
             nome CHAR(30) NOT NULL,
+            data_aprov INT,
             admin BOOLEAN NOT NULL);
     """)
 

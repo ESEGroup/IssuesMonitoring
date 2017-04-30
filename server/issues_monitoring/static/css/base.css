@@ -82,7 +82,7 @@ button.center {
 .campos {
     text-align: center;
     /* Apenas para centralizar o form na página */
-    margin: 0 auto;
+    margin: 20px auto;
     width: 70%;
     /* Para ver as bordas do formulário */
     padding: 1em;

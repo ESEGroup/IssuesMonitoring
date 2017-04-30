@@ -5,10 +5,10 @@ class UsuarioLab:
                  laboratorio = None, lab_id = None):
         self.user_id = user_id
         self.nome = nome
-        self.lab_id = lab_id
-        self.laboratorio = laboratorio
         self.email = email
         self.data_aprovacao = data_aprovacao
+        self.lab_id = lab_id
+        self.laboratorio = laboratorio
 
     def registrar_presenca(eventos):
         usuarios_presenca = []
@@ -48,11 +48,11 @@ class UsuarioLab:
             (user_id, lab_id, presente)
             VALUES (?, ?, ?)""", (self.user_id, self.lab_id, False))
 
-    def remover(id_lab, user_id):
+    def remover(lab_id, user_id):
         db.execute("""
             DELETE FROM Presenca
             WHERE lab_id = ? AND
-                  user_id = ?;""", (id_lab, user_id))
+                  user_id = ?;""", (lab_id, user_id))
         count = db.fetchone("""
             SELECT COUNT(presenca_id)
             FROM Presenca

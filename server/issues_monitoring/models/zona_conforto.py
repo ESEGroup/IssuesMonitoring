@@ -41,8 +41,8 @@ class ZonaConforto:
                                        WHERE lab_id = ?);""",
             (self.temp_min,
              self.temp_max,
-             self.umidade_max,
              self.umidade_min,
-             self.lumin_max,
+             self.umidade_max,
+             self.lumin_min,
              self.lumin_max,
              self.lab_id))

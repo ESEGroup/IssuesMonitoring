@@ -14,6 +14,9 @@ class Config:
     debug = True
 
     issues_monitoring = URI("0.0.0.0", 8080)
+    email_host = URI("smtp.gmail.com", "587", protocol="")
+    email = "cos603.issuesmonitoring@gmail.com"
+    email_password = ""
 
     # Provide the same token the client is using (not empty)
     token_parser = ""
