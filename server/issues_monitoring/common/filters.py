@@ -8,6 +8,10 @@ def data(timestamp):
     timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
 
+@app.template_filter('len')
+def _len(l):
+    return len(l)
+
 @app.template_filter('bool')
 def _bool(b):
     return {True: "Sim", False: "Não"}.get(b, "-")

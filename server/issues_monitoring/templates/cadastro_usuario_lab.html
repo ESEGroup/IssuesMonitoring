@@ -19,7 +19,41 @@ Cadastro Usuario Laboratório
 
 <hr>
 
+{% if autenticado and usuarios|len > 0 %}
 <div class="campos cadastro">
+    <h3>Adicionar usuário existente a laboratório</h3>
+    <form method="POST" action="{{url_for('adicionar_usuario_lab')}}">
+        <div>
+            <p>Laboratório:</p>
+            <select name="id-lab">
+                {% if laboratorios %}
+                {% for lab in laboratorios %}
+                <option value="{{lab.id}}">{{lab.nome}}</option>
+                {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        <div>
+            <p>Usuário:</p>
+            <select name="id-user">
+                {% if usuarios %}
+                {% for u in usuarios %}
+                <option value="{{u}}">{{u}}</option>
+                {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        <div>
+            <input type="submit" value="Adicionar">
+        </div>
+    </form>
+</div>
+{% endif %}
+
+<div class="campos cadastro">
+    <h3>Cadastrar novo usuário</h3>
     <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
         <div>
             <p>Laboratório:</p>
@@ -46,6 +80,13 @@ Cadastro Usuario Laboratório
             <p>E-mail:</p>
             <input type="text" name="email" />
         </div>
+
+        {% if admin %}
+        <div>
+            <p>Aprovar:</p>
+            <input type="checkbox" name="aprovar">
+        </div>
+        {% endif %}
 
         <div>
             <input type="submit" value="Registrar">

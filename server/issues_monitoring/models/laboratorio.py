@@ -35,7 +35,7 @@ class Laboratorio:
             VALUES (?, ?, ?, ?, ?);""", args,
             return_id=True)
 
-    def listar_todos():
+    def obter_todos():
         data = db.fetchall("SELECT nome, lab_id FROM Lab")
         return [Laboratorio(d[0], None, None, None, None, d[1]) for d in data]
 
@@ -57,9 +57,12 @@ class Laboratorio:
               ON l.lab_id = e.lab_id;""")
 
         _dict = {}
-        equipamentos_id = {None}
-        usuarios_id = {None}
+        equipamentos_id = {}
+        usuarios_id = {}
         for d in data:
+            equipamentos_id.setdefault(d[0], {None})
+            usuarios_id.setdefault(d[0], {None})
+
             usuario_lab = UsuarioLab(*d[-4:])
             equipamento = Equipamento(*d[-9:-4])
             zona_conforto = ZonaConforto(*d[5:-9])
@@ -68,14 +71,14 @@ class Laboratorio:
                                                membros=[],
                                                equipamentos=[],
                                                id=d[0]))
-            if equipamento.id not in equipamentos_id:
+            if equipamento.id not in equipamentos_id[d[0]]:
                 _dict[d[0]].equipamentos += [equipamento]
 
-            if usuario_lab.user_id not in usuarios_id:
+            if usuario_lab.user_id not in usuarios_id[d[0]]:
                 _dict[d[0]].membros += [usuario_lab]
 
-            usuarios_id.add(usuario_lab.user_id)
-            equipamentos_id.add(equipamento.id)
+            usuarios_id[d[0]].add(usuario_lab.user_id)
+            equipamentos_id[d[0]].add(equipamento.id)
         return sorted(_dict.values(), key=lambda d: d.id)
 
     def editar(self):

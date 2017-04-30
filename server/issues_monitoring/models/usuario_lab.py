@@ -12,12 +12,19 @@ class UsuarioLab(Usuario):
         self.lab_id = lab_id
         self.laboratorio = laboratorio
 
+    def obter_user_ids():
+        data = db.fetchall("SELECT user_id from User_Lab;")
+        return [d[0] for d in data]
+
     def registrar_presenca(eventos):
         usuarios_presenca = []
         tupla_eventos = []
         for e in eventos:
             usuarios_presenca += [(e.evento == "IN", e.user_id)]
-            tupla_eventos += [(e.epoch, e.user_id, e.lab_id, e.evento)]
+            tupla_eventos += [(e.epoch,
+                               e.user_id,
+                               e.lab_id,
+                               e.evento)]
 
         db.executemany("""
             UPDATE Presenca
@@ -30,25 +37,41 @@ class UsuarioLab(Usuario):
             VALUES (?, ?, ?, ?);""",
             tupla_eventos)
 
+    def existe(user_id):
+        return db.fetchone("""
+            SELECT user_id
+            FROM User_lab
+            WHERE user_id = ?;""", (user_id,)) == user_id
+
+    def adicionar_ao_laboratorio(lab_id, user_id):
+        if db.fetchone("""
+                SELECT user_id
+                FROM Presenca
+                WHERE user_id = ?
+                      AND lab_id = ?;""",
+                (user_id, lab_id)) is not None:
+            return
+
+        db.execute("""
+            INSERT INTO Presenca
+            (lab_id, user_id, presente)
+            VALUES (?, ?, ?);""",
+            (lab_id,
+             user_id,
+             False))
+
     def cadastrar(self):
         values = (self.user_id,
                   self.nome,
                   self.email,
                   self.data_aprovacao)
-        user_id = db.fetchone("""
-            SELECT user_id
-            FROM User_lab
-            WHERE user_id = ?;""", (self.user_id,))
-        if user_id is None:
-            db.execute("""
-                INSERT INTO User_Lab
-                (user_id, nome, email, data_aprov)
-                VALUES (?, ?, ?, ?);""", values)
-
         db.execute("""
-            INSERT INTO Presenca
-            (user_id, lab_id, presente)
-            VALUES (?, ?, ?)""", (self.user_id, self.lab_id, False))
+            INSERT INTO User_Lab
+            (user_id, nome, email, data_aprov)
+            VALUES (?, ?, ?, ?);""", values)
+
+        UsuarioLab.adicionar_ao_laboratorio(self.lab_id,
+                                            self.user_id)
 
     def remover(lab_id, user_id):
         db.execute("""

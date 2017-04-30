@@ -42,8 +42,8 @@ def atualizar_informacoes_lab(lab_id, nome, endereco, intervalo_parser,
                               id=lab_id)
     laboratorio.editar()
 
-def listar_laboratorios():
-    return Laboratorio.listar_todos()
+def obter_laboratorios():
+    return Laboratorio.obter_todos()
 
 def cadastrar_equipamento(lab_id, temp_min, temp_max, MAC):
     equipamento = Equipamento(lab_id, temp_min, temp_max, MAC)

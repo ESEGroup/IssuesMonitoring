@@ -148,12 +148,25 @@ def editar_autorizacao_usuario():
 
 @app.route('/cadastro-usuario-lab')
 def cadastro_usuario_lab():
-    laboratorios = controllers.listar_laboratorios()
+    laboratorios = controllers.obter_laboratorios()
     if len(laboratorios) == 0:
         return redirect(url_for("cadastro_lab"))
+
+    usuarios = controllers.obter_usuarios_laboratorio()
     return render_template('cadastro_usuario_lab.html',
                            laboratorios=laboratorios,
+                           usuarios=usuarios,
+                           admin=admin_autenticado(),
                            autenticado=autenticado())
+
+@app.route('/adicionar-usuario-lab', methods=['POST'])
+def adicionar_usuario_lab():
+    lab_id = request.form.get('id-lab') or ''
+    user_id = request.form.get('id-user') or ''
+    if "" not in [lab_id, user_id]:
+        controllers.adicionar_usuario_lab(lab_id, user_id)
+        return redirect(url_for("gerenciar"))
+    return redirect(url_for("cadastro_usuario_lab"))
 
 @app.route('/cadastro-usuario-lab', methods=['POST'])
 def cadastro_usuario_lab_post():
@@ -162,17 +175,24 @@ def cadastro_usuario_lab_post():
     nome = request.form.get('nome') or ''
     email = request.form.get('email') or ''
 
-    aprovar = admin_autenticado() and request.form.get('aprovar') == 'on'
+    aprovar = (admin_autenticado()
+               and request.form.get('aprovar') == 'on')
     args = [lab_id, user_id, nome, email, aprovar]
 
+    success = False
     if "" not in args:
-        controllers.cadastrar_usuario_lab(*args)
+        success = controllers.cadastrar_usuario_lab(*args)
+
+    if not success:
+        kwargs = {"e": "Id de usuário já existe"}
+    else:
+        kwargs = {}
 
     if autenticado():
         url = 'gerenciar'
     else:
         url = 'cadastro_usuario_lab'
-    return redirect(url_for(url))
+    return redirect(url_for(url, **kwargs))
 
 @app.route('/remover-usuario-lab', methods=["POST"])
 def remover_usuario_lab():
