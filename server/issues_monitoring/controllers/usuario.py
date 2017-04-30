@@ -23,5 +23,9 @@ def remover_usuario_lab(id_lab, user_id):
     UsuarioLab.remover(id_lab, user_id)
 
 def cadastrar_usuario_sistema(login, senha, email, nome):
-    usuario = UsuarioSistema(login, senha, email, nome)
-    usuario.cadastrar()
+    if not UsuarioSistema.existe(login, email):
+        usuario = UsuarioSistema(login, senha, email, nome)
+        usuario.cadastrar()
+        return True
+    else:
+        return False

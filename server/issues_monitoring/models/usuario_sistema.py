@@ -1,11 +1,12 @@
 import bcrypt
-from . import db
+from . import db, Usuario
 
-class UsuarioSistema:
+class UsuarioSistema(Usuario):
     admin = False
 
     def __init__(self, login, senha, email, nome, hash = None,
-                 id = None):
+                 id = None, data_aprovacao = None):
+        super().__init__(nome, email, data_aprovacao)
         self.id = id
         self.login = login
         self.senha = hash or UsuarioSistema.__hash_senha(senha)
@@ -36,6 +37,14 @@ class UsuarioSistema:
                 return _id, _admin
 
         return None, False
+
+    def existe(login, email):
+        return db.fetchone("""
+            SELECT user_id
+            FROM User_Sys
+            WHERE login = ?
+                  OR email = ?;""",
+            (login, email)) is not None
 
     def __hash_senha(senha, _hash = None):
         if isinstance(senha, str):

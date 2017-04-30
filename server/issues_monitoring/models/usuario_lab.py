@@ -1,8 +1,10 @@
+from .usuario import Usuario
 from . import db
 
-class UsuarioLab:
+class UsuarioLab(Usuario):
     def __init__(self, user_id, nome, email, data_aprovacao = None,
                  laboratorio = None, lab_id = None):
+        super().__init__(nome, email, data_aprovacao)
         self.user_id = user_id
         self.nome = nome
         self.email = email

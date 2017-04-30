@@ -69,7 +69,7 @@ def login_post():
         kwargs = {}
     else:
         session.pop('id', None)
-        kwargs = {"e": "Usuário ou senha incorretos."}
+        kwargs = {"e": "Usuário ou senha incorretos"}
     return redirect(url_for('login', **kwargs))
 
 @app.route('/cadastro')
@@ -86,7 +86,14 @@ def cadastro_post():
     args = [login, senha, email, nome]
 
     if '' not in args:
-        controllers.cadastrar_usuario_sistema(login, senha, email, nome)
+        if not controllers.cadastrar_usuario_sistema(login,
+                                                     senha,
+                                                     email,
+                                                     nome):
+            kwargs = {"e": "Login ou e-mail já utilizados"}
+            return redirect(url_for("cadastro", **kwargs))
+
+
     return redirect(url_for('login'))
 
 @app.route('/cadastro-lab')
