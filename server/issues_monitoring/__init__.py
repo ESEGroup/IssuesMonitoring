@@ -8,6 +8,9 @@ from .controllers import reset_presencas_meia_noite
 if Config.token_parser == "":
     print("Please change the 'token_parser' at `config.py` (remember to update at the parser client too)")
     exit()
+elif Config.email_password == "":
+    print("Please change the 'email_password' at `config.py`")
+    exit()
 
 app = Flask(__name__)
 

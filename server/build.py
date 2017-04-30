@@ -57,12 +57,12 @@ cursor = conn.cursor()
 cursor.execute("""
     INSERT INTO User_Sys
     (login, senha, email, nome, admin, data_aprov)
-    VALUES (?, ?, ?, ?, ?);""", (usuario,
-                                 senha,
-                                 email,
-                                 nome,
-                                 True,
-                                 now))
+    VALUES (?, ?, ?, ?, ?, ?);""", (usuario,
+                                    senha,
+                                    email,
+                                    nome,
+                                    True,
+                                    now))
 conn.commit()
 conn.close()
 print("Administrador criado")
