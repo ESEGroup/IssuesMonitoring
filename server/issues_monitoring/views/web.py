@@ -9,9 +9,11 @@ def gerenciar():
         return redirect(url_for('login'))
 
     admin = admin_autenticado()
+    usuarios = controllers.obter_usuarios_sistema()
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('gerenciar.html',
                            admin=admin,
+                           usuarios=usuarios,
                            laboratorios=laboratorios)
 
 @app.route('/', methods=["POST"])
@@ -69,32 +71,8 @@ def login_post():
         kwargs = {}
     else:
         session.pop('id', None)
-        kwargs = {"e": "Usuário ou senha incorretos"}
+        kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado"}
     return redirect(url_for('login', **kwargs))
-
-@app.route('/cadastro')
-def cadastro():
-    return render_template('cadastro_usuario_sistema.html',
-                           autenticado=autenticado())
-
-@app.route('/cadastro', methods=['POST'])
-def cadastro_post():
-    login = request.form.get('login') or ''
-    senha = request.form.get('senha') or ''
-    email = request.form.get('email') or ''
-    nome = request.form.get('nome') or ''
-    args = [login, senha, email, nome]
-
-    if '' not in args:
-        if not controllers.cadastrar_usuario_sistema(login,
-                                                     senha,
-                                                     email,
-                                                     nome):
-            kwargs = {"e": "Login ou e-mail já utilizados"}
-            return redirect(url_for("cadastro", **kwargs))
-
-
-    return redirect(url_for('login'))
 
 @app.route('/cadastro-lab')
 def cadastro_lab():
@@ -123,6 +101,49 @@ def cadastro_lab_post():
             lumin_max]
     if "" not in args:
         controllers.cadastrar_laboratorio(*args)
+    return redirect(url_for('gerenciar'))
+
+@app.route('/cadastro')
+def cadastro():
+    return render_template('cadastro_usuario_sistema.html',
+                           autenticado=autenticado())
+
+@app.route('/cadastro', methods=['POST'])
+def cadastro_post():
+    login = request.form.get('login') or ''
+    senha = request.form.get('senha') or ''
+    email = request.form.get('email') or ''
+    nome = request.form.get('nome') or ''
+    args = [login, senha, email, nome]
+
+    if '' not in args:
+        if not controllers.cadastrar_usuario_sistema(login,
+                                                     senha,
+                                                     email,
+                                                     nome):
+            kwargs = {"e": "Login ou e-mail já utilizados"}
+            return redirect(url_for("cadastro", **kwargs))
+
+    return redirect(url_for('login'))
+
+@app.route('/editar-status-administrador', methods=["POST"])
+def editar_status_administrador():
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    user_id = request.form.get('id-user')
+    administrador = request.form.get('admin') == "1"
+    controllers.editar_status_administrador(user_id, administrador)
+    return redirect(url_for('gerenciar'))
+
+@app.route('/editar-autorizacao-usuario', methods=["POST"])
+def editar_autorizacao_usuario():
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    user_id = request.form.get('id-user')
+    aprovar = request.form.get('data') == "None"
+    controllers.editar_autorizacao_usuario(user_id, aprovar)
     return redirect(url_for('gerenciar'))
 
 @app.route('/cadastro-usuario-lab')

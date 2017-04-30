@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
 from ..common.mail import send_email
 from ..models import Laboratorio, Evento, UsuarioLab
@@ -32,11 +32,10 @@ Caso ainda se encontre no laboratório, pedimos que renove seu registro de prese
 def reset_presencas_meia_noite():
     while True:
         hoje = datetime.today()
-        proxima_execucao = hoje.replace(day=hoje.day+1,
-                                        hour=0,
-                                        minute=0,
-                                        second=0,
-                                        microsecond=0)
+        proxima_execucao = datetime(
+            day   = hoje.day,
+            month = hoje.month,
+            year  = hoje.year) + timedelta(days=1)
         delta_t = proxima_execucao - hoje
         segundos_ate = delta_t.seconds + 1
         sleep(segundos_ate)

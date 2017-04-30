@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 from getpass import getpass
 from os import getcwd
 from os.path import join, isfile
@@ -16,9 +17,10 @@ Popen([".env/bin/pip",
        "-r",
        "requirements.txt"]).wait()
 
-Popen(["cp",
-       "config.py.example",
-       "config.py"]).wait()
+if not isfile("config.py"):
+    Popen(["cp",
+           "config.py.example",
+           "config.py"]).wait()
 
 __file__ = join(".env", "bin", "activate_this.py")
 with open(join(".env", "bin", "activate_this.py"), "r") as f:
@@ -46,18 +48,21 @@ nome = input()
 senha = bytes(senha, 'utf-8')
 senha = bcrypt.hashpw(senha, bcrypt.gensalt()).decode('utf-8')
 
+now = int(datetime.now().timestamp())
+
 conn = sqlite3.connect(join(getcwd(),
                             "db",
                             "Issues.db"))
 cursor = conn.cursor()
 cursor.execute("""
     INSERT INTO User_Sys
-    (login, senha, email, nome, admin)
+    (login, senha, email, nome, admin, data_aprov)
     VALUES (?, ?, ?, ?, ?);""", (usuario,
                                  senha,
                                  email,
                                  nome,
-                                 True))
+                                 True,
+                                 now))
 conn.commit()
 conn.close()
 print("Administrador criado")

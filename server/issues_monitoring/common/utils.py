@@ -1,15 +1,8 @@
-from datetime import datetime
 from flask import session
 from random import choice
 from string import ascii_letters, digits
-from .. import app, Config
-
-@app.template_filter('data')
-def data(timestamp):
-    if timestamp is None:
-        return "-"
-    timestamp = float(timestamp)
-    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
+from .filters import *
+from .. import Config
 
 def autenticado():
     tem_user_id = session.get('id') is not None

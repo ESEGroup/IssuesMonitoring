@@ -1,17 +1,28 @@
 import bcrypt
-from . import db, Usuario
+from .usuario import Usuario
+from . import db
 
 class UsuarioSistema(Usuario):
     admin = False
 
-    def __init__(self, login, senha, email, nome, hash = None,
-                 id = None, data_aprovacao = None):
+    def __init__(self, login, senha, email, nome, id = None,
+                 data_aprovacao = None, hash = None):
         super().__init__(nome, email, data_aprovacao)
         self.id = id
         self.login = login
         self.senha = hash or UsuarioSistema.__hash_senha(senha)
         self.email = email
         self.nome = nome
+
+    def obter_informacoes():
+        data = db.fetchall("""
+            SELECT admin, login, senha, email, nome, user_id, data_aprov
+            FROM User_Sys;""")
+        usuarios = []
+        for d in data:
+            usuarios += [UsuarioSistema(*d[1:])]
+            usuarios[-1].admin = bool(int(d[0]))
+        return usuarios
 
     def cadastrar(self):
         values = (self.login,
@@ -28,7 +39,8 @@ class UsuarioSistema(Usuario):
         args = db.fetchone("""
             SELECT user_id, senha, admin
             FROM User_Sys
-            WHERE login = ?;""", (login,)) 
+            WHERE login = ?
+                  AND data_aprov IS NOT NULL;""", (login,))
 
         if args is not None and len(args) == 3:
             (_id, _hash, _admin) = args

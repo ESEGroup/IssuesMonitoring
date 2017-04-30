@@ -15,6 +15,46 @@ Gerenciar
 
 <hr>
 
+<div class="campos">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Login</th>
+                <th>E-mail</th>
+                <th>Admin</th>
+                <th>Aprovado</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios %}
+            <tr>
+                <td>{{usuario.nome}}</td>
+                <td>{{usuario.login}}</td>
+                <td>{{usuario.email}}</td>
+                {% if admin %}
+                <form method="POST" action="{{url_for('editar_status_administrador')}}">
+                    <input type="hidden" name="id-user" value="{{usuario.id}}">
+                    <input type="hidden" name="admin" value="{{(not usuario.admin)|int}}">
+                    <td><input type="submit" value="{% if usuario.admin %}[-]{% else %}[+]{% endif %}"></td>
+                </form>
+                <form method="POST" action="{{url_for('editar_autorizacao_usuario')}}">
+                    <input type="hidden" name="id-user" value="{{usuario.id}}">
+                    <input type="hidden" name="data" value="{{usuario.data_aprovacao}}">
+                    <td><input type="submit" value="{% if (usuario.data_aprovacao|data) != '-' %}[-]{% else %}[+]{% endif %}"></td>
+                </form>
+                {% else %}
+                <td>{{usuario.admin|bool}}</td>
+                <td>{{usuario.data_aprovacao|data}}</td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
 {% if laboratorios %}
 {% for lab in laboratorios %}
 <div class="campos">

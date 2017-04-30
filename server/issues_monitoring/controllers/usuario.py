@@ -4,6 +4,22 @@ from ..models import UsuarioSistema, UsuarioLab, AdministradorSistema
 def autenticar(usuario, senha):
     return UsuarioSistema.autenticar(usuario, senha)
 
+def obter_usuarios_sistema():
+    return UsuarioSistema.obter_informacoes()
+
+def editar_status_administrador(user_id, admin):
+    AdministradorSistema.editar_status_administrador(user_id, admin)
+
+def editar_autorizacao_usuario(user_id, autorizar):
+    AdministradorSistema.editar_autorizacao_usuario(user_id, autorizar)
+
+def cadastrar_usuario_sistema(login, senha, email, nome):
+    if not UsuarioSistema.existe(login, email):
+        usuario = UsuarioSistema(login, senha, email, nome)
+        usuario.cadastrar()
+        return True
+    else:
+        return False
 def autorizar_usuario_lab(lab_id, user_id):
     AdministradorSistema.autorizar_usuario_lab(lab_id, user_id)
 
@@ -21,11 +37,3 @@ def cadastrar_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
 
 def remover_usuario_lab(id_lab, user_id):
     UsuarioLab.remover(id_lab, user_id)
-
-def cadastrar_usuario_sistema(login, senha, email, nome):
-    if not UsuarioSistema.existe(login, email):
-        usuario = UsuarioSistema(login, senha, email, nome)
-        usuario.cadastrar()
-        return True
-    else:
-        return False
