@@ -45,7 +45,7 @@ def gerenciar_post():
 def logout():
     session.clear()
     return redirect(url_for('login'))
- 
+
 @app.route('/login')
 def login():
     if autenticado():
@@ -244,4 +244,4 @@ def remover_equipamento():
 
 @app.route('/robots.txt')
 def robots_txt():
-    return "User-Agent: *\nDisallow: /"
+    return """User-Agent: *<br>\nDisallow: /"""
