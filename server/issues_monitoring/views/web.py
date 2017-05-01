@@ -9,11 +9,13 @@ def gerenciar():
         return redirect(url_for('login'))
 
     admin = admin_autenticado()
-    usuarios = controllers.obter_usuarios_sistema()
+    usuarios_sistema = controllers.obter_usuarios_sistema()
+    usuarios_lab = controllers.obter_usuarios_laboratorio()
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('gerenciar.html',
                            admin=admin,
-                           usuarios=usuarios,
+                           usuarios_sistema=usuarios_sistema,
+                           usuarios_lab=usuarios_lab,
                            laboratorios=laboratorios)
 
 @app.route('/', methods=["POST"])
@@ -100,7 +102,7 @@ def cadastro_lab_post():
             temp_min, temp_max, umid_min, umid_max, lumin_min,
             lumin_max]
     if "" not in args:
-        controllers.cadastrar_laboratorio(*args)
+        controllers.cadastro_laboratorio(*args)
     return redirect(url_for('gerenciar'))
 
 @app.route('/cadastro')
@@ -117,7 +119,7 @@ def cadastro_post():
     args = [login, senha, email, nome]
 
     if '' not in args:
-        if not controllers.cadastrar_usuario_sistema(login,
+        if not controllers.cadastro_usuario_sistema(login,
                                                      senha,
                                                      email,
                                                      nome):
@@ -181,7 +183,7 @@ def cadastro_usuario_lab_post():
 
     success = False
     if "" not in args:
-        success = controllers.cadastrar_usuario_lab(*args)
+        success = controllers.cadastro_usuario_lab(*args)
 
     if not success:
         kwargs = {"e": "Id de usuário já existe"}
@@ -217,8 +219,8 @@ def autorizar_usuario_lab():
     controllers.autorizar_usuario_lab(lab_id, user_id)
     return redirect(url_for('gerenciar'))
 
-@app.route('/cadastrar-equipamento', methods=["POST"])
-def cadastrar_equipamento():
+@app.route('/cadastro-equipamento', methods=["POST"])
+def cadastro_equipamento():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
 
@@ -228,7 +230,7 @@ def cadastrar_equipamento():
     MAC = request.form.get('endereco-mac')
     args = [lab_id, temp_min, temp_max, MAC]
     if "" not in args:
-        controllers.cadastrar_equipamento(*args)
+        controllers.cadastro_equipamento(*args)
 
     return redirect(url_for('gerenciar'))
 
