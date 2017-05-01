@@ -1,4 +1,4 @@
-# How to deploy the server
+# Build environment
 
 ## Clone the repository
 
@@ -22,9 +22,13 @@ Ubuntu:
 
 ## Configure server
 
-Necessary changes:
+Edit **config.py**
+
+Necessary changes (empty is not accepted):
 
 - 'token_parser' (also change at parser client)
+
+- 'email_password'
 
 In production:
 
@@ -32,6 +36,7 @@ In production:
 
 - 'issues_monitoring' port from 8080 to 80 
 
+# Run server
 
 ## Join the virtualenv
 
