@@ -5,7 +5,7 @@
     <title>{% block title %}{% endblock %}</title>
 
     <!-- CSS Include -->
-    <link rel="stylesheet" type="text/css" href="/static/css/base.css" /> 
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css" />
     {% block header %}
     {% endblock %}
 </head>
@@ -23,6 +23,11 @@
     {% if request.args.get("e", "") != "" %}
     <div class="error_message">
         <p>{{request.args.get("e")}}</p>
+    </div>
+    {% endif %}
+    {% if request.args.get("c", "") != "" %}
+    <div class="confirm_message">
+        <p>{{request.args.get("c")}}</p>
     </div>
     {% endif %}
     {% block content %}
