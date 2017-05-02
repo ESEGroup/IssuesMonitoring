@@ -108,7 +108,7 @@ form > div > input, form > div > select {
 
 hr {
   border: 0;
-  width: 50%;               
+  width: 50%;
   background-color:#cbd0d8;
   height: 1px;
 }
@@ -145,4 +145,14 @@ table {
     margin: 0;
     background-color: #840808;
     color: #ccc;
+}
+
+.confirm_message {
+    width: 100%;
+    text-align: center;
+    padding: 0.5px;
+    font-size: 15pt;
+    margin: 0;
+    background-color: lightgreen;
+    color: black;
 }
