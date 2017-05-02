@@ -122,9 +122,11 @@ class Laboratorio:
         return emails
 
     def obter_intervalo_parser():
-        return db.fetchone("""
+        data = db.fetchone("""
             SELECT intervalo_parser
-            FROM Lab;""")[0]
+            FROM Lab;""")
+        if data is not None:
+            return data[0]
 
     def obter_intervalo_arduino(lab_id):
         return db.fetchone("""

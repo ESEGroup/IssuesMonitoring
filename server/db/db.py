@@ -37,7 +37,7 @@ class DB:
                                   return_id,
                                   fetch)
                 _tries = 0
-            except sqlite3.Error:
+            except sqlite3.OperationalError:
                 _tries -= 1
                 if _tries == 0:
                     raise

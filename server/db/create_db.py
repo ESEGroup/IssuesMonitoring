@@ -26,17 +26,17 @@ def work():
     CREATE TABLE Lab(
             lab_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             zona_conforto_id INTEGER NOT NULL REFERENCES Zona_de_Conforto_Lab(zona_conforto_id),
-            nome CHAR(20) NOT NULL,
-            endereco CHAR(30) NOT NULL,
-            intervalo_parser INT NOT NULL,
-            intervalo_arduino INT NOT NULL);
+            nome CHAR(255) NOT NULL,
+            endereco CHAR(255) NOT NULL,
+            intervalo_parser INTEGER NOT NULL,
+            intervalo_arduino INTEGER NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE Log_Lab(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            data INT NOT NULL,
-            lab_id INT REFERENCES Lab(lab_id),
+            data INTEGER NOT NULL,
+            lab_id INTEGER REFERENCES Lab(lab_id),
             temp FLOAT NOT NULL,
             umid FLOAT NOT NULL,
             lum FLOAT NOT NULL);
@@ -45,52 +45,53 @@ def work():
     cursor.execute("""
     CREATE TABLE Equip(
             equip_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            lab_id INT NOT NULL REFERENCES Lab(lab_id),
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             temp_min FLOAT NOT NULL,
             temp_max FLOAT NOT NULL,
-            end_mac CHAR(29) NOT NULL);
+            end_mac CHAR(17) NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE Log_Equip(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            data INT,
-            equip_id INT NOT NULL REFERENCES Equip(equip_id),
+            data INTEGER NOT NULL,
+            equip_id INTEGER NOT NULL REFERENCES Equip(equip_id),
             temp FLOAT NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE User_Lab(
             user_id CHAR(4) NOT NULL PRIMARY KEY,
-            nome CHAR(30) NOT NULL,
-            email CHAR(30) NOT NULL,
-            data_aprov INT);
+            nome CHAR(255) NOT NULL,
+            email CHAR(255) NOT NULL,
+            data_aprov INTEGER);
     """)
 
     cursor.execute("""
     CREATE TABLE Presenca(
             presenca_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             user_id CHAR(4) NOT NULL REFERENCES User_Labs(user_id),
-            lab_id INT NOT NULL REFERENCES Lab(lab_id),
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             presente BOOLEAN NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE Log_Presenca(
-            data INT NOT NULL PRIMARY KEY,
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            data INTEGER NOT NULL,
             user_id CHAR(4) NOT NULL REFERENCES User_Labs(user_id),
-            lab_id INT REFERENCES Lab(lab_id),
+            lab_id INTEGER REFERENCES Lab(lab_id),
             evento CHAR(3) NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE User_Sys(
             user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            login CHAR(10) NOT NULL,
-            senha CHAR(16) NOT NULL,
-            email CHAR(30) NOT NULL,
-            nome CHAR(30) NOT NULL,
-            data_aprov INT,
+            login CHAR(255) NOT NULL,
+            senha CHAR(60) NOT NULL,
+            email CHAR(255) NOT NULL,
+            nome CHAR(255) NOT NULL,
+            data_aprov INTEGER,
             admin BOOLEAN NOT NULL);
     """)
 

@@ -3,7 +3,7 @@ from .. import app
 
 @app.template_filter('data')
 def data(timestamp):
-    if timestamp is None:
+    if timestamp in [None, ""]:
         return "-"
     timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
