@@ -2,41 +2,34 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title> Issues Monitoring - Registro </title>
-
-    <!-- Bootstrap CDN CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-
-    <!-- Bootstrap CDN JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock %}</title>
 
     <!-- CSS Include -->
-    <link rel="stylesheet" type="text/css" href="/static/css/base.css" /> 
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css" />
     {% block header %}
     {% endblock %}
 </head>
 
-<body text="#000000" link="#0000FF" vlink="#0000FF">
-    <div class="navbar navbar-inverse navbar-static-top">
-        <div class="container">
-            <a href="#" class="navbar-left"><img id="icon-link" src="/static/img/ese.png"></a>
-            <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="collapse navbar-collapse navHeaderCollapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Configurações</a></li>
-                </ul>
+<body>
+    <div class="menu">
+        <ul>
+            <li class="logo"><a href="/"><img src="/static/img/ese.png"></a></li>
+            <div class="links_menu">
+            {% block menu %}
+            {% endblock %}
             </div>
-        </div>
+        </ul>
     </div>
+    {% if request.args.get("e", "") != "" %}
+    <div class="error_message">
+        <p>{{request.args.get("e")}}</p>
+    </div>
+    {% endif %}
+    {% if request.args.get("c", "") != "" %}
+    <div class="confirm_message">
+        <p>{{request.args.get("c")}}</p>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 </body>

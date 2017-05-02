@@ -20,4 +20,4 @@ MAX_WAITING_PERIOD   = 60
 
 MAIL_FROM            = "noreply@denox.com.br"
 
-API_ENDPOINT         = "http://localhost/parser"
+API_ENDPOINT         = "http://localhost:8080/parser"

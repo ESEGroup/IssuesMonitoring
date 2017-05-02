@@ -1,5 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
+from ..common.mail import send_email
 from ..models import Laboratorio, Evento, UsuarioLab
 
 def obter_intervalo_parser():
@@ -14,19 +15,27 @@ def registrar_presenca(dict_eventos):
                                e['user_id'])]
         except KeyError:
             pass
-    return UsuarioLab.registrar_presenca(eventos)
+    UsuarioLab.registrar_presenca(eventos)
 
 def enviar_email_presenca_zerada(emails):
-    pass
+    msg_content = """
+Caro usuário,
+Você está recebendo essa mensagem pois se encontra marcado como 'presente' no laboratório.
+Informamos que às 00:00h de hoje, todos os logs de presença foram reiniciados.
+Caso ainda se encontre no laboratório, pedimos que renove seu registro de presença.
+\n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
+
+    send_mail("Alerta de Reset de presenças",
+              msg_content,
+              emails)
 
 def reset_presencas_meia_noite():
     while True:
         hoje = datetime.today()
-        proxima_execucao = hoje.replace(day=hoje.day+1,
-                                        hour=0,
-                                        minute=0,
-                                        second=0,
-                                        microsecond=0)
+        proxima_execucao = datetime(
+            day   = hoje.day,
+            month = hoje.month,
+            year  = hoje.year) + timedelta(days=1)
         delta_t = proxima_execucao - hoje
         segundos_ate = delta_t.seconds + 1
         sleep(segundos_ate)

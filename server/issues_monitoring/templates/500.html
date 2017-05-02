@@ -1,0 +1,19 @@
+{% extends 'menu.html' %}
+{% block title %}
+Erro do servidor (500)
+{% endblock %}
+
+{% block menu %}
+    {% if autenticado %}
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+    {% else %}
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    {% endif %}
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Erro 500</h2>
+{% endblock %}
