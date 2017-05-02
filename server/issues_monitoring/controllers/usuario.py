@@ -23,9 +23,9 @@ Você está recebendo essa mensagem pois um novo usuário foi cadastrado no banc
 Para continuar o processo de cadastro do novo usuário, por favor entre no site do sistema com seu nome de usuário e senha e aprove o cadastro.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
-    send_mail("Alerta de cadastro de novo usuário",
-              msg_content,
-              emails)
+    send_email("Alerta de cadastro de novo usuário",
+               msg_content,
+               emails)
 
 def cadastro_usuario_sistema(login, senha, email, nome):
     if not UsuarioSistema.existe(login, email):
