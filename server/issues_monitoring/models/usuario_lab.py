@@ -12,9 +12,10 @@ class UsuarioLab(Usuario):
         self.lab_id = lab_id
         self.laboratorio = laboratorio
 
-    def obter_user_ids():
-        data = db.fetchall("SELECT user_id from User_Lab;")
-        return [d[0] for d in data]
+    def obter_todos():
+        data = db.fetchall("""SELECT user_id, nome, email, data_aprov
+                            FROM User_Lab;""")
+        return [UsuarioLab(*d) for d in data]
 
     def registrar_presenca(eventos):
         usuarios_presenca = []
@@ -41,7 +42,7 @@ class UsuarioLab(Usuario):
         return db.fetchone("""
             SELECT user_id
             FROM User_lab
-            WHERE user_id = ?;""", (user_id,)) == user_id
+            WHERE user_id = ?;""", (user_id,)) is not None
 
     def adicionar_ao_laboratorio(lab_id, user_id):
         if db.fetchone("""

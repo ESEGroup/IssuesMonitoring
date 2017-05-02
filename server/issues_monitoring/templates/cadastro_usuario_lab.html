@@ -19,29 +19,25 @@ Cadastro Usuario Laboratório
 
 <hr>
 
-{% if autenticado and usuarios|len > 0 %}
+{% if autenticado and laboratorios|len > 0 and usuarios|len > 0 %}
 <div class="campos cadastro">
     <h3>Adicionar usuário existente a laboratório</h3>
     <form method="POST" action="{{url_for('adicionar_usuario_lab')}}">
         <div>
             <p>Laboratório:</p>
             <select name="id-lab">
-                {% if laboratorios %}
                 {% for lab in laboratorios %}
                 <option value="{{lab.id}}">{{lab.nome}}</option>
                 {% endfor %}
-                {% endif %}
             </select>
         </div>
 
         <div>
             <p>Usuário:</p>
             <select name="id-user">
-                {% if usuarios %}
                 {% for u in usuarios %}
-                <option value="{{u}}">{{u}}</option>
+                <option value="{{u.user_id}}">{{u.nome}}</option>
                 {% endfor %}
-                {% endif %}
             </select>
         </div>
 

@@ -27,7 +27,7 @@ Gerenciar
             </tr>
         </thead>
         <tbody>
-        {% for usuario in usuarios %}
+        {% for usuario in usuarios_sistema %}
             <tr>
                 <td>{{usuario.nome}}</td>
                 <td>{{usuario.login}}</td>
@@ -47,7 +47,6 @@ Gerenciar
                 <td>{{usuario.admin|bool}}</td>
                 <td>{{usuario.data_aprovacao|data}}</td>
                 {% endif %}
-
             </tr>
         {% endfor %}
         </tbody>
@@ -55,7 +54,7 @@ Gerenciar
 </div>
 
 
-{% if laboratorios %}
+{% if laboratorios|len > 0 %}
 {% for lab in laboratorios %}
 <div class="campos">
     <form method="POST" action="{{url_for('gerenciar')}}">
@@ -117,7 +116,7 @@ Gerenciar
         {% endif %}
     </form>
 
-    {% if lab.membros or admin%}
+    {% if lab.membros|len > 0 or admin %}
     <div>
         <h3>Lista de membros:</h3>
         <table>
@@ -133,7 +132,6 @@ Gerenciar
                 </tr>
             </thead>
             <tbody>
-            {% if lab.membros %}
             {% for m in lab.membros %}
                 <tr>
                     <td>{{m.user_id}}</td>
@@ -157,25 +155,43 @@ Gerenciar
                     {% endif %}
                 </tr>
             {% endfor %}
-            {% endif %}
             {% if admin %}
-            <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
-                <tr>
-                    <input type="hidden" value="{{lab.id}}" name="id-lab">
-                    <td><input type="text" name="id-user"></td>
-                    <td><input type="text" name="nome"></td>
-                    <td><input type="text" name="email"></td>
-                    <td>Aprovar: <input type="checkbox" name="aprovar"></td>
-                    <td><input type="submit" value="Adicionar"></td>
-                </tr>
-            </form>
+                {% set user_ids = lab.membros|user_ids %}
+                {% if usuarios_lab|len > 0 and usuarios_lab|len != user_ids|len %}
+                <form method="POST" action="{{url_for('adicionar_usuario_lab')}}">
+                    <tr>
+                        <input type="hidden" value="{{lab.id}}" name="id-lab">
+                        <td>-</td>
+                        <td><select name="id-user">
+                            {% for u in usuarios_lab %}
+                                {% if u.user_id not in user_ids %}
+                                <option value="{{u.user_id}}">{{u.nome}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td><input type="submit" value="Adicionar"></td>
+                    </tr>
+                </form>
+                {% endif %}
+                <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
+                    <tr>
+                        <input type="hidden" value="{{lab.id}}" name="id-lab">
+                        <td><input type="text" name="id-user"></td>
+                        <td><input type="text" name="nome"></td>
+                        <td><input type="text" name="email"></td>
+                        <td>Aprovar: <input type="checkbox" name="aprovar"></td>
+                        <td><input type="submit" value="Cadastrar"></td>
+                    </tr>
+                </form>
             {% endif %}
             </tbody>
         </table>
     </div>
     {% endif %}
 
-    {% if lab.equipamentos or admin %}
+    {% if lab.equipamentos|len > 0 or admin %}
     <div>
         <h3>Lista de equipamentos:</h3>
         <table>
@@ -190,7 +206,6 @@ Gerenciar
                     </tr>
                 </thead>
                 <tbody>
-                    {% if lab.equipamentos %}
                     {% for e in lab.equipamentos %}
                     <tr>
                         <td>{{e.MAC}}</td>
@@ -204,15 +219,14 @@ Gerenciar
                         {% endif %}
                     </tr>
                     {% endfor %}
-                    {% endif %}
                     {% if admin %}
-                    <form method="POST" action="{{url_for('cadastrar_equipamento')}}">
+                    <form method="POST" action="{{url_for('cadastro_equipamento')}}">
                         <tr>
                             <input type="hidden" name="id-lab" value="{{lab.id}}">
                             <td><input type="text" name="endereco-mac"></td>
                             <td><input type="text" name="temp-min"></td>
                             <td><input type="text" name="temp-max"></td>
-                            <td><input type="submit" value="Adicionar"></td>
+                            <td><input type="submit" value="Cadastrar"></td>
                         </tr>
                     </form>
                     {% endif %}

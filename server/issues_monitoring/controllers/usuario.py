@@ -13,7 +13,7 @@ def editar_status_administrador(user_id, admin):
 def editar_autorizacao_usuario(user_id, autorizar):
     AdministradorSistema.editar_autorizacao_usuario(user_id, autorizar)
 
-def cadastrar_usuario_sistema(login, senha, email, nome):
+def cadastro_usuario_sistema(login, senha, email, nome):
     if not UsuarioSistema.existe(login, email):
         usuario = UsuarioSistema(login, senha, email, nome)
         usuario.cadastrar()
@@ -28,9 +28,9 @@ def autorizar_usuario_lab(lab_id, user_id):
     AdministradorSistema.autorizar_usuario_lab(lab_id, user_id)
 
 def obter_usuarios_laboratorio():
-    return UsuarioLab.obter_user_ids()
+    return UsuarioLab.obter_todos()
 
-def cadastrar_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
+def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
     if not UsuarioLab.existe(user_id):
         data_aprovacao = None
         if aprovar:

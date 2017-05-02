@@ -8,6 +8,10 @@ def data(timestamp):
     timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
 
+@app.template_filter('user_ids')
+def user_ids(usuarios):
+    return [u.user_id for u in usuarios]
+
 @app.template_filter('len')
 def _len(l):
     return len(l)

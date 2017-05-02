@@ -1,7 +1,7 @@
 from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
                       ZonaConforto)
 
-def cadastrar_laboratorio(nome, endereco, intervalo_parser,
+def cadastro_laboratorio(nome, endereco, intervalo_parser,
                           intervalo_arduino, temp_min, temp_max,
                           umid_min, umid_max, lumin_min,
                           lumin_max):
@@ -45,7 +45,7 @@ def atualizar_informacoes_lab(lab_id, nome, endereco, intervalo_parser,
 def obter_laboratorios():
     return Laboratorio.obter_todos()
 
-def cadastrar_equipamento(lab_id, temp_min, temp_max, MAC):
+def cadastro_equipamento(lab_id, temp_min, temp_max, MAC):
     equipamento = Equipamento(lab_id, temp_min, temp_max, MAC)
     equipamento.cadastrar()
 
