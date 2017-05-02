@@ -159,7 +159,8 @@ def editar_autorizacao_usuario():
 def cadastro_usuario_lab():
     laboratorios = controllers.obter_laboratorios()
     if len(laboratorios) == 0:
-        return redirect(url_for("cadastro_lab"))
+        kwargs = {"e" : "Primeiro, cadastre um laboratório"}
+        return redirect(url_for("cadastro_lab", **kwargs))
 
     usuarios = controllers.obter_usuarios_laboratorio()
     return render_template('cadastro_usuario_lab.html',
@@ -195,7 +196,7 @@ def cadastro_usuario_lab_post():
     if not success:
         kwargs = {"e": "Id de usuário já existe"}
     else:
-        kwargs = {}
+        kwargs = {"c" : "Usuário cadastrado com sucesso!"}
 
     if autenticado():
         url = 'gerenciar'
@@ -214,7 +215,8 @@ def remover_usuario_lab():
     if "" not in args:
         controllers.remover_usuario_lab(*args)
 
-    return redirect(url_for('gerenciar'))
+    kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/autorizar-usuario-lab', methods=["POST"])
 def autorizar_usuario_lab():
@@ -224,7 +226,8 @@ def autorizar_usuario_lab():
     lab_id = request.form.get('id-lab')
     user_id = request.form.get('id-user')
     controllers.autorizar_usuario_lab(lab_id, user_id)
-    return redirect(url_for('gerenciar'))
+    kwargs = {"c" : "Usuário autorizado com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/cadastro-equipamento', methods=["POST"])
 def cadastro_equipamento():
@@ -239,7 +242,8 @@ def cadastro_equipamento():
     if "" not in args:
         controllers.cadastro_equipamento(*args)
 
-    return redirect(url_for('gerenciar'))
+    kwargs = {"c" : "Equipamento cadastrado com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/remover-equipamento', methods=["POST"])
 def remover_equipamento():
@@ -249,7 +253,9 @@ def remover_equipamento():
     _id = request.form.get('id-equipamento')
     if _id != "":
         controllers.remover_equipamento(_id)
-    return redirect(url_for('gerenciar'))
+
+    kwargs = {"c" : "Equipamento removido com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/robots.txt')
 def robots_txt():
