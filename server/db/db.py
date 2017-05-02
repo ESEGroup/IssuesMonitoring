@@ -6,6 +6,7 @@ class DB:
 
     def connect(self):
         conn = sqlite3.connect(self.name)
+        conn.row_factory = sqlite3.Row
         return conn
 
     def __execute(self, function, query, arguments, return_id, fetch):

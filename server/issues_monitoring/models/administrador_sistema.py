@@ -12,7 +12,8 @@ class AdministradorSistema(UsuarioSistema):
             WHERE admin = 1;""")
         admins = []
         for d in data:
-            admins += [AdministradorSistema(*d[1:])]
+            # admins += [AdministradorSistema(*d[1:])
+            admins += [d]
         return admins
 
     def autorizar_usuario_lab(lab_id, user_id):

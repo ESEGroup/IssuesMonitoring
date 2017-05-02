@@ -130,7 +130,7 @@ def cadastro_post():
                                                      nome):
             kwargs = {"e": "Login ou e-mail já utilizados"}
             return redirect(url_for("cadastro", **kwargs))
-    kwargs = {"c": "Usuário cadastrado com sucesso!"}
+    kwargs = {"c": "Usuário enviado para aprovação!"}
     return redirect(url_for('login', **kwargs))
 
 @app.route('/editar-status-administrador', methods=["POST"])
