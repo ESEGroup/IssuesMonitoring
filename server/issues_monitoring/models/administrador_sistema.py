@@ -5,6 +5,16 @@ from . import db
 class AdministradorSistema(UsuarioSistema):
     admin = True
 
+    def obter_administradores():
+        data = db.fetchall("""
+            SELECT login, senha, email, nome, user_id, data_aprov
+            FROM User_Sys
+            WHERE admin = 1;""")
+        admins = []
+        for d in data:
+            admins += [AdministradorSistema(*d[1:])]
+        return admins
+
     def autorizar_usuario_lab(lab_id, user_id):
         data_aprovacao = int(datetime.now().timestamp())
         db.execute("""
