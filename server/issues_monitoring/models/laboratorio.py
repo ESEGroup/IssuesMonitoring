@@ -127,6 +127,7 @@ class Laboratorio:
             FROM Lab;""")
         if data is not None:
             return data[0]
+        return "2"
 
     def obter_intervalo_arduino(lab_id):
         return db.fetchone("""

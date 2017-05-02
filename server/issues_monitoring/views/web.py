@@ -6,7 +6,8 @@ from .. import app, Config, controllers
 @app.route('/')
 def gerenciar():
     if not autenticado():
-        return redirect(url_for('login'))
+        kwargs = {"e" : "Por favor, faça o login"}
+        return redirect(url_for('login', **kwargs))
 
     admin = admin_autenticado()
     usuarios_sistema = controllers.obter_usuarios_sistema()
@@ -21,7 +22,8 @@ def gerenciar():
 @app.route('/', methods=["POST"])
 def gerenciar_post():
     if not autenticado():
-        return redirect(url_for('login'))
+        kwargs = {"e" : "Por favor, faça o login"}
+        return redirect(url_for('login', **kwargs))
 
     lab_id = request.form.get("id-lab") or ''
     nome = request.form.get("nome-lab") or ''
@@ -41,7 +43,8 @@ def gerenciar_post():
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
-    return redirect(url_for("gerenciar"))
+    kwargs = {"c" : "Informações atualizadas com sucesso!"}
+    return redirect(url_for("gerenciar", **kwargs))
 
 @app.route('/logout')
 def logout():
@@ -103,7 +106,9 @@ def cadastro_lab_post():
             lumin_max]
     if "" not in args:
         controllers.cadastro_laboratorio(*args)
-    return redirect(url_for('gerenciar'))
+
+    kwargs = {"c" : "Laboratório cadastrado com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/cadastro')
 def cadastro():
@@ -136,7 +141,8 @@ def editar_status_administrador():
     user_id = request.form.get('id-user')
     administrador = request.form.get('admin') == "1"
     controllers.editar_status_administrador(user_id, administrador)
-    return redirect(url_for('gerenciar'))
+    kwargs = {"c" : "Status de administrador alterado com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/editar-autorizacao-usuario', methods=["POST"])
 def editar_autorizacao_usuario():
@@ -146,7 +152,8 @@ def editar_autorizacao_usuario():
     user_id = request.form.get('id-user')
     aprovar = request.form.get('data') == "None"
     controllers.editar_autorizacao_usuario(user_id, aprovar)
-    return redirect(url_for('gerenciar'))
+    kwargs = {"c" : "Aprovação alterada com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/cadastro-usuario-lab')
 def cadastro_usuario_lab():
