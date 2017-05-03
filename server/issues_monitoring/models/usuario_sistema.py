@@ -6,7 +6,7 @@ class UsuarioSistema(Usuario):
     admin = False
 
     def __init__(self, login, senha, email, nome, id = None,
-                 data_aprovacao = None, hash = False:
+                 data_aprovacao = None, hash = False):
         super().__init__(nome, email, data_aprovacao)
         self.id = id
         self.login = login
