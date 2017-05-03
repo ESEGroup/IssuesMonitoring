@@ -16,7 +16,8 @@ def editar_autorizacao_usuario(user_id, autorizar):
 
 def enviar_emails_cadastro_usuario():
     admins = AdministradorSistema.obter_administradores()
-    emails = [a["email"] for a in admins]
+
+    emails = [a.email for a in admins]
 
     msg_content = """
 Caro responsável,
