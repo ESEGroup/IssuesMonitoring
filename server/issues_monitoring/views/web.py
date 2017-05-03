@@ -4,6 +4,12 @@ from ..common.utils import autenticado, admin_autenticado
 from .. import app, Config, controllers
 
 @app.route('/')
+def root():
+    if not autenticado():
+        return redirect(url_for('login'))
+    return redirect(url_for('gerenciar'))
+
+@app.route('/gerenciar')
 def gerenciar():
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login"}
@@ -19,7 +25,7 @@ def gerenciar():
                            usuarios_lab=usuarios_lab,
                            laboratorios=laboratorios)
 
-@app.route('/', methods=["POST"])
+@app.route('/gerenciar', methods=["POST"])
 def gerenciar_post():
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login"}

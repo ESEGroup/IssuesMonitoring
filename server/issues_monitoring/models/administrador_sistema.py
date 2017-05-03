@@ -12,7 +12,7 @@ class AdministradorSistema(UsuarioSistema):
             WHERE admin = 1;""")
         admins = []
         for d in data:
-            admins += [AdministradorSistema(*d, hash=True)
+            admins += [AdministradorSistema(*d, hash=True)]
         return admins
 
     def autorizar_usuario_lab(lab_id, user_id):
@@ -38,4 +38,3 @@ class AdministradorSistema(UsuarioSistema):
             UPDATE User_Sys
             SET admin = ?
             WHERE user_id = ?;""", (admin, user_id))
-
