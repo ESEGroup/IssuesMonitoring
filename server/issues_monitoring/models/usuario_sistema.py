@@ -6,11 +6,14 @@ class UsuarioSistema(Usuario):
     admin = False
 
     def __init__(self, login, senha, email, nome, id = None,
-                 data_aprovacao = None, hash = None):
+                 data_aprovacao = None, hash = False):
         super().__init__(nome, email, data_aprovacao)
         self.id = id
         self.login = login
-        self.senha = hash or UsuarioSistema.__hash_senha(senha)
+        if hash:
+            self.senha = senha
+        else:
+            self.senha = UsuarioSistema.__hash_senha(senha)
         self.email = email
         self.nome = nome
 
@@ -20,7 +23,7 @@ class UsuarioSistema(Usuario):
             FROM User_Sys;""")
         usuarios = []
         for d in data:
-            usuarios += [UsuarioSistema(*d[1:])]
+            usuarios += [UsuarioSistema(*d[1:], hash=True)]
             usuarios[-1].admin = bool(int(d[0]))
         return usuarios
 
