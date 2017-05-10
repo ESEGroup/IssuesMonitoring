@@ -50,8 +50,10 @@ In production:
 
 GNU/Linux:
 
-`bash run`
+`bash run` 
+
+or `./run` after the first execution
 
 General:
 
-`env FLASK_APP=issues_monitoring/server.py flask run`
+`python3 run.py`
