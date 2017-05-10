@@ -1,5 +1,4 @@
-from ...db import DB
-from .. import Config
+from .. import Config, DB
 db = DB(Config.db_path)
 
 from .laboratorio import Laboratorio

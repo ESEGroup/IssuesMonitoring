@@ -1,4 +1,6 @@
-from ..issues_monitoring import app, Config
-from . import views
+from . import app, Config, views
 
-app.run(host=Config.issues_monitoring.host, port=Config.issues_monitoring.port, debug=Config.debug)
+if __name__ == "server.issues_monitoring.server":
+    app.run(host=Config.issues_monitoring.host,
+            port=Config.issues_monitoring.port,
+            debug=Config.debug)
