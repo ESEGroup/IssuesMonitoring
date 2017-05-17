@@ -1,0 +1,41 @@
+{% extends 'menu.html' %}
+{% block title %}
+Editar Usuario Laboratório
+{% endblock %}
+
+{% block menu %}
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Editar Usuário do Laboratório</h2>
+
+<hr>
+
+<div class="campos cadastro">
+    <h3>Editar usuário</h3>
+    <form method="POST" action="{{url_for('editar_usuario_sistema', user_id=usuario.id)}}">
+        <div>
+            <p>Login:</p>
+            <input type="text" name="login" value="{{usuario.login}}">
+        </div>
+
+        <div>
+            <p>Nome Completo:</p>
+            <input type="text" name="nome" value="{{usuario.nome}}">
+        </div>
+
+        <div>
+            <p>E-mail:</p>
+            <input type="text" name="email" value="{{usuario.email}}">
+        </div>
+
+        <div>
+            <input type="submit" value="Editar">
+        </div>
+    </form>
+</div>
+{% endblock %}

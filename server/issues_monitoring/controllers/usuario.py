@@ -8,6 +8,16 @@ def autenticar(usuario, senha):
 def obter_usuarios_sistema():
     return UsuarioSistema.obter_informacoes()
 
+def obter_usuario_sistema(user_id):
+    return UsuarioSistema.obter(user_id)
+
+def editar_usuario_sistema(user_id, login, nome, email):
+    usuario = UsuarioSistema(login, "", email, nome, user_id)
+    usuario.editar()
+
+def remover_usuario_sistema(user_id):
+    UsuarioSistema.remover(user_id)
+
 def editar_status_administrador(user_id, admin):
     AdministradorSistema.editar_status_administrador(user_id, admin)
 

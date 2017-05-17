@@ -315,6 +315,42 @@ def remover_usuario_de_todos_labs(user_id):
     kwargs = {"c" : "Usuário removido com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
+@app.route('/editar-usuario-sistema/<user_id>')
+def editar_usuario_sistema(user_id):
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    usuario = controllers.obter_usuario_sistema(user_id)
+    return render_template("editar_usuario_sistema.html",
+                           usuario=usuario)
+
+@app.route('/editar-usuario-sistema/<user_id>', methods=["POST"])
+def editar_usuario_sistema_post(user_id):
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    login = request.form.get('login') or ''
+    nome = request.form.get('nome') or ''
+    email = request.form.get('email') or ''
+
+    args = [user_id, login, nome, email]
+    print(args)
+    if "" not in args:
+        controllers.editar_usuario_sistema(*args)
+
+    kwargs = {"c" : "Usuário editado com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
+
+@app.route('/remover-usuario-sistema/<user_id>', methods=["POST"])
+def remover_usuario_sistema(user_id):
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    controllers.remover_usuario_sistema(user_id)
+
+    kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
+
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""

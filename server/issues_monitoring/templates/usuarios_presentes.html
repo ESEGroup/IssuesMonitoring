@@ -16,6 +16,7 @@ Gerenciar
 
 <hr>
 
+{% if usuarios_presentes|len > 0 %}
 <div class="campos">
     <table>
         <thead>
@@ -36,4 +37,8 @@ Gerenciar
         </tbody>
     </table>
 </div>
+{% else %}
+<h1>
+<h1 style="text-align: center;">Não há usuários presentes</h1>
+{% endif %}
 {% endblock %}

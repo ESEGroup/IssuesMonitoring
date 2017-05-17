@@ -16,6 +16,7 @@ Gerenciar
 
 <hr>
 
+{% if usuarios|len > 0 %}
 <div class="campos">
     <table>
         <thead>
@@ -44,4 +45,7 @@ Gerenciar
         </tbody>
     </table>
 </div>
+{% else %}
+<h1 style="text-align: center;">Não há usuários de laboratório</h1>
+{% endif %}
 {% endblock %}

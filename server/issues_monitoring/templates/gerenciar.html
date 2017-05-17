@@ -16,6 +16,7 @@ Gerenciar
 
 <hr>
 
+{% if usuarios_sistema|len > 0 %}
 <div class="campos">
     <table>
         <thead>
@@ -25,6 +26,10 @@ Gerenciar
                 <th>E-mail</th>
                 <th>Admin</th>
                 <th>Aprovado</th>
+                {% if admin %}
+                <th>Editar</th>
+                <th>Excluir</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -44,6 +49,12 @@ Gerenciar
                     <input type="hidden" name="data" value="{{usuario.data_aprovacao}}">
                     <td><input type="submit" value="{% if (usuario.data_aprovacao|data) != '-' %}[-]{% else %}[+]{% endif %}"></td>
                 </form>
+                <form action="{{url_for('editar_usuario_sistema', user_id=usuario.id)}}">
+                    <td><input type="submit" value="Editar"></td>
+                </form>
+                <form method="POST" action="{{url_for('remover_usuario_sistema', user_id=usuario.id)}}">
+                    <td><input type="submit" value="Excluir"></td>
+                </form>
                 {% else %}
                 <td>{{usuario.admin|bool}}</td>
                 <td>{{usuario.data_aprovacao|data}}</td>
@@ -53,7 +64,9 @@ Gerenciar
         </tbody>
     </table>
 </div>
-
+{% else %}
+<h1>Não há usuários de sistema</h1>
+{% endif %}
 
 {% if laboratorios|len > 0 %}
 {% for lab in laboratorios %}
