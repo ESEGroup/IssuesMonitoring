@@ -1,0 +1,39 @@
+{% extends 'menu.html' %}
+{% block title %}
+Gerenciar
+{% endblock %}
+
+{% block menu %}
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
+    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Usuários presentes</h2>
+
+<hr>
+
+<div class="campos">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Hora de entrada</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios_presentes %}
+            <tr>
+                <td>{{usuario.nome}}</td>
+                <td>{{usuario.email}}</td>
+                <td>{{usuario.data_entrada|hora_min}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -263,6 +263,15 @@ def remover_equipamento():
     kwargs = {"c" : "Equipamento removido com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
+@app.route('/<lab_id>/usuarios-presentes')
+def usuarios_presentes(lab_id):
+    if not autenticado():
+        return redirect(url_for('login'))
+
+    usuarios_presentes = controllers.usuarios_presentes(lab_id)
+    return render_template('usuarios_presentes.html',
+                           usuarios_presentes = usuarios_presentes)
+
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""

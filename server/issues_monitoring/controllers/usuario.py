@@ -63,5 +63,8 @@ def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
     else:
         return False
 
+def usuarios_presentes(lab_id):
+    return UsuarioLab.presentes(lab_id)
+
 def remover_usuario_lab(id_lab, user_id):
     UsuarioLab.remover(id_lab, user_id)

@@ -5,7 +5,9 @@ from .. import app
 
 @app.errorhandler(sqlite3.Error)
 def db_error(error):
-    return redirect(url_for('server_error'))
+    print(error)
+    return render_template("500.html",
+                           autenticado=autenticado()) , 500
 
 @app.route('/500')
 def server_error():
