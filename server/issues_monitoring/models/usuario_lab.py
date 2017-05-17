@@ -14,6 +14,13 @@ class UsuarioLab(Usuario):
         self.laboratorio = laboratorio
         self.data_entrada = data_entrada
 
+    def obter(user_id):
+        data = db.fetchone("""SELECT user_id, nome, email, data_aprov
+                           FROM User_Lab
+                           WHERE user_id = ?;""",
+                           (user_id,))
+        return UsuarioLab(*data)
+
     def obter_todos():
         data = db.fetchall("""SELECT user_id, nome, email, data_aprov
                             FROM User_Lab;""")
@@ -104,6 +111,16 @@ class UsuarioLab(Usuario):
         UsuarioLab.adicionar_ao_laboratorio(self.lab_id,
                                             self.user_id)
 
+    def editar(self):
+        db.execute("""
+            UPDATE User_Lab
+            SET nome = ?,
+                email = ?
+            WHERE user_id = ?;""",
+            (self.nome,
+             self.email,
+             self.user_id))
+
     def remover(lab_id, user_id):
         db.execute("""
             DELETE FROM Presenca
@@ -117,3 +134,11 @@ class UsuarioLab(Usuario):
             db.execute("""
                 DELETE FROM User_Lab
                 WHERE user_id = ?;""", (user_id,))
+
+    def remover_de_todos(user_id):
+        db.execute("""
+            DELETE FROM Presenca
+            WHERE user_id = ?;""", (user_id,))
+        db.execute("""
+            DELETE FROM User_Lab
+            WHERE user_id = ?;""", (user_id,))

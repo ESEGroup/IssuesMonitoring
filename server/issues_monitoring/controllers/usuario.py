@@ -44,7 +44,10 @@ def adicionar_usuario_lab(lab_id, user_id):
 def autorizar_usuario_lab(lab_id, user_id):
     AdministradorSistema.autorizar_usuario_lab(lab_id, user_id)
 
-def obter_usuarios_laboratorio():
+def obter_usuario_lab(user_id):
+    return UsuarioLab.obter(user_id)
+
+def obter_usuarios_laboratorios():
     return UsuarioLab.obter_todos()
 
 def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
@@ -63,8 +66,15 @@ def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
     else:
         return False
 
+def editar_usuario_lab(user_id, nome, email):
+    usuario = UsuarioLab(user_id, nome, email)
+    usuario.editar()
+
 def usuarios_presentes(lab_id):
     return UsuarioLab.presentes(lab_id)
 
 def remover_usuario_lab(id_lab, user_id):
     UsuarioLab.remover(id_lab, user_id)
+
+def remover_usuario_de_todos_labs(user_id):
+    UsuarioLab.remover_de_todos(user_id)

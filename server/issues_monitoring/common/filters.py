@@ -8,6 +8,10 @@ def data(timestamp):
     timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
 
+@app.template_filter('existe')
+def existe(var):
+    return var is not None
+
 @app.template_filter('hora_min')
 def hora_min(timestamp):
     if timestamp in [None, ""]:

@@ -17,7 +17,7 @@ def gerenciar():
 
     admin = admin_autenticado()
     usuarios_sistema = controllers.obter_usuarios_sistema()
-    usuarios_lab = controllers.obter_usuarios_laboratorio()
+    usuarios_lab = controllers.obter_usuarios_laboratorios()
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('gerenciar.html',
                            admin=admin,
@@ -168,7 +168,7 @@ def cadastro_usuario_lab():
         kwargs = {"e" : "Primeiro, cadastre um laboratório"}
         return redirect(url_for("cadastro_lab", **kwargs))
 
-    usuarios = controllers.obter_usuarios_laboratorio()
+    usuarios = controllers.obter_usuarios_laboratorios()
     return render_template('cadastro_usuario_lab.html',
                            laboratorios=laboratorios,
                            usuarios=usuarios,
@@ -271,6 +271,49 @@ def usuarios_presentes(lab_id):
     usuarios_presentes = controllers.usuarios_presentes(lab_id)
     return render_template('usuarios_presentes.html',
                            usuarios_presentes = usuarios_presentes)
+
+@app.route('/usuarios-laboratorios')
+def usuarios_laboratorios():
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    usuarios = controllers.obter_usuarios_laboratorios()
+    return render_template('usuarios_laboratorios.html',
+                           usuarios=usuarios)
+
+@app.route('/editar-usuario-lab/<user_id>')
+def editar_usuario_lab(user_id):
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    usuario = controllers.obter_usuario_lab(user_id)
+    return render_template('editar_usuario_lab.html',
+                           usuario=usuario,
+                           admin=admin_autenticado())
+
+@app.route('/editar-usuario-lab/<user_id>', methods=["post"])
+def editar_usuario_lab_post(user_id):
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    nome = request.form.get('nome') or ''
+    email = request.form.get('email') or ''
+
+    args = [user_id, nome, email]
+    if "" not in args:
+        controllers.editar_usuario_lab(*args)
+    kwargs = {"c" : "Usuário editado com sucesso!"}
+    return redirect(url_for('usuarios_laboratorios', **kwargs))
+
+@app.route('/remover-usuario-lab/<user_id>', methods=["POST"])
+def remover_usuario_de_todos_labs(user_id):
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    controllers.remover_usuario_de_todos_labs(user_id)
+
+    kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/robots.txt')
 def robots_txt():
