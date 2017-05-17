@@ -1,5 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from .. import app
+
+@app.template_filter('trans_evento')
+def trans_evento(evento):
+    return {"IN": "Entrada",
+            "OUT": "Saída"}[evento.upper()]
 
 @app.template_filter('data')
 def data(timestamp):
@@ -8,16 +13,24 @@ def data(timestamp):
     timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
 
-@app.template_filter('existe')
-def existe(var):
-    return var is not None
-
 @app.template_filter('hora_min')
 def hora_min(timestamp):
     if timestamp in [None, ""]:
         return "-"
     timestamp = float(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%H:%M")
+
+@app.template_filter('dia_mes_ano')
+def dia_mes_ano(timestamp):
+    if timestamp in [None, ""]:
+        return "-"
+    timestamp = float(timestamp)
+    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y")
+
+@app.template_filter('existe')
+def existe(var):
+    return var is not None
+
 
 @app.template_filter('user_ids')
 def user_ids(usuarios):
@@ -37,3 +50,11 @@ def _int(n):
         return int(n)
     except (ValueError, TypeError):
         return "-"
+
+@app.template_filter('format_dia_url')
+def format_dia_url(dia):
+    return datetime.fromtimestamp(dia).strftime("%d-%m-%Y")
+
+@app.template_filter('timestamp')
+def timestamp(dia):
+    return int(datetime.strptime(dia, "%d-%m-%Y").timestamp())

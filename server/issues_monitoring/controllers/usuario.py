@@ -88,3 +88,12 @@ def remover_usuario_lab(id_lab, user_id):
 
 def remover_usuario_de_todos_labs(user_id):
     UsuarioLab.remover_de_todos(user_id)
+
+def log_eventos(lab_id, dia):
+    return UsuarioLab.eventos(lab_id, dia)
+
+def data_proximo_evento_mydenox(lab_id, dia):
+    return UsuarioLab.data_proximo_evento(lab_id, dia)
+
+def data_evento_anterior_mydenox(lab_id, dia):
+    return UsuarioLab.data_evento_anterior(lab_id, dia)

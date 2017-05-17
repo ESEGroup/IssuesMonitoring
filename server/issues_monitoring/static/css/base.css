@@ -69,7 +69,7 @@ input:focus {
     border-color: #000;
 }
 
-button.center {
+button.center, input[type="submit"].center, div.center {
     width: 20%;
     min-width: 200px;
     margin: 0 40%;

@@ -1,0 +1,62 @@
+{% extends 'menu.html' %}
+{% block title %}
+Logs de entrada e saída do laboratório
+{% endblock %}
+
+{% block menu %}
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
+    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Logs</h2>
+<h3 class="center">Dia {{dia|dia_mes_ano}}</h3>
+
+<hr>
+
+{% if eventos|len > 0 %}
+<div class="campos">
+    <table>
+        <thead>
+            <tr>
+                <th>Id de usuário</th>
+                <th>Nome</th>
+                <th>Evento</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for evento in eventos %}
+            <tr>
+                <td>{{evento.user_id}}</td>
+                <td>{{evento.nome_de_usuario}}</td>
+                <td>{{evento.evento|trans_evento}}</td>
+                <td>{{evento.epoch|data}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<h1 style="text-align: center;">Não há logs</h1>
+{% endif %}
+
+<div class="center">
+    {% if proximo_dia > dia %}
+    <a href="{{url_for('log_eventos', lab_id=lab_id, dia=proximo_dia|format_dia_url)}}"><input type="submit" value="{{proximo_dia|dia_mes_ano}}"></a>
+    {% else %}
+    <input type="submit" value="Próximo" disabled>
+    {% endif %}
+
+    {% if dia_anterior < dia %}
+    <a href="{{url_for('log_eventos', lab_id=lab_id, dia=dia_anterior|format_dia_url)}}"><input type="submit" value="{{dia_anterior|dia_mes_ano}}"></a>
+    {% else %}
+    <input type="submit" value="Anterior" disabled>
+    {% endif %}
+</div>
+
+<a href="/{{lab_id}}/usuarios-presentes"><input value="Usuários Presentes" class="center" type="submit"></a>
+{% endblock %}

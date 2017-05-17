@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
-from ..common.utils import autenticado, admin_autenticado
+from ..common.utils import autenticado, admin_autenticado, hoje
 from .. import app, Config, controllers
 
 @app.route('/')
@@ -9,7 +9,7 @@ def root():
         return redirect(url_for('login'))
     return redirect(url_for('gerenciar'))
 
-@app.route('/gerenciar')
+@app.route('/gerenciar/')
 def gerenciar():
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login"}
@@ -52,12 +52,12 @@ def gerenciar_post():
     kwargs = {"c" : "Informações atualizadas com sucesso!"}
     return redirect(url_for("gerenciar", **kwargs))
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/login')
+@app.route('/login/')
 def login():
     if autenticado():
         return redirect(url_for('gerenciar'))
@@ -85,7 +85,7 @@ def login_post():
         kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado"}
     return redirect(url_for('login', **kwargs))
 
-@app.route('/cadastro-lab')
+@app.route('/cadastro-lab/')
 def cadastro_lab():
     if not admin_autenticado():
         return redirect(url_for('login'))
@@ -116,7 +116,7 @@ def cadastro_lab_post():
     kwargs = {"c" : "Laboratório cadastrado com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/cadastro')
+@app.route('/cadastro/')
 def cadastro():
     return render_template('cadastro_usuario_sistema.html',
                            autenticado=autenticado())
@@ -161,7 +161,7 @@ def editar_autorizacao_usuario():
     kwargs = {"c" : "Aprovação alterada com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/cadastro-usuario-lab')
+@app.route('/cadastro-usuario-lab/')
 def cadastro_usuario_lab():
     laboratorios = controllers.obter_laboratorios()
     if len(laboratorios) == 0:
@@ -263,16 +263,44 @@ def remover_equipamento():
     kwargs = {"c" : "Equipamento removido com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/<lab_id>/usuarios-presentes')
+@app.route('/<lab_id>/usuarios-presentes/')
 def usuarios_presentes(lab_id):
     if not autenticado():
         return redirect(url_for('login'))
 
     usuarios_presentes = controllers.usuarios_presentes(lab_id)
+    hoje_formatado = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     return render_template('usuarios_presentes.html',
-                           usuarios_presentes = usuarios_presentes)
+                           lab_id=lab_id,
+                           hoje=hoje_formatado,
+                           usuarios_presentes=usuarios_presentes)
 
-@app.route('/usuarios-laboratorios')
+@app.route('/<lab_id>/log-eventos/')
+def log_eventos_hoje(lab_id):
+    _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    return redirect(url_for('log_eventos',
+                            lab_id=lab_id,
+                            dia=_hoje))
+
+@app.route('/<lab_id>/log-eventos/<dia>/')
+def log_eventos(lab_id, dia):
+    if not autenticado():
+        return redirect(url_for('login'))
+
+    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
+    log_eventos = controllers.log_eventos(lab_id, dia)
+
+    proximo_dia = controllers.data_proximo_evento_mydenox(lab_id, dia)
+    dia_anterior = controllers.data_evento_anterior_mydenox(lab_id, dia)
+
+    return render_template('logs_entrada_saida.html',
+                           eventos=log_eventos,
+                           proximo_dia=proximo_dia,
+                           dia_anterior=dia_anterior,
+                           lab_id=lab_id,
+                           dia=dia)
+
+@app.route('/usuarios-laboratorios/')
 def usuarios_laboratorios():
     if not autenticado():
         return redirect(url_for('gerenciar'))
@@ -281,7 +309,7 @@ def usuarios_laboratorios():
     return render_template('usuarios_laboratorios.html',
                            usuarios=usuarios)
 
-@app.route('/editar-usuario-lab/<user_id>')
+@app.route('/editar-usuario-lab/<user_id>/')
 def editar_usuario_lab(user_id):
     if not autenticado():
         return redirect(url_for('gerenciar'))
@@ -291,7 +319,7 @@ def editar_usuario_lab(user_id):
                            usuario=usuario,
                            admin=admin_autenticado())
 
-@app.route('/editar-usuario-lab/<user_id>', methods=["post"])
+@app.route('/editar-usuario-lab/<user_id>/', methods=["post"])
 def editar_usuario_lab_post(user_id):
     if not autenticado():
         return redirect(url_for('gerenciar'))
@@ -305,7 +333,7 @@ def editar_usuario_lab_post(user_id):
     kwargs = {"c" : "Usuário editado com sucesso!"}
     return redirect(url_for('usuarios_laboratorios', **kwargs))
 
-@app.route('/remover-usuario-lab/<user_id>', methods=["POST"])
+@app.route('/remover-usuario-lab/<user_id>/', methods=["POST"])
 def remover_usuario_de_todos_labs(user_id):
     if not autenticado():
         return redirect(url_for('gerenciar'))
@@ -315,7 +343,7 @@ def remover_usuario_de_todos_labs(user_id):
     kwargs = {"c" : "Usuário removido com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/editar-usuario-sistema/<user_id>')
+@app.route('/editar-usuario-sistema/<user_id>/')
 def editar_usuario_sistema(user_id):
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -324,7 +352,7 @@ def editar_usuario_sistema(user_id):
     return render_template("editar_usuario_sistema.html",
                            usuario=usuario)
 
-@app.route('/editar-usuario-sistema/<user_id>', methods=["POST"])
+@app.route('/editar-usuario-sistema/<user_id>/', methods=["POST"])
 def editar_usuario_sistema_post(user_id):
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -334,14 +362,13 @@ def editar_usuario_sistema_post(user_id):
     email = request.form.get('email') or ''
 
     args = [user_id, login, nome, email]
-    print(args)
     if "" not in args:
         controllers.editar_usuario_sistema(*args)
 
     kwargs = {"c" : "Usuário editado com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/remover-usuario-sistema/<user_id>', methods=["POST"])
+@app.route('/remover-usuario-sistema/<user_id>/', methods=["POST"])
 def remover_usuario_sistema(user_id):
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))

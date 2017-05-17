@@ -1,4 +1,5 @@
 from flask import session
+from datetime import datetime
 from random import choice
 from string import ascii_letters, digits
 from .filters import *
@@ -21,3 +22,10 @@ def admin_autenticado():
 def random_string(n):
     alfabeto = ascii_letters + digits
     return ''.join(choice(alfabeto) for i in range(n))
+
+def hoje():
+    agora = datetime.now()
+    hoje = int(datetime(day=agora.day,
+                        month=agora.month,
+                        year=agora.year).timestamp())
+    return hoje

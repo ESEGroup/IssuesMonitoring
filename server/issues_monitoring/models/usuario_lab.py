@@ -1,4 +1,6 @@
 from datetime import datetime
+from ..common.utils import hoje
+from .evento import Evento
 from .usuario import Usuario
 from . import db
 
@@ -71,10 +73,6 @@ class UsuarioLab(Usuario):
              False))
 
     def presentes(lab_id):
-        agora = datetime.now()
-        hoje = int(datetime(day=agora.day,
-                            month=agora.month,
-                            year=agora.year).timestamp())
         data = db.fetchall("""SELECT u.user_id, u.nome, u.email,
                                      u.data_aprov, log.data
                             FROM User_Lab u
@@ -83,13 +81,14 @@ class UsuarioLab(Usuario):
                             INNER JOIN Log_Presenca log
                                 ON log.user_id = u.user_id
                                    AND log.lab_id = p.lab_id
-                            WHERE p.presente = 1
+                            WHERE log.evento = "IN"
+                                  AND p.presente = ?
                                   AND p.lab_id = ?
-                                  AND log.evento = "IN"
                                   AND log.data > ?
                             ORDER BY log.data DESC;""",
-                            (lab_id,
-                            hoje))
+                            (True,
+                             lab_id,
+                             hoje()))
         usuarios = []
         usuarios_set = set()
         for d in data:
@@ -142,3 +141,50 @@ class UsuarioLab(Usuario):
         db.execute("""
             DELETE FROM User_Lab
             WHERE user_id = ?;""", (user_id,))
+
+    def eventos(lab_id, dia):
+        prox_dia = dia + 60 * 60 * 24 + 1
+        dia -= 1
+
+        data = db.fetchall("""
+            SELECT l.data, l.evento, l.user_id, l.lab_id, u.nome
+            FROM Log_Presenca l
+            INNER JOIN User_Lab u
+              ON u.user_id = l.user_id
+            WHERE l.lab_id = ?
+                  AND l.data > ?
+                  AND l.data < ?
+            ORDER BY l.data DESC;""",
+            (lab_id, dia, prox_dia)) or []
+        return [Evento(*d) for d in data]
+
+    def data_proximo_evento(lab_id, dia):
+        dia_dt = datetime.fromtimestamp(dia)
+        dia = int(datetime(day=dia_dt.day,
+                           month=dia_dt.month,
+                           year=dia_dt.year,
+                           hour=23,
+                           minute=59,
+                           second=59).timestamp())
+        data = db.fetchone("""SELECT data
+                           FROM Log_Presenca
+                           WHERE lab_id = ?
+                                 AND data > ?
+                           ORDER BY data ASC;""",
+                           (lab_id,
+                            dia))
+        if data is not None:
+            return data[0]
+        return int(datetime.now().timestamp()) - 60 * 60 * 24
+
+    def data_evento_anterior(lab_id, dia):
+        data = db.fetchone("""SELECT data
+                           FROM Log_Presenca
+                           WHERE lab_id = ?
+                                 AND data < ?
+                           ORDER BY data DESC;""",
+                           (lab_id,
+                            dia))
+        if data is not None:
+            return data[0]
+        return int(datetime.now().timestamp())

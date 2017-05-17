@@ -1,6 +1,6 @@
 {% extends 'menu.html' %}
 {% block title %}
-Gerenciar
+Usuários Presentes
 {% endblock %}
 
 {% block menu %}
@@ -15,6 +15,8 @@ Gerenciar
 <h2 class="center">Usuários presentes</h2>
 
 <hr>
+
+<a href="{{url_for('log_eventos', lab_id=lab_id, dia=hoje)}}"><input class='center' type="submit" value="Log dos eventos"></a>
 
 {% if usuarios_presentes|len > 0 %}
 <div class="campos">

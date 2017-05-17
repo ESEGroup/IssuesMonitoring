@@ -1,5 +1,7 @@
-from threading import Thread
 from flask import Flask
+app = Flask(__name__)
+
+from threading import Thread
 from os import getenv
 from time import sleep
 try:
@@ -32,8 +34,6 @@ elif not Config.debug and getenv('SECRET_KEY') is None:
           "authenticated as a user or admin")
     print('    export SECRET_KEY="[secret_key]";')
     raise NoSecretKey
-
-app = Flask(__name__)
 
 from .common.utils import random_string
 if Config.debug:

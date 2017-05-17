@@ -72,6 +72,7 @@ Gerenciar
 {% for lab in laboratorios %}
 <div class="campos">
     <a href="/{{lab.id}}/usuarios-presentes"><input value="Usuários Presentes" type="submit"></a>
+    <a href="/{{lab.id}}/log-eventos"><input value="Log dos Eventos" type="submit"></a>
     <form method="POST" action="{{url_for('gerenciar')}}">
         <input type="hidden" name="id-lab" value="{{lab.id}}">
         <div>
