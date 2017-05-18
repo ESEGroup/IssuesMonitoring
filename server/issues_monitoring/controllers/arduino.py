@@ -5,14 +5,18 @@ def registrar_medidas(json):
     dict_medidas = {}
     try:
         MAC = json["MAC"]
-        #Pegar
+        dict_medidas = json["data"]
+        all_mac = listar_todos_mac_arduino()
+        if MAC not in all_mac:
+            print ("MAC não cadastrado")
+            return False
     except KeyError:
-        print("MAC não encontrado")
+        print("MAC não encontrado no JSON")
         return False
     except:
         print("Erro não esperado")
         return False
-
+    
     for m in dict_medidas:
         try:
             medidas += [Medida(m['epoch'],
@@ -21,13 +25,11 @@ def registrar_medidas(json):
         except KeyError:
             pass
     UsuarioLab.registrar_presenca(medidas)
+    return True
 
 def listar_todos_mac_arduino():
-    print ("ENTROU LISTAR TODOS")
     data = Arduino.listar_todos()
-    print ("LISTOU TODOS!!!!!")
     mac_arduinos = []
     for a in data:
-        mac_arduinos += [*a[len(*a)-1]]
-
+        mac_arduinos += [a[len(a)-1]]
     return str(mac_arduinos)
