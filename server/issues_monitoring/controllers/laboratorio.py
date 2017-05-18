@@ -3,14 +3,11 @@ from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
 
 def cadastro_laboratorio(nome, endereco, intervalo_parser,
                           intervalo_arduino, temp_min, temp_max,
-                          umid_min, umid_max, lumin_min,
-                          lumin_max):
+                          umid_min, umid_max):
     zona_de_conforto = ZonaConforto(temp_min,
                                     temp_max,
                                     umid_min,
-                                    umid_max,
-                                    lumin_min,
-                                    lumin_max)
+                                    umid_max)
     zona_de_conforto.cadastrar()
 
     laboratorio = Laboratorio(nome,
@@ -25,14 +22,11 @@ def obter_informacoes_labs():
 
 def atualizar_informacoes_lab(lab_id, nome, endereco, intervalo_parser,
                               intervalo_arduino, temp_min, temp_max,
-                              umid_min, umid_max, lumin_min,
-                              lumin_max):
+                              umid_min, umid_max):
     zona_conforto = ZonaConforto(temp_min,
                                  temp_max,
                                  umid_min,
                                  umid_max,
-                                 lumin_min,
-                                 lumin_max,
                                  lab_id)
     zona_conforto.editar()
     laboratorio = Laboratorio(nome,

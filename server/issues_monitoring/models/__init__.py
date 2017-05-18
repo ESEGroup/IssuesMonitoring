@@ -10,3 +10,5 @@ from .usuario import Usuario
 from .usuario_lab import UsuarioLab
 from .usuario_sistema import UsuarioSistema
 from .administrador_sistema import AdministradorSistema
+
+from .arduino import Arduino

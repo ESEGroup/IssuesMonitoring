@@ -40,12 +40,9 @@ def gerenciar_post():
     temp_max = request.form.get("temp-max") or ''
     umid_min = request.form.get("umid-min") or ''
     umid_max = request.form.get("umid-max") or ''
-    lumin_min = request.form.get("lumin-min") or ''
-    lumin_max = request.form.get("lumin-max") or ''
 
     args = [lab_id, nome, endereco, intervalo_parser,
-            intervalo_arduino, temp_min, temp_max, umid_min, umid_max,
-            lumin_min, lumin_max]
+            intervalo_arduino, temp_min, temp_max, umid_min, umid_max]
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
@@ -105,11 +102,8 @@ def cadastro_lab_post():
     temp_max = request.form.get("temp-max") or ""
     umid_min = request.form.get("umid-min") or ""
     umid_max = request.form.get("umid-max") or ""
-    lumin_min = request.form.get("lumin-min") or ""
-    lumin_max = request.form.get("lumin-max") or ""
     args = [nome, endereco, intervalo_parser, intervalo_arduino,
-            temp_min, temp_max, umid_min, umid_max, lumin_min,
-            lumin_max]
+            temp_min, temp_max, umid_min, umid_max]
     if "" not in args:
         controllers.cadastro_laboratorio(*args)
 

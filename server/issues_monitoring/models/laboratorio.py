@@ -43,7 +43,7 @@ class Laboratorio:
         data = db.fetchall("""
             SELECT l.lab_id, l.nome, l.endereco, l.intervalo_parser,
             l.intervalo_arduino, zc.temp_min, zc.temp_max,
-            zc.umid_min, zc.umid_max, zc.lum_min, zc.lum_max, l.lab_id,
+            zc.umid_min, zc.umid_max, l.lab_id,
             e.temp_min, e.temp_max, e.end_mac, e.equip_id, u.user_id,
             u.nome, u.email, u.data_aprov
             FROM Lab as l
