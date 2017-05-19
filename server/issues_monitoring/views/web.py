@@ -25,7 +25,7 @@ def gerenciar():
                            usuarios_lab=usuarios_lab,
                            laboratorios=laboratorios)
 
-@app.route('/gerenciar', methods=["POST"])
+@app.route('/gerenciar/', methods=["POST"])
 def gerenciar_post():
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login"}
@@ -60,7 +60,7 @@ def login():
         return redirect(url_for('gerenciar'))
     return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login/', methods=['POST'])
 def login_post():
     if autenticado():
         return redirect(url_for('gerenciar'))
@@ -89,7 +89,7 @@ def cadastro_lab():
     return render_template('cadastro_lab.html',
                            autenticado=autenticado())
 
-@app.route('/cadastro-lab', methods=["POST"])
+@app.route('/cadastro-lab/', methods=["POST"])
 def cadastro_lab_post():
     if not admin_autenticado():
         return redirect(url_for('login'))
@@ -115,7 +115,7 @@ def cadastro():
     return render_template('cadastro_usuario_sistema.html',
                            autenticado=autenticado())
 
-@app.route('/cadastro', methods=['POST'])
+@app.route('/cadastro/', methods=['POST'])
 def cadastro_post():
     login = request.form.get('login') or ''
     senha = request.form.get('senha') or ''
@@ -133,7 +133,7 @@ def cadastro_post():
     kwargs = {"c": "Usuário enviado para aprovação!"}
     return redirect(url_for('login', **kwargs))
 
-@app.route('/editar-status-administrador', methods=["POST"])
+@app.route('/editar-status-administrador/', methods=["POST"])
 def editar_status_administrador():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -144,7 +144,7 @@ def editar_status_administrador():
     kwargs = {"c" : "Status de administrador alterado com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/editar-autorizacao-usuario', methods=["POST"])
+@app.route('/editar-autorizacao-usuario/', methods=["POST"])
 def editar_autorizacao_usuario():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -169,7 +169,7 @@ def cadastro_usuario_lab():
                            admin=admin_autenticado(),
                            autenticado=autenticado())
 
-@app.route('/adicionar-usuario-lab', methods=['POST'])
+@app.route('/adicionar-usuario-lab/', methods=['POST'])
 def adicionar_usuario_lab():
     lab_id = request.form.get('id-lab') or ''
     user_id = request.form.get('id-user') or ''
@@ -178,7 +178,7 @@ def adicionar_usuario_lab():
         return redirect(url_for("gerenciar"))
     return redirect(url_for("cadastro_usuario_lab"))
 
-@app.route('/cadastro-usuario-lab', methods=['POST'])
+@app.route('/cadastro-usuario-lab/', methods=['POST'])
 def cadastro_usuario_lab_post():
     lab_id = request.form.get('id-lab') or ''
     user_id = request.form.get('id-user') or ''
@@ -204,7 +204,7 @@ def cadastro_usuario_lab_post():
         url = 'cadastro_usuario_lab'
     return redirect(url_for(url, **kwargs))
 
-@app.route('/remover-usuario-lab', methods=["POST"])
+@app.route('/remover-usuario-lab/', methods=["POST"])
 def remover_usuario_lab():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -218,7 +218,7 @@ def remover_usuario_lab():
     kwargs = {"c" : "Usuário removido com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/autorizar-usuario-lab', methods=["POST"])
+@app.route('/autorizar-usuario-lab/', methods=["POST"])
 def autorizar_usuario_lab():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -229,7 +229,7 @@ def autorizar_usuario_lab():
     kwargs = {"c" : "Usuário autorizado com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/cadastro-equipamento', methods=["POST"])
+@app.route('/cadastro-equipamento/', methods=["POST"])
 def cadastro_equipamento():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))
@@ -245,7 +245,7 @@ def cadastro_equipamento():
     kwargs = {"c" : "Equipamento cadastrado com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
-@app.route('/remover-equipamento', methods=["POST"])
+@app.route('/remover-equipamento/', methods=["POST"])
 def remover_equipamento():
     if not admin_autenticado():
         return redirect(url_for('gerenciar'))

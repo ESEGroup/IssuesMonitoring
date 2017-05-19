@@ -3,7 +3,7 @@ from re import search
 from datetime import datetime, timedelta
 
 TIME_REGEXP = r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}"
-EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?\]"
+EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?(-[^\W_]+)?\]"
 
 def parse_messages(messages):
     debug("Parsing messages.")
@@ -21,14 +21,17 @@ def parse_messages(messages):
         epoch_start = datetime(1970, 1, 1)
         epoch = int((dt - epoch_start) / timedelta(seconds=1))
 
-        # Remove [] from [EVENT-user_id] and split them to register
+        # Remove [] from [EVENT-lab_id-user_id] and split them to register
         args = event[1:-1].split("-")
 
-        # Allow static events (no user_id) e.g. opening the door
+        # Allow static events (no user_id or lab_id) e.g. opening the door
         _dict = {"epoch": epoch,
                  "event": args[0]}
-        if len(args) > 1:
+        n_args = len(args)
+        if n_args > 1:
             _dict["user_id"] = args[1]
+        if n_args == 3:
+            _dict["lab_id"] = args[2]
 
         data += [_dict]
 
