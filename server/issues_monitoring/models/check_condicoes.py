@@ -34,9 +34,15 @@ Caro responsável,
 Você está recebendo essa mensagem pois a luz do laboratorio """ + str(lab_id) + """ foi deixada acesa e não há mais funcionários presentes.
 Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessário de energia.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
-    
+
             admins = AdministradorSistema.obter_administradores()
             emails = [a.email for a in admins]
+
+            data = db.fetchall("""SELECT u.email
+                                  FROM Log_Presenca l, User_Lab u WHERE l.lab_id=? AND l.evento='OUT' AND l.user_id = u.user_id ORDER BY l.data DESC LIMIT 1;""", (lab_id,))
+            if(len(data) != 0):
+                for d in data:
+                    emails += [d[0]]           
             #if it got here, just send message to supervisor(s)
             send_email(subject, msgContent, emails)
 
@@ -75,6 +81,9 @@ Você está recebendo essa mensagem pois a temperatura do laboratorio """ + str(
 Pedimos que procure uma solução quanto a isso.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
+        admins = AdministradorSistema.obter_administradores()
+        emails = [a.email for a in admins]
+
         data = db.fetchall("""
             SELECT u.email
             FROM Presenca p
@@ -82,12 +91,9 @@ Pedimos que procure uma solução quanto a isso.
               ON p.user_id = u.user_id
             WHERE presente = 1 AND lab_id = ?; """, (lab_id,))
 
-        admins = AdministradorSistema.obter_administradores()
-        emails = [a.email for a in admins]
         if len(data) != 0:
             for d in data:
                 emails += [d[0]]    
-        print (emails)
 
         #if it got here, just send message to supervisor(s)
         send_email(subject, msgContent, emails)
@@ -100,6 +106,9 @@ Você está recebendo essa mensagem pois a umidade do laboratorio """ + str(lab_
 Pedimos que procure uma solução quanto a isso.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
+        admins = AdministradorSistema.obter_administradores()
+        emails = [a.email for a in admins]
+
         data = db.fetchall("""
             SELECT u.email
             FROM Presenca p
@@ -107,12 +116,9 @@ Pedimos que procure uma solução quanto a isso.
               ON p.user_id = u.user_id
             WHERE presente = 1 AND lab_id = ?; """, (lab_id,))
 
-        admins = AdministradorSistema.obter_administradores()
-        emails = [a.email for a in admins]
         if len(data) != 0:
             for d in data:
                 emails += [d[0]]    
 
-        print (emails)
         #if it got here, just send message to supervisor(s)
         send_email(subject, msgContent, emails)     
