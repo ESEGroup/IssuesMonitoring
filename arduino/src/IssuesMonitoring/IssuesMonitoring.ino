@@ -15,13 +15,13 @@ DHT dht(DHT_PIN, DHT11);
 // Timers
 Timer ldr_timer;
 Timer dht_timer;
-Tomer temp_timer;
+Timer temp_timer;
 Timer send_timer;
 
 // Temperature Sensors
 #define ONE_WIRE_BUS 3
 OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire,);
+DallasTemperature sensors(&oneWire);
 DeviceAddress sensor1, sensor2;
 
 // Intervals [ms]
@@ -39,13 +39,15 @@ MathBox machine1_temperature_signal;
 MathBox machine2_temperature_signal;
 
 // Print functions
-void printLDR(byte ldr) {
+void printLDR(byte ldr)
+{
   Serial.print("LDR: ");
   Serial.println(ldr);
   Serial.println("");
 }
 
-void printDHT(float humidity, float temperature, float heat_index) {
+void printDHT(float humidity, float temperature, float heat_index)
+{
   Serial.print("Humidity: ");
   Serial.print(humidity);
   Serial.println(" %");
@@ -58,8 +60,9 @@ void printDHT(float humidity, float temperature, float heat_index) {
   Serial.println("");
 }
 
-void printTemp(int id, float temperature) {
-  Serial.print("Sensor ");
+void printTemp(int id, float temperature)
+{
+  Serial.print("Temperature ");
   Serial.print(id);
   Serial.print(": ");
   Serial.print(temperature);
@@ -68,7 +71,8 @@ void printTemp(int id, float temperature) {
 }
 
 // Callbacks
-void readLDR() {
+void readLDR()
+{
   Serial.println("==== LDR ====");
   byte ldr = !digitalRead(LDR_PIN);
 
@@ -77,13 +81,15 @@ void readLDR() {
   printLDR(ldr);
 }
 
-void readDHT() {
+void readDHT()
+{
   Serial.println("==== DHT ====");
-  float humidity = dht.readHumidity(); // [percentage]
-  float temperature = dht.readTemperature(); // [Celsius]
+  float humidity = dht.readHumidity();                                   // [percentage]
+  float temperature = dht.readTemperature();                             // [Celsius]
   float heat_index = dht.computeHeatIndex(humidity, temperature, false); // [Celsius]
 
-  if (isnan(humidity) || isnan(temperature) || isnan(heat_index)) {
+  if (isnan(humidity) || isnan(temperature) || isnan(heat_index))
+  {
     Serial.println("Failed to read from DHT sensor!");
     Serial.println("");
     return;
@@ -96,7 +102,9 @@ void readDHT() {
   printDHT(humidity, temperature, heat_index);
 }
 
-void readTemp() {
+void readTemp()
+{
+  Serial.println("==== TEMP ====");
   sensors.requestTemperatures();
   float tempC1 = sensors.getTempC(sensor1);
   float tempC2 = sensors.getTempC(sensor2);
@@ -106,19 +114,19 @@ void readTemp() {
   printTemp(2, tempC2);
 }
 
-void send() {
+void send()
+{
   Serial.println("==== Send ====");
 
   // TODO: Send the message to the server
 
   printLDR(ldr_signal.getAverage());
   printDHT(
-    humidity_signal.getAverage(),
-    temperature_signal.getAverage(),
-    heat_index_signal.getAverage()
-  );
-  printTemp(1,machine1_temperature_signal.getAverage());
-  printTemp(2,machine2_temperature_signal.getAverage());
+      humidity_signal.getAverage(),
+      temperature_signal.getAverage(),
+      heat_index_signal.getAverage());
+  printTemp(1, machine1_temperature_signal.getAverage());
+  printTemp(2, machine2_temperature_signal.getAverage());
 
   ldr_signal.clear();
   humidity_signal.clear();
@@ -128,7 +136,8 @@ void send() {
   machine2_temperature_signal.clear();
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
 
   // LDR setup
@@ -156,6 +165,7 @@ void setup() {
   TimerManager::instance().start();
 }
 
-void loop() {
+void loop()
+{
   TimerManager::instance().update();
 }
