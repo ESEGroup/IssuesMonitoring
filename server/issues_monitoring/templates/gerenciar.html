@@ -86,45 +86,35 @@ Gerenciar
         </div>
 
         <div>
-            <p>Intervalo de coleta do parser:</p>
+            <p>Intervalo de coleta do parser (s):</p>
             <input type="text" name="intervalo-parser" value="{{lab.intervalo_parser}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Intervalo de coleta do Arduino:</p>
+            <p>Intervalo de coleta do Arduino (s):</p>
             <input type="text" name="intervalo-arduino" value="{{lab.intervalo_arduino}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <h3>Zona de Conforto do laboratório</h3>
 
         <div>
-            <p>Temperatura mínima:</p>
+            <p>Temperatura mínima (°C):</p>
             <input type="text" name="temp-min" value="{{lab.zona_conforto_lab.temp_min}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Temperatura máxima:</p>
+            <p>Temperatura máxima (°C):</p>
             <input type="text" name="temp-max" value="{{lab.zona_conforto_lab.temp_max}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Umidade mínima:</p>
+            <p>Umidade mínima (%):</p>
             <input type="text" name="umid-min" value="{{lab.zona_conforto_lab.umidade_min}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Umidade máxima:</p>
+            <p>Umidade máxima (%):</p>
             <input type="text" name="umid-max" value="{{lab.zona_conforto_lab.umidade_max}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Luminosidade mínima:</p>
-            <input type="text" name="lumin-min" value="{{lab.zona_conforto_lab.lumin_min}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Luminosidade máxima:</p>
-            <input type="text" name="lumin-max" value="{{lab.zona_conforto_lab.lumin_max}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         {% if admin %}
