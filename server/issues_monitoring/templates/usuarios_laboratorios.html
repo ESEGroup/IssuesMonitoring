@@ -1,0 +1,51 @@
+{% extends 'menu.html' %}
+{% block title %}
+Usuarios de laboratório
+{% endblock %}
+
+{% block menu %}
+    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
+    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
+    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="center">Usuários de Laboratório</h2>
+
+<hr>
+
+{% if usuarios|len > 0 %}
+<div class="campos">
+    <table>
+        <thead>
+            <tr>
+                <th>Id de usuário</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Data de Aprovação</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios %}
+            <tr>
+                <td>{{usuario.user_id}}</td>
+                <td>{{usuario.nome}}</td>
+                <td>{{usuario.email}}</td>
+                <td>{{usuario.data_aprovacao|data}}</td>
+                <td><a href="/editar-usuario-lab/{{usuario.user_id}}"><input type="submit" value="Editar"></a></td>
+                <td><form action="/remover-usuario-lab/{{usuario.user_id}}" method="POST">
+                        <input type="submit" value="Excluir">
+                </form></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<h1 style="text-align: center;">Não há usuários de laboratório</h1>
+{% endif %}
+{% endblock %}

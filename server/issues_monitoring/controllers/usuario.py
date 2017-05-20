@@ -8,6 +8,16 @@ def autenticar(usuario, senha):
 def obter_usuarios_sistema():
     return UsuarioSistema.obter_informacoes()
 
+def obter_usuario_sistema(user_id):
+    return UsuarioSistema.obter(user_id)
+
+def editar_usuario_sistema(user_id, login, nome, email):
+    usuario = UsuarioSistema(login, "", email, nome, user_id)
+    usuario.editar()
+
+def remover_usuario_sistema(user_id):
+    UsuarioSistema.remover(user_id)
+
 def editar_status_administrador(user_id, admin):
     AdministradorSistema.editar_status_administrador(user_id, admin)
 
@@ -44,7 +54,10 @@ def adicionar_usuario_lab(lab_id, user_id):
 def autorizar_usuario_lab(lab_id, user_id):
     AdministradorSistema.autorizar_usuario_lab(lab_id, user_id)
 
-def obter_usuarios_laboratorio():
+def obter_usuario_lab(user_id):
+    return UsuarioLab.obter(user_id)
+
+def obter_usuarios_laboratorios():
     return UsuarioLab.obter_todos()
 
 def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
@@ -63,5 +76,24 @@ def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
     else:
         return False
 
+def editar_usuario_lab(user_id, nome, email):
+    usuario = UsuarioLab(user_id, nome, email)
+    usuario.editar()
+
+def usuarios_presentes(lab_id):
+    return UsuarioLab.presentes(lab_id)
+
 def remover_usuario_lab(id_lab, user_id):
     UsuarioLab.remover(id_lab, user_id)
+
+def remover_usuario_de_todos_labs(user_id):
+    UsuarioLab.remover_de_todos(user_id)
+
+def log_eventos(lab_id, dia):
+    return UsuarioLab.eventos(lab_id, dia)
+
+def data_proximo_evento_mydenox(lab_id, dia):
+    return UsuarioLab.data_proximo_evento(lab_id, dia)
+
+def data_evento_anterior_mydenox(lab_id, dia):
+    return UsuarioLab.data_evento_anterior(lab_id, dia)

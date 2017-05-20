@@ -17,6 +17,16 @@ class UsuarioSistema(Usuario):
         self.email = email
         self.nome = nome
 
+    def obter(user_id):
+        data = db.fetchone("""
+            SELECT admin, login, senha, email, nome, user_id, data_aprov
+            FROM User_Sys
+            WHERE user_id = ?;""",
+            (user_id,))
+        usuario = UsuarioSistema(*data[1:], hash=True)
+        usuario.admin = bool(int(data[0]))
+        return usuario
+
     def obter_informacoes():
         data = db.fetchall("""
             SELECT admin, login, senha, email, nome, user_id, data_aprov
@@ -60,6 +70,22 @@ class UsuarioSistema(Usuario):
             WHERE login = ?
                   OR email = ?;""",
             (login, email)) is not None
+
+    def editar(self):
+        db.execute("""UPDATE User_Sys
+                   SET nome = ?,
+                       email = ?,
+                       login = ?
+                   WHERE user_id = ?;""",
+                   (self.nome,
+                    self.email,
+                    self.login,
+                    self.id))
+
+    def remover(user_id):
+        db.execute("""DELETE FROM User_Sys
+                   WHERE user_id = ?;""",
+                   (user_id,))
 
     def __hash_senha(senha, _hash = None):
         if isinstance(senha, str):

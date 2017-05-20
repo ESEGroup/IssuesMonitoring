@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
-from ..common.utils import autenticado, admin_autenticado
+from ..common.utils import autenticado, admin_autenticado, hoje
 from .. import app, Config, controllers
 
 @app.route('/')
@@ -17,7 +17,7 @@ def gerenciar():
 
     admin = admin_autenticado()
     usuarios_sistema = controllers.obter_usuarios_sistema()
-    usuarios_lab = controllers.obter_usuarios_laboratorio()
+    usuarios_lab = controllers.obter_usuarios_laboratorios()
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('gerenciar.html',
                            admin=admin,
@@ -40,12 +40,9 @@ def gerenciar_post():
     temp_max = request.form.get("temp-max") or ''
     umid_min = request.form.get("umid-min") or ''
     umid_max = request.form.get("umid-max") or ''
-    lumin_min = request.form.get("lumin-min") or ''
-    lumin_max = request.form.get("lumin-max") or ''
 
     args = [lab_id, nome, endereco, intervalo_parser,
-            intervalo_arduino, temp_min, temp_max, umid_min, umid_max,
-            lumin_min, lumin_max]
+            intervalo_arduino, temp_min, temp_max, umid_min, umid_max]
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
@@ -105,11 +102,8 @@ def cadastro_lab_post():
     temp_max = request.form.get("temp-max") or ""
     umid_min = request.form.get("umid-min") or ""
     umid_max = request.form.get("umid-max") or ""
-    lumin_min = request.form.get("lumin-min") or ""
-    lumin_max = request.form.get("lumin-max") or ""
     args = [nome, endereco, intervalo_parser, intervalo_arduino,
-            temp_min, temp_max, umid_min, umid_max, lumin_min,
-            lumin_max]
+            temp_min, temp_max, umid_min, umid_max]
     if "" not in args:
         controllers.cadastro_laboratorio(*args)
 
@@ -168,7 +162,7 @@ def cadastro_usuario_lab():
         kwargs = {"e" : "Primeiro, cadastre um laboratório"}
         return redirect(url_for("cadastro_lab", **kwargs))
 
-    usuarios = controllers.obter_usuarios_laboratorio()
+    usuarios = controllers.obter_usuarios_laboratorios()
     return render_template('cadastro_usuario_lab.html',
                            laboratorios=laboratorios,
                            usuarios=usuarios,
@@ -261,6 +255,121 @@ def remover_equipamento():
         controllers.remover_equipamento(_id)
 
     kwargs = {"c" : "Equipamento removido com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
+
+@app.route('/<lab_id>/usuarios-presentes')
+def usuarios_presentes(lab_id):
+    if not autenticado():
+        return redirect(url_for('login'))
+
+    usuarios_presentes = controllers.usuarios_presentes(lab_id)
+    hoje_formatado = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    return render_template('usuarios_presentes.html',
+                           lab_id=lab_id,
+                           hoje=hoje_formatado,
+                           usuarios_presentes=usuarios_presentes)
+
+@app.route('/<lab_id>/log-eventos')
+def log_eventos_hoje(lab_id):
+    _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    return redirect(url_for('log_eventos',
+                            lab_id=lab_id,
+                            dia=_hoje))
+
+@app.route('/<lab_id>/log-eventos/<dia>')
+def log_eventos(lab_id, dia):
+    if not autenticado():
+        return redirect(url_for('login'))
+
+    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
+    log_eventos = controllers.log_eventos(lab_id, dia)
+
+    proximo_dia = controllers.data_proximo_evento_mydenox(lab_id, dia)
+    dia_anterior = controllers.data_evento_anterior_mydenox(lab_id, dia)
+
+    return render_template('logs_entrada_saida.html',
+                           eventos=log_eventos,
+                           proximo_dia=proximo_dia,
+                           dia_anterior=dia_anterior,
+                           lab_id=lab_id,
+                           dia=dia)
+
+@app.route('/usuarios-laboratorios')
+def usuarios_laboratorios():
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    usuarios = controllers.obter_usuarios_laboratorios()
+    return render_template('usuarios_laboratorios.html',
+                           usuarios=usuarios)
+
+@app.route('/editar-usuario-lab/<user_id>')
+def editar_usuario_lab(user_id):
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    usuario = controllers.obter_usuario_lab(user_id)
+    return render_template('editar_usuario_lab.html',
+                           usuario=usuario,
+                           admin=admin_autenticado())
+
+@app.route('/editar-usuario-lab/<user_id>', methods=["POST"])
+def editar_usuario_lab_post(user_id):
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    nome = request.form.get('nome') or ''
+    email = request.form.get('email') or ''
+
+    args = [user_id, nome, email]
+    if "" not in args:
+        controllers.editar_usuario_lab(*args)
+    kwargs = {"c" : "Usuário editado com sucesso!"}
+    return redirect(url_for('usuarios_laboratorios', **kwargs))
+
+@app.route('/remover-usuario-lab/<user_id>', methods=["POST"])
+def remover_usuario_de_todos_labs(user_id):
+    if not autenticado():
+        return redirect(url_for('gerenciar'))
+
+    controllers.remover_usuario_de_todos_labs(user_id)
+
+    kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
+
+@app.route('/editar-usuario-sistema/<user_id>')
+def editar_usuario_sistema(user_id):
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    usuario = controllers.obter_usuario_sistema(user_id)
+    return render_template("editar_usuario_sistema.html",
+                           usuario=usuario)
+
+@app.route('/editar-usuario-sistema/<user_id>', methods=["POST"])
+def editar_usuario_sistema_post(user_id):
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    login = request.form.get('login') or ''
+    nome = request.form.get('nome') or ''
+    email = request.form.get('email') or ''
+
+    args = [user_id, login, nome, email]
+    if "" not in args:
+        controllers.editar_usuario_sistema(*args)
+
+    kwargs = {"c" : "Usuário editado com sucesso!"}
+    return redirect(url_for('gerenciar', **kwargs))
+
+@app.route('/remover-usuario-sistema/<user_id>', methods=["POST"])
+def remover_usuario_sistema(user_id):
+    if not admin_autenticado():
+        return redirect(url_for('gerenciar'))
+
+    controllers.remover_usuario_sistema(user_id)
+
+    kwargs = {"c" : "Usuário removido com sucesso!"}
     return redirect(url_for('gerenciar', **kwargs))
 
 @app.route('/robots.txt')
