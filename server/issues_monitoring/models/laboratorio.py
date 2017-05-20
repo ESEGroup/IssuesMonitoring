@@ -2,25 +2,36 @@ from . import db
 from .usuario_lab import UsuarioLab
 from .equipamento import Equipamento
 from .zona_conforto import ZonaConforto
+from .medida import Medida_Lab, Medida_Equip
+from datetime import datetime
 
 class Laboratorio:
     def __init__(self, nome, endereco, intervalo_parser,
                  intervalo_arduino, zona_conforto_lab = None,
                  id = None, equipamentos = [], membros = []):
-        self.nome = nome
-        self.endereco = endereco
-        self.intervalo_parser = intervalo_parser
+        self.nome              = nome
+        self.endereco          = endereco
+        self.intervalo_parser  = intervalo_parser
         self.intervalo_arduino = intervalo_arduino
         self.zona_conforto_lab = zona_conforto_lab
-        self.id = id
-        self.equipamentos = equipamentos
-        self.membros = membros
+        self.id                = id
+        self.equipamentos      = equipamentos
+        self.membros           = membros
 
-    def registrar_medidas(_id, temperatura, luminosidade, umidade):
-        data_registro = int(datetime.now().timestamp())
+    def registrar_medidas(medida):
+        epoch = int(datetime.now().timestamp())
+        #insert lab info
+        db.execute('''
+            INSERT INTO Log_Lab
+            (data, lab_id, temp, umid, lum)
+            VALUES (?, ?, ?, ?, ?);''', (epoch, medida.lab_id, medida.term_sens, medida.hum, medida.lum))
 
-    def obter_medidas(_id):
-        pass
+        for m in medida.medidas_equips:
+            # foreach equip, insert its info
+            db.execute('''
+                INSERT INTO Log_Equip
+                (data, equip_id, temp)
+                VALUES (?, ?, ?);''', (epoch, m.equip_id, m.temp))
 
     def cadastrar(self):
         args = (self.zona_conforto_lab.id,
@@ -56,21 +67,23 @@ class Laboratorio:
             LEFT JOIN Equip as e
               ON l.lab_id = e.lab_id;""")
 
-        _dict = {}
+        _dict           = {}
         equipamentos_id = {}
-        usuarios_id = {}
+        usuarios_id     = {}
         for d in data:
             equipamentos_id.setdefault(d[0], {None})
             usuarios_id.setdefault(d[0], {None})
 
-            usuario_lab = UsuarioLab(*d[-4:])
-            equipamento = Equipamento(*d[-9:-4])
+            usuario_lab   = UsuarioLab(*d[-4:])
+            equipamento   = Equipamento(*d[-9:-4])
             zona_conforto = ZonaConforto(*d[5:-9])
-            lab_info = list(d[1:5]) + [zona_conforto]
+            lab_info      = list(d[1:5]) + [zona_conforto]
+
             _dict.setdefault(d[0], Laboratorio(*lab_info,
                                                membros=[],
                                                equipamentos=[],
                                                id=d[0]))
+
             if equipamento.id not in equipamentos_id[d[0]]:
                 _dict[d[0]].equipamentos += [equipamento]
 
@@ -127,10 +140,13 @@ class Laboratorio:
             FROM Lab;""")
         if data is not None:
             return data[0]
-        return "2"
+        return "-10"
 
     def obter_intervalo_arduino(lab_id):
-        return db.fetchone("""
+        data = db.fetchone("""
             SELECT intervalo_arduino
             FROM Lab
             WHERE lab_id = ?;""", (lab_id,))
+        if data is not None:
+            return data[0]
+        return "-10"
