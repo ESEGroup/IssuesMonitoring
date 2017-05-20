@@ -84,11 +84,9 @@ class UsuarioLab(Usuario):
                             WHERE log.evento = "IN"
                                   AND p.presente = ?
                                   AND p.lab_id = ?
-                                  AND log.data > ?
                             ORDER BY log.data DESC;""",
                             (True,
-                             lab_id,
-                             hoje()))
+                             lab_id))
         usuarios = []
         usuarios_set = set()
         for d in data:
@@ -175,7 +173,7 @@ class UsuarioLab(Usuario):
                             dia))
         if data is not None:
             return data[0]
-        return int(datetime.now().timestamp()) - 60 * 60 * 24
+        return dia_dt.timestamp()
 
     def data_evento_anterior(lab_id, dia):
         data = db.fetchone("""SELECT data
@@ -187,4 +185,4 @@ class UsuarioLab(Usuario):
                             dia))
         if data is not None:
             return data[0]
-        return int(datetime.now().timestamp())
+        return dia

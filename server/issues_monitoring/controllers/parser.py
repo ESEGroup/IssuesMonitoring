@@ -12,7 +12,8 @@ def registrar_presenca(dict_eventos):
         try:
             eventos += [Evento(e['epoch'],
                                e['event'],
-                               e['user_id'])]
+                               e['user_id'],
+                               e.get('lab_id'))]
         except KeyError:
             pass
     UsuarioLab.registrar_presenca(eventos)
