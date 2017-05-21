@@ -1,4 +1,5 @@
 from ..models import Laboratorio, Evento, UsuarioLab, Arduino, Medida_Lab, Medida_Equip
+from ..models.check_condicoes import CheckForForgottenLights, CheckForEnvironmentConditions
 import sqlite3
 import json
 
@@ -32,6 +33,8 @@ def registrar_medidas(j):
                                     m['sensacao_termica'],
                                     l_equips)
             Laboratorio.registrar_medidas(medida_lab)
+            CheckForForgottenLights(lab_id)
+            CheckForEnvironmentConditions(lab_id)
 
         except KeyError:
             pass
