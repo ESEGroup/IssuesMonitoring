@@ -1,24 +1,45 @@
-from threading import Thread
 from flask import Flask
+app = Flask(__name__)
+
+from threading import Thread
 from os import getenv
 from time import sleep
-from ..config import Config
+try:
+    from server import Config, DB
+except:
+    from config import Config
+    from db import DB
 from .controllers import reset_presencas_meia_noite
+
+class NoTokenParser(KeyboardInterrupt):
+    pass
+
+class NoEmailPassword(KeyboardInterrupt):
+    pass
+
+class NoSecretKey(KeyboardInterrupt):
+    pass
 
 if Config.token_parser == "":
     print("Please change the 'token_parser' at `config.py` (remember to update at the parser client too)")
-    exit()
+    raise NoTokenParser
 elif Config.email_password == "":
     print("Please change the 'email_password' at `config.py`")
-    exit()
-
-app = Flask(__name__)
+    raise NoEmailPassword
+elif not Config.debug and getenv('SECRET_KEY') is None:
+    print("Please set the 'SECRET_KEY' environment "
+          "variable while in production")
+    print("The secret key signs the cookies allowing user "
+          "authentication, leaving it empty means anyone can get "
+          "authenticated as a user or admin")
+    print('    export SECRET_KEY="[secret_key]";')
+    raise NoSecretKey
 
 from .common.utils import random_string
 if Config.debug:
     app.config['SECRET_KEY'] = 'cmsodna oskawa j0iwjdeoj20n'
 else:
-    app.config['SECRET_KEY'] = getenv('SECRET_KEY') or random_string(32)
+    app.config['SECRET_KEY'] = getenv('SECRET_KEY')
 
 @app.after_request
 def no_cache_dynamic(response):

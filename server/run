@@ -1,4 +1,4 @@
 #!/bin/bash
 
 chmod +x $0
-env FLASK_APP=issues_monitoring/server.py flask run
+python3 run.py

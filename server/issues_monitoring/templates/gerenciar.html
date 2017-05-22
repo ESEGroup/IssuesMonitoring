@@ -7,6 +7,7 @@ Gerenciar
     <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
     <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
     <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+    <li><a href="{{url_for('usuarios_laboratorios')}}">Listar Usuarios de Lab</a></li>
     <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
 {% endblock %}
 
@@ -15,6 +16,7 @@ Gerenciar
 
 <hr>
 
+{% if usuarios_sistema|len > 0 %}
 <div class="campos">
     <table>
         <thead>
@@ -24,6 +26,10 @@ Gerenciar
                 <th>E-mail</th>
                 <th>Admin</th>
                 <th>Aprovado</th>
+                {% if admin %}
+                <th>Editar</th>
+                <th>Excluir</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -43,6 +49,12 @@ Gerenciar
                     <input type="hidden" name="data" value="{{usuario.data_aprovacao}}">
                     <td><input type="submit" value="{% if (usuario.data_aprovacao|data) != '-' %}[-]{% else %}[+]{% endif %}"></td>
                 </form>
+                <form action="{{url_for('editar_usuario_sistema', user_id=usuario.id)}}">
+                    <td><input type="submit" value="Editar"></td>
+                </form>
+                <form method="POST" action="{{url_for('remover_usuario_sistema', user_id=usuario.id)}}">
+                    <td><input type="submit" value="Excluir"></td>
+                </form>
                 {% else %}
                 <td>{{usuario.admin|bool}}</td>
                 <td>{{usuario.data_aprovacao|data}}</td>
@@ -52,11 +64,15 @@ Gerenciar
         </tbody>
     </table>
 </div>
-
+{% else %}
+<h1>Não há usuários de sistema</h1>
+{% endif %}
 
 {% if laboratorios|len > 0 %}
 {% for lab in laboratorios %}
 <div class="campos">
+    <a href="/{{lab.id}}/usuarios-presentes"><input value="Usuários Presentes" type="submit"></a>
+    <a href="/{{lab.id}}/log-eventos"><input value="Log dos Eventos" type="submit"></a>
     <form method="POST" action="{{url_for('gerenciar')}}">
         <input type="hidden" name="id-lab" value="{{lab.id}}">
         <div>
@@ -70,45 +86,35 @@ Gerenciar
         </div>
 
         <div>
-            <p>Intervalo de coleta do parser:</p>
+            <p>Intervalo de coleta do parser (s):</p>
             <input type="text" name="intervalo-parser" value="{{lab.intervalo_parser}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Intervalo de coleta do Arduino:</p>
+            <p>Intervalo de coleta do Arduino (s):</p>
             <input type="text" name="intervalo-arduino" value="{{lab.intervalo_arduino}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <h3>Zona de Conforto do laboratório</h3>
 
         <div>
-            <p>Temperatura mínima:</p>
+            <p>Temperatura mínima (°C):</p>
             <input type="text" name="temp-min" value="{{lab.zona_conforto_lab.temp_min}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Temperatura máxima:</p>
+            <p>Temperatura máxima (°C):</p>
             <input type="text" name="temp-max" value="{{lab.zona_conforto_lab.temp_max}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Umidade mínima:</p>
+            <p>Umidade mínima (%):</p>
             <input type="text" name="umid-min" value="{{lab.zona_conforto_lab.umidade_min}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         <div>
-            <p>Umidade máxima:</p>
+            <p>Umidade máxima (%):</p>
             <input type="text" name="umid-max" value="{{lab.zona_conforto_lab.umidade_max}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Luminosidade mínima:</p>
-            <input type="text" name="lumin-min" value="{{lab.zona_conforto_lab.lumin_min}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Luminosidade máxima:</p>
-            <input type="text" name="lumin-max" value="{{lab.zona_conforto_lab.lumin_max}}" {% if not admin %}readonly{% endif %}>
         </div>
 
         {% if admin %}
