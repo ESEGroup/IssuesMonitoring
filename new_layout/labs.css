@@ -1,0 +1,120 @@
+/* CSS referente ao botao de opcao de laboratorio: */
+
+.lab-container {
+	min-height: 100px;
+	margin-top: 50px;
+	width: 100%;
+	text-align: center;
+}
+
+a.lab-btn { 
+	display: inline-block;
+	color: #666;
+	background-color: #eee;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-size: 14px;
+	padding: 100px 38px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-bottom-width: 4px;
+    background: url(scientist.png) no-repeat top;
+    background-size: 110px 145px; /*Tamanho da imagem do lab*/
+    background-position: 55% 15%; /*Centraliza a imagem do lab*/
+    width: 130px;
+    height: 90%;
+    text-decoration: none; 
+    margin: 0 10px; 
+}
+
+	a.lab-btn:hover {
+		background-color: #e3e3e3;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	a.lab-btn:active {
+		background-color: #CCC;
+		border-color: rgba(0,0,0,0.9);
+	}
+
+.lab-txt {
+    position: relative; 
+    bottom: -80px;
+    word-wrap: break-word;
+}
+
+/* Variante azul do botao de laboratorio: */
+
+a.lab-btn.lab-btn-blue {
+	background-color: #699DB6;
+	border-color: rgba(0,0,0,0.3);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+}
+
+	a.lab-btn.lab-btn-blue:hover {
+		background-color: #4F87A2;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	a.lab-btn.lab-btn-blue:active {
+		background-color: #3C677B;
+		border-color: rgba(0,0,0,0.9);
+	}
+
+/* CSS referente a barra de navegacao lateral: */
+
+body {
+    margin: 0;
+}
+
+.nav-bar-li {
+    font-size: 14pt;
+    letter-spacing: 1px;
+}
+
+.nav-bar-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 20%; /*Tamanho da nav-bar lateral*/
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.nav-bar-li .nav-bar-li-link {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.nav-bar-li .nav-bar-li-link.active {
+    background-color: #87F;
+    color: white;
+}
+
+.nav-bar-li .nav-bar-li-link:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+#nav-bar {
+    margin-left : 20%; /*Se mudar tamanho da nav-bar lateral, mude aqui tambem*/
+    padding : 1px 16px;
+    height : 1000px;
+}
+
+/* CSS referente ao titulo principal da pagina: */
+
+#title-text {
+    text-align : center;
+    margin-top : 30px;
+    letter-spacing: 1px;
+	font-size: 40px;
+    text-shadow: 0 0 0.05em #87F, 0 0 0.03em #87F, 0 0 0.03em #87F;
+}
