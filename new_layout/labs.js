@@ -1,0 +1,10 @@
+$(document).ready(function(){
+    $("#switch-view").click(function(){
+        $("#hidden-form").toggle(400);
+        $("#escolher-lab").toggle(400);
+    });
+    $("#switch-back").click(function(){
+        $("#hidden-form").toggle(400);
+        $("#escolher-lab").toggle(400);
+    });
+});

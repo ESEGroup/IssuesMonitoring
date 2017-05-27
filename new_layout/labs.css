@@ -7,7 +7,7 @@
 	text-align: center;
 }
 
-a.lab-btn { 
+.lab-btn { 
 	display: inline-block;
 	color: #666;
 	background-color: #eee;
@@ -29,12 +29,12 @@ a.lab-btn {
     margin: 0 10px; 
 }
 
-	a.lab-btn:hover {
+	.lab-btn:hover {
 		background-color: #e3e3e3;
 		border-color: rgba(0,0,0,0.5);
 	}
 	
-	a.lab-btn:active {
+	.lab-btn:active {
 		background-color: #CCC;
 		border-color: rgba(0,0,0,0.9);
 	}
@@ -47,19 +47,19 @@ a.lab-btn {
 
 /* Variante azul do botao de laboratorio: */
 
-a.lab-btn.lab-btn-blue {
+.btn-blue {
 	background-color: #699DB6;
 	border-color: rgba(0,0,0,0.3);
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	color: #FFF;
 }
 
-	a.lab-btn.lab-btn-blue:hover {
+	.btn-blue:hover {
 		background-color: #4F87A2;
 		border-color: rgba(0,0,0,0.5);
 	}
 	
-	a.lab-btn.lab-btn-blue:active {
+	.btn-blue:active {
 		background-color: #3C677B;
 		border-color: rgba(0,0,0,0.9);
 	}
@@ -117,4 +117,162 @@ body {
     letter-spacing: 1px;
 	font-size: 40px;
     text-shadow: 0 0 0.05em #87F, 0 0 0.03em #87F, 0 0 0.03em #87F;
+}
+
+/* CSS referente ao botao de Cadastrar Novo Laboratorio: */
+
+.div-botao-novo-lab {
+    min-height: 100px;
+	margin-top: 30px;
+	width: 100%;
+    text-align: center;
+}
+
+.btn-novo-lab {
+	display: inline-block;
+	color: #666;
+	background-color: #eee;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-size: 12px;
+	padding: 10px 30px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-bottom-width: 3px;
+    text-align: center;
+    text-decoration: none;
+}
+
+	.btn-novo-lab:hover {
+		background-color: #e3e3e3;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	.btn-novo-lab:active {
+		background-color: #CCC;
+		border-color: rgba(0,0,0,0.9);
+	}
+
+.btn-novo-lab-blue {
+	background-color: #4aa3ce;
+	border-color: rgba(0,0,0,0.3);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+}
+
+	.btn-novo-lab-blue:hover {
+		background-color: #2182b2;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	.btn-novo-lab-blue:active {
+		background-color: #3C677B;
+		border-color: rgba(0,0,0,0.9);
+	}
+
+
+/* CSS referente a cadastrar novo laboratorio: */
+
+.cadastrar-lab-form{
+    max-width: 500px;
+    padding: 10px 20px;
+    background: #f4f7f8;
+    margin: 10px auto;
+    padding: 20px;
+    background: #f4f7f8;
+    border-radius: 8px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+.cadastrar-lab-form fieldset{
+    border: none;
+}
+.cadastrar-lab-form legend {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+.cadastrar-lab-form label {
+    display: block;
+    margin-bottom: 8px;
+}
+.cadastrar-lab-form input[type="text"],
+.cadastrar-lab-form input[type="date"],
+.cadastrar-lab-form input[type="datetime"],
+.cadastrar-lab-form input[type="email"],
+.cadastrar-lab-form input[type="number"],
+.cadastrar-lab-form input[type="search"],
+.cadastrar-lab-form input[type="time"],
+.cadastrar-lab-form input[type="url"],
+.cadastrar-lab-form textarea,
+.cadastrar-lab-form select {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    background: rgba(255,255,255,.1);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 0;
+    outline: 0;
+    padding: 7px;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    background-color: #e8eeef;
+    color:#8a97a0;
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    margin-bottom: 30px;
+   
+}
+.cadastrar-lab-form input[type="text"]:focus,
+.cadastrar-lab-form input[type="date"]:focus,
+.cadastrar-lab-form input[type="datetime"]:focus,
+.cadastrar-lab-form input[type="email"]:focus,
+.cadastrar-lab-form input[type="number"]:focus,
+.cadastrar-lab-form input[type="search"]:focus,
+.cadastrar-lab-form input[type="time"]:focus,
+.cadastrar-lab-form input[type="url"]:focus,
+.cadastrar-lab-form textarea:focus,
+.cadastrar-lab-form select:focus{
+    background: #d2d9dd;
+}
+.cadastrar-lab-form select{
+    -webkit-appearance: menulist-button;
+    height:35px;
+}
+.cadastrar-lab-form .number {
+    background: #1abc9c;
+    color: #fff;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    font-size: 0.8em;
+    margin-right: 4px;
+    line-height: 30px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+    border-radius: 15px 15px 15px 0px;
+}
+
+.cadastrar-lab-form input[type="submit"],
+.cadastrar-lab-form input[type="button"]
+{
+    position: relative;
+    display: block;
+    padding: 19px 39px 18px 39px;
+    color: #FFF;
+    margin: 0 auto;
+    background: #1abc9c;
+    font-size: 18px;
+    text-align: center;
+    font-style: normal;
+    width: 100%;
+    border: 1px solid #16a085;
+    border-width: 1px 1px 3px;
+    margin-bottom: 10px;
+}
+.cadastrar-lab-form input[type="submit"]:hover,
+.cadastrar-lab-form input[type="button"]:hover
+{
+    background: #109177;
 }
