@@ -6,7 +6,9 @@
 
 
     <!-- Page CSS Include -->
+    <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="labs.css" />
+
 
 
 
@@ -36,25 +38,28 @@
                 <fieldset>
                     <legend><span class="number">1</span> Informações do Laboratório</legend>
                     <input type="text" name="field1" placeholder="Nome do Laboratório">
-                    <input type="email" name="field2" placeholder="Endereço">     
+                    <input type="email" name="field2" placeholder="Endereço (opcional)">     
                 </fieldset>
                 <fieldset>
                     <legend><span class="number">2</span> Intervalos de coleta</legend>
-                    <div class="legenda-cadastro">Parser (em minutos)</div>
+                    <div class="legenda-cadastro">Parser (em minutos):</div>
                     <div class="range-slider">
-                        <input class="range-slider__range" type="range" value="3" min="0.5" max="20" step="0.5">
+                        <input class="range-slider__range" id="int_parser" type="range" value="3" min="0.5" max="20" step="0.5">
                         <span class="range-slider__value">0</span>
                     </div>
-                    <div class="legenda-cadastro">Arduino (em minutos)</div>
+                    <div class="legenda-cadastro">Arduino (em minutos):</div>
                     <div class="range-slider">
-                        <input class="range-slider__range" type="range" value="3" min="0.5" max="20" step="0.5">
+                        <input class="range-slider__range" id="int_arduino" type="range" value="3" min="0.5" max="20" step="0.5">
                         <span class="range-slider__value">0</span>
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend><span class="number">3</span> Zona de Conforto</legend>
-                    <div class="legenda-cadastro">Temperatura</div>
-                    <div id="double-slider"></div>
+                    <div class="legenda-cadastro">Temperatura do laboratório:</div>
+                    <div class="div-double-slider">
+                        <div id="slider-range" class="double-slider"></div>
+                        <span class="double-slider-value"><input type="url" id="temp-lab" readonly></span>
+                    </div>
                 </fieldset>
                 <input type="submit" value="Cadastrar Laboratório" />
             </form>
@@ -63,12 +68,12 @@
             </div>
         </div>
 
-    
-
     </div>
+
 
     <!-- Page Javascript Include -->
     <script src="jquery.min.js"></script>
     <script src="labs.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </body>
 </html>

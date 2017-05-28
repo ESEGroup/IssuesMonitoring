@@ -202,7 +202,6 @@ body {
 .cadastrar-lab-form input[type="number"],
 .cadastrar-lab-form input[type="search"],
 .cadastrar-lab-form input[type="time"],
-.cadastrar-lab-form input[type="url"],
 .cadastrar-lab-form textarea,
 .cadastrar-lab-form select {
     font-family: Georgia, "Times New Roman", Times, serif;
@@ -231,7 +230,6 @@ body {
 .cadastrar-lab-form input[type="number"]:focus,
 .cadastrar-lab-form input[type="search"]:focus,
 .cadastrar-lab-form input[type="time"]:focus,
-.cadastrar-lab-form input[type="url"]:focus,
 .cadastrar-lab-form textarea:focus,
 .cadastrar-lab-form select:focus{
     background: #d2d9dd;
@@ -282,6 +280,8 @@ body {
     letter-spacing: 1px;
     font-size: 18px;
 }
+
+
 
 /* CSS referente ao slider: */
 
@@ -338,16 +338,22 @@ body {
 }
 
 .range-slider__value {
-  display: inline;
-  position: relative;
-  width: 60px;
-  color: #fff;
-  line-height: 20px;
-  text-align: center;
-  border-radius: 3px;
-  background: #2c3e50;
-  padding: 5px 14px;
-  margin-left: 8px;
+    display: inline;
+    position: relative;
+    width: 60px;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 3px;
+    background: #2c3e50;
+    padding: 5px 14px;
+    margin-left: 8px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */;
 }
 .range-slider__value:after {
   position: absolute;
@@ -370,3 +376,66 @@ input::-moz-focus-inner,
 input::-moz-focus-outer {
   border: 0;
 }
+
+
+
+/* CSS referente ao slider duplo: */
+
+.div-double-slider {
+    margin: 20px 0 0 0%;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#temp-lab {
+    background: transparent;
+    border: none;
+    color: #fff;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */;
+}
+
+.double-slider {
+    -webkit-appearance: none;
+    width: calc(100% - (110px));
+    height: 10px;
+    border-radius: 5px;
+    background: #d7dcdf;
+    outline: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.double-slider-value {
+    display: block;
+    position: relative;
+    bottom: 20px;
+    left: 374px;
+    width: 63px;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 3px;
+    background: #2c3e50;
+    padding: 5px 14px;
+    margin-left: 8px;
+}
+
+.double-slider-value:after {
+    position: absolute;
+    top: 8px;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-right: 7px solid #2c3e50;
+    border-bottom: 7px solid transparent;
+    content: '';
+}
+

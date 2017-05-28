@@ -36,15 +36,14 @@ rangeSlider();
 //JS para os sliders de dois handles presentes em cadastrar lab:
 
 $( function() {
-    $( "#double-slider" ).slider({
+    $( "#slider-range" ).slider({
         range: true,
-        min: 0,
-        max: 500,
-        values: [ 75, 300 ],
+        min: 10,
+        max: 50,
+        values: [ 20, 30 ],
         slide: function( event, ui ) {
-            $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+            $( "#temp-lab" ).val( ui.values[ 0 ] + "ºC a " + ui.values[ 1 ] + "ºC" );
         }
     });
-
-    $( "#amount" ).val( "$" + $( "#double-slider" ).slider( "values", 0 ) +" - $" + $( "#double-slider" ).slider( "values", 1 ) );
+    $( "#temp-lab" ).val($( "#slider-range" ).slider( "values", 0 ) + "ºC a " + $( "#slider-range" ).slider( "values", 1 ) + "ºC");
 } );
