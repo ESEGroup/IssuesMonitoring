@@ -11,6 +11,15 @@ $(document).ready(function(){
     });
 });
 
+//JS para o menu dropdown de cadastrar usuário:
+
+$(document).ready(function(){
+    $("#cadastro-usuario").click(function(){
+        $("#hidden-register").slideToggle(200);
+    });
+});
+
+
 //JS para os sliders de handle unico presentes em cadastrar lab:
 
 var rangeSlider = function(){
@@ -53,7 +62,7 @@ $( function() {
         range: true,
         min: 0,
         max: 100,
-        values: [ 20, 30 ],
+        values: [ 10, 60 ],
         slide: function( event, ui ) {
             $( "#umidade-lab" ).val( ui.values[ 0 ] + "% a " + ui.values[ 1 ] + "%" );
         }

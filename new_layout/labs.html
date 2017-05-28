@@ -6,8 +6,8 @@
 
 
     <!-- Page CSS Include -->
-    <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="labs.css" />
+    <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/labs.css" />
 
 
 
@@ -18,7 +18,11 @@
 
     <ul class="nav-bar-ul">
         <li class="nav-bar-li"><a class = "nav-bar-li-link active" href="#home">Laboratório</a></li>
-        <li class="nav-bar-li"><a class = "nav-bar-li-link" href="#news">Cadastro</a></li>
+        <li class="nav-bar-li"><a id="cadastro-usuario" class = "nav-bar-li-link" href="#news">Cadastro de Usuário</a></li>
+        <ul id="hidden-register" class="nav-bar-ul" style="display:none">
+            <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="#home"><div class="nav-bar-suboption-text">Novo Usuário do Sistema</div></a></li>
+            <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="#home"><div class="nav-bar-suboption-text">Novo Usuário do Laboratório</div></a></li>
+        </ul>
     </ul>
 
     <div id="nav-bar">
@@ -37,8 +41,8 @@
             <form>
                 <fieldset>
                     <legend><span class="number">1</span> Informações do Laboratório</legend>
-                    <input type="text" name="field1" placeholder="Nome do Laboratório">
-                    <input type="email" name="field2" placeholder="Endereço (opcional)">     
+                    <input type="text" name="nome" placeholder="Nome do Laboratório">
+                    <textarea type="email" name="endereco" placeholder="Endereço (opcional)"></textarea>     
                 </fieldset>
                 <fieldset>
                     <legend><span class="number">2</span> Intervalos de coleta</legend>
@@ -77,8 +81,8 @@
 
 
     <!-- Page Javascript Include -->
-    <script src="jquery.min.js"></script>
-    <script src="labs.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/labs.js"></script>
+    <script src="js/jquery-ui/jquery-ui.js"></script>
 </body>
 </html>

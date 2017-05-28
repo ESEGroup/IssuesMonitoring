@@ -20,7 +20,7 @@
 	-webkit-border-radius: 5px;
 	border: 1px solid rgba(0,0,0,0.3);
 	border-bottom-width: 4px;
-    background: url(scientist.png) no-repeat top;
+    background: url(images/scientist.png) no-repeat top;
     background-size: 110px 145px; /*Tamanho da imagem do lab*/
     background-position: 55% 15%; /*Centraliza a imagem do lab*/
     width: 130px;
@@ -75,6 +75,16 @@ body {
     letter-spacing: 1px;
 }
 
+.nav-bar-suboption {
+    font-size: 9pt;
+    letter-spacing: 1px;
+}
+
+.nav-bar-suboption-text {
+    margin-left: 20px;
+}
+
+
 .nav-bar-ul {
     list-style-type: none;
     margin: 0;
@@ -86,19 +96,19 @@ body {
     overflow: auto;
 }
 
-.nav-bar-li .nav-bar-li-link {
+.nav-bar-li-link {
     display: block;
     color: #000;
     padding: 8px 16px;
     text-decoration: none;
 }
 
-.nav-bar-li .nav-bar-li-link.active {
+.nav-bar-li-link.active {
     background-color: #87F;
     color: white;
 }
 
-.nav-bar-li .nav-bar-li-link:hover:not(.active) {
+.nav-bar-li-link:hover:not(.active) {
     background-color: #555;
     color: white;
 }
