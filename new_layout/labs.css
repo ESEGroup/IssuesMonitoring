@@ -388,7 +388,7 @@ input::-moz-focus-outer {
     margin-bottom: 20px;
 }
 
-#temp-lab {
+.slider-bounds-lab {
     background: transparent;
     border: none;
     color: #fff;
