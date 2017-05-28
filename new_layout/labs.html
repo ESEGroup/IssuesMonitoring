@@ -8,10 +8,6 @@
     <!-- Page CSS Include -->
     <link rel="stylesheet" type="text/css" href="labs.css" />
 
-    <!-- Page Javascript Include -->
-    <script src="jquery.min.js"></script>
-    <script src="labs.js"></script>
-
 
 
 </head>
@@ -39,41 +35,40 @@
             <form>
                 <fieldset>
                     <legend><span class="number">1</span> Informações do Laboratório</legend>
-                    <input type="text" name="field1" placeholder="Your Name *">
-                    <input type="email" name="field2" placeholder="Your Email *">
-                    <textarea name="field3" placeholder="About yourself"></textarea>
-                    <label for="job">Interests:</label>
-                    <select id="job" name="field4">
-                        <optgroup label="Indoors">
-                            <option value="fishkeeping">Fishkeeping</option>
-                            <option value="reading">Reading</option>
-                            <option value="boxing">Boxing</option>
-                            <option value="debate">Debate</option>
-                            <option value="gaming">Gaming</option>
-                            <option value="snooker">Snooker</option>
-                            <option value="other_indoor">Other</option>
-                        </optgroup>
-                        <optgroup label="Outdoors">
-                            <option value="football">Football</option>
-                            <option value="swimming">Swimming</option>
-                            <option value="fishing">Fishing</option>
-                            <option value="climbing">Climbing</option>
-                            <option value="cycling">Cycling</option>
-                            <option value="other_outdoor">Other</option>
-                        </optgroup>
-                    </select>      
+                    <input type="text" name="field1" placeholder="Nome do Laboratório">
+                    <input type="email" name="field2" placeholder="Endereço">     
                 </fieldset>
                 <fieldset>
-                    <legend><span class="number">2</span> Additional Info</legend>
-                    <textarea name="field3" placeholder="About Your School"></textarea>
+                    <legend><span class="number">2</span> Intervalos de coleta</legend>
+                    <div class="legenda-cadastro">Parser (em minutos)</div>
+                    <div class="range-slider">
+                        <input class="range-slider__range" type="range" value="3" min="0.5" max="20" step="0.5">
+                        <span class="range-slider__value">0</span>
+                    </div>
+                    <div class="legenda-cadastro">Arduino (em minutos)</div>
+                    <div class="range-slider">
+                        <input class="range-slider__range" type="range" value="3" min="0.5" max="20" step="0.5">
+                        <span class="range-slider__value">0</span>
+                    </div>
                 </fieldset>
-                <input type="submit" value="Apply" />
+                <fieldset>
+                    <legend><span class="number">3</span> Zona de Conforto</legend>
+                    <div class="legenda-cadastro">Temperatura</div>
+                    <div id="double-slider"></div>
+                </fieldset>
+                <input type="submit" value="Cadastrar Laboratório" />
             </form>
             <div class="div-botao-novo-lab">
                 <a href="#" class="btn-novo-lab btn-novo-lab-blue" id="switch-back">Cancelar</a>
             </div>
         </div>
 
+    
+
     </div>
+
+    <!-- Page Javascript Include -->
+    <script src="jquery.min.js"></script>
+    <script src="labs.js"></script>
 </body>
 </html>
