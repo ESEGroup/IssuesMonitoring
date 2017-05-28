@@ -2,11 +2,13 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>Laboratórios</title>
+    <title>Issues Monitoring</title>
 
 
     <!-- Page CSS Include -->
     <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/navbar.css" />
+    <link rel="stylesheet" type="text/css" href="css/form.css" />
     <link rel="stylesheet" type="text/css" href="css/labs.css" />
 
 
@@ -17,8 +19,8 @@
 <body>
 
     <ul class="nav-bar-ul">
-        <li class="nav-bar-li"><a class = "nav-bar-li-link active" href="#home">Laboratório</a></li>
-        <li class="nav-bar-li"><a id="cadastro-usuario" class = "nav-bar-li-link" href="#news">Cadastro de Usuário</a></li>
+        <li class="nav-bar-li"><a class = "nav-bar-li-link active" href="#">Laboratório</a></li>
+        <li class="nav-bar-li"><a id="cadastro-usuario" class = "nav-bar-li-link" href="#">Cadastro de Usuário</a></li>
         <ul id="hidden-register" class="nav-bar-ul" style="display:none">
             <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="#home"><div class="nav-bar-suboption-text">Novo Usuário do Sistema</div></a></li>
             <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="#home"><div class="nav-bar-suboption-text">Novo Usuário do Laboratório</div></a></li>
@@ -37,7 +39,7 @@
             </div>
         </div>
 
-        <div class="cadastrar-lab-form" id="hidden-form" style="display:none">
+        <div class="neat-form" id="hidden-form" style="display:none">
             <form>
                 <fieldset>
                     <legend><span class="number">1</span> Informações do Laboratório</legend>
@@ -83,6 +85,7 @@
     <!-- Page Javascript Include -->
     <script src="js/jquery.min.js"></script>
     <script src="js/labs.js"></script>
+    <script src="js/navbar.js"></script>
     <script src="js/jquery-ui/jquery-ui.js"></script>
 </body>
 </html>
