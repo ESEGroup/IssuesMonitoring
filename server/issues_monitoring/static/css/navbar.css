@@ -1,0 +1,55 @@
+/* CSS referente a barra de navegacao lateral: */
+
+body {
+    margin: 0;
+}
+
+.nav-bar-li {
+    font-size: 14pt;
+    letter-spacing: 1px;
+}
+
+.nav-bar-suboption {
+    font-size: 9pt;
+    letter-spacing: 1px;
+}
+
+.nav-bar-suboption-text {
+    margin-left: 20px;
+}
+
+
+.nav-bar-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 20%; /*Tamanho da nav-bar lateral*/
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.nav-bar-li-link {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.nav-bar-li-link.active {
+    background-color: #87F;
+    color: white;
+}
+
+.nav-bar-li-link:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+#nav-bar {
+    margin-left : 20%; /*Se mudar tamanho da nav-bar lateral, mude aqui tambem*/
+    padding : 1px 16px;
+    height : 1000px;
+}
+
