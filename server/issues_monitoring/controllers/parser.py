@@ -26,7 +26,7 @@ Informamos que às 00:00h de hoje, todos os logs de presença foram reiniciados.
 Caso ainda se encontre no laboratório, pedimos que renove seu registro de presença.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
-    send_mail("Alerta de Reset de presenças",
+    send_email("Alerta de Reset de presenças",
               msg_content,
               emails)
 
