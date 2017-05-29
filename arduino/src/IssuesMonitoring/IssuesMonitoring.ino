@@ -6,8 +6,8 @@
 #include "DallasTemperature.h"
 
 // Pins
-const byte LDR_PIN = 2;
-const byte DHT_PIN = 3;
+const byte LDR_PIN = 4;
+const byte DHT_PIN = 2;
 
 // DHT sensor
 DHT dht(DHT_PIN, DHT11);
