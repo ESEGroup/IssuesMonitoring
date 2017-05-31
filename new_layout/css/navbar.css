@@ -53,3 +53,57 @@ body {
     height : 1000px;
 }
 
+
+/* CSS referente ao botao azul: */
+
+.div-botao-estilizado {
+    min-height: 100px;
+	margin-top: 30px;
+	width: 100%;
+    text-align: center;
+}
+
+.btn-estilizado {
+	display: inline-block;
+	color: #666;
+	background-color: #eee;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-size: 12px;
+	padding: 10px 30px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-bottom-width: 3px;
+    text-align: center;
+    text-decoration: none;
+}
+
+	.btn-estilizado:hover {
+		background-color: #e3e3e3;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	.btn-estilizado:active {
+		background-color: #CCC;
+		border-color: rgba(0,0,0,0.9);
+	}
+
+.btn-estilizado-blue {
+	background-color: #4aa3ce;
+	border-color: rgba(0,0,0,0.3);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+}
+
+	.btn-estilizado-blue:hover {
+		background-color: #2182b2;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	.btn-estilizado-blue:active {
+		background-color: #3C677B;
+		border-color: rgba(0,0,0,0.9);
+	}
+
+

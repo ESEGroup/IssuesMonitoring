@@ -33,7 +33,7 @@ div.table-title {
   background: white;
   border-radius:3px;
   border-collapse: collapse;
-  height: 320px;
+  /*height: 320px;*/
   margin: auto;
   max-width: 600px;
   padding:5px;
@@ -47,10 +47,10 @@ div.table-title {
 }
  
 th {
-  color:#D5DDE5;;
-  background:#1b1e24;
+  color:#001A33;;
+  background:#699DB6;
   border-bottom:4px solid #9ea7af;
-  border-right: 1px solid #343a45;
+  border-right: 1px solid #a0b2d2;
   font-size:23px;
   font-weight: 100;
   padding:24px;
