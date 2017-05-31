@@ -18,7 +18,9 @@
 <body>
 
     <ul class="nav-bar-ul">
-        <li class="nav-bar-li"><a class = "nav-bar-li-link active" href="labs.html">Laboratório</a></li>
+        <li class="nav-bar-li"><a class = "nav-bar-li-link" href="gerenciar.html">Laboratório</a></li>
+        <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="log_presenca.html"><div class="nav-bar-suboption-text">Log de Presença</div></a></li>
+        <li class="nav-bar-suboption"><a class = "nav-bar-li-link active" href="#"><div class="nav-bar-suboption-text">Alterar Zona de Conforto</div></a></li>
         <li class="nav-bar-li"><a id="cadastro-usuario" class = "nav-bar-li-link" href="#">Cadastro de Usuário</a></li>
         <ul id="hidden-register" class="nav-bar-ul" style="display:none">
             <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="cadastro_usuario_sistema.html"><div class="nav-bar-suboption-text">Novo Usuário do Sistema</div></a></li>
@@ -31,31 +33,14 @@
 
         <div class="page-title">
             <h3>Alterar a Zona de Conforto</h3>
+            <h4>Laboratório de Engenharia de Software</h4>
         </div>
 
 
         <div class="neat-form">
             <form>
                 <fieldset>
-                    <legend><span class="number">1</span> Informações do Laboratório</legend>
-                    <input type="text" name="nome" placeholder="Nome do Laboratório">
-                    <textarea type="email" name="endereco" placeholder="Endereço (opcional)"></textarea>     
-                </fieldset>
-                <fieldset>
-                    <legend><span class="number">2</span> Intervalos de coleta</legend>
-                    <div class="legenda-cadastro">Parser (em minutos):</div>
-                    <div class="range-slider">
-                        <input class="range-slider__range" id="int_parser" type="range" value="3" min="0.5" max="20" step="0.5">
-                        <span class="range-slider__value">0</span>
-                    </div>
-                    <div class="legenda-cadastro">Arduino (em minutos):</div>
-                    <div class="range-slider">
-                        <input class="range-slider__range" id="int_arduino" type="range" value="3" min="0.5" max="20" step="0.5">
-                        <span class="range-slider__value">0</span>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend><span class="number">3</span> Zona de Conforto</legend>
+                    <legend><span class="number">1</span> Zona de Conforto</legend>
                     <div class="legenda-cadastro">Temperatura do laboratório:</div>
                     <div class="div-double-slider">
                         <div id="slider-temp" class="double-slider"></div>
@@ -67,10 +52,10 @@
                         <span class="double-slider-value"><input type="url" id="umidade-lab" class="slider-bounds-lab" readonly></span>
                     </div>
                 </fieldset>
-                <input type="submit" value="Cadastrar Laboratório" />
+                <input type="submit" value="Salvar Informações" />
             </form>
             <div class="div-botao-estilizado">
-                <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
+                <a href="gerenciar.html" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
             </div>
         </div>
 
@@ -81,5 +66,6 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/jquery-ui/jquery-ui.js"></script>
+    <script src="js/alterar_zona_conforto.js"></script>
 </body>
 </html>
