@@ -7,25 +7,6 @@
   text-rendering: optimizeLegibility;
 }
 
-div.table-title {
-   display: block;
-  margin: auto;
-  max-width: 600px;
-  padding:5px;
-  width: 100%;
-}
-
-.table-title h3 {
-   color: #4286f4;
-   font-size: 30px;
-   font-weight: 400;
-   font-style:normal;
-   font-family: "Roboto", helvetica, arial, sans-serif;
-   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-   text-transform:uppercase;
-   text-align: center;
-}
-
 
 /*** Table Styles **/
 
@@ -44,6 +25,7 @@ div.table-title {
   font-size: 16px;
   font-weight: 400;
   text-rendering: optimizeLegibility;
+  margin-bottom: 60px;
 }
  
 th {

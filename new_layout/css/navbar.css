@@ -106,4 +106,28 @@ body {
 		border-color: rgba(0,0,0,0.9);
 	}
 
+/* CSS referente a titulos de paginas: */
+
+.page-title h3 {
+    color: #4286f4;
+    font-size: 36px;
+    font-weight: 400;
+    font-style: normal;
+    font-family: "Roboto", helvetica, arial, sans-serif;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.page-title h4 {
+    position: relative;
+    bottom: 30px;
+    margin-bottom: 2px;
+    color: #4286f4;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    font-family: "Roboto", helvetica, arial, sans-serif;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
