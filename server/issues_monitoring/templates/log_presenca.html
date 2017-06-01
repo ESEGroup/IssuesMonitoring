@@ -1,0 +1,39 @@
+{% extends 'menu.html' %}
+/en
+{% block title %}Issues Monitorint{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Log de Presença de {{dia|dia_mes_ano}}</h3>
+    </div>
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th class="text-left">Nome</th>
+                <th class="text-left">Evento</th>
+                <th class="text-left">Data</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            {% for evento in eventos %}
+            <tr>
+                <td class="text-left" title="{{evento.user_id}}">{{evento.nome_de_usuario}}</td>
+                <td class="text-left">{{evento.evento|trans_evento}}</td>
+                <td class="text-left">{{evento.epoch|data}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="div-botao-estilizado">
+        <a href="gerenciar.html" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+    </div>
+
+</div>
+{% endblock %}

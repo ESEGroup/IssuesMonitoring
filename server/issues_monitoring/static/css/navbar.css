@@ -18,7 +18,6 @@ body {
     margin-left: 20px;
 }
 
-
 .nav-bar-ul {
     list-style-type: none;
     margin: 0;
@@ -53,3 +52,84 @@ body {
     height : 1000px;
 }
 
+
+/* CSS referente ao botao azul: */
+
+.div-botao-estilizado {
+    min-height: 100px;
+	margin-top: 30px;
+	width: 100%;
+    text-align: center;
+}
+
+.btn-estilizado {
+	display: inline-block;
+	color: #666;
+	background-color: #eee;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-size: 12px;
+	padding: 10px 30px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-bottom-width: 3px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-estilizado:hover {
+    background-color: #e3e3e3;
+    border-color: rgba(0,0,0,0.5);
+}
+
+.btn-estilizado:active {
+    background-color: #CCC;
+    border-color: rgba(0,0,0,0.9);
+}
+
+.btn-estilizado-blue {
+	background-color: #4aa3ce;
+	border-color: rgba(0,0,0,0.3);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+}
+
+.btn-estilizado-blue:hover {
+    background-color: #2182b2;
+    border-color: rgba(0,0,0,0.5);
+}
+
+.btn-estilizado-blue:active {
+    background-color: #3C677B;
+    border-color: rgba(0,0,0,0.9);
+}
+
+/* CSS referente a titulos de paginas: */
+
+.page-title h3 {
+    color: #4286f4;
+    font-size: 36px;
+    font-weight: 400;
+    font-style: normal;
+    font-family: "Roboto", helvetica, arial, sans-serif;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.page-title h4 {
+    position: relative;
+    bottom: 30px;
+    margin-bottom: 2px;
+    color: #4286f4;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    font-family: "Roboto", helvetica, arial, sans-serif;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.dropdown:hover {
+    cursor: pointer
+}

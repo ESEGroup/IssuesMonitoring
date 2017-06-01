@@ -37,3 +37,16 @@ class ZonaConforto:
              self.umidade_min,
              self.umidade_max,
              self.lab_id))
+
+    def obter(id):
+        data = db.fetchone("""
+            SELECT zc.temp_min, zc.temp_max,
+                   zc.umid_min, zc.umid_max,
+                   l.lab_id, zc.zona_conforto_id
+            FROM Zona_de_Conforto_Lab as zc
+            INNER JOIN Lab as l
+              ON l.zona_conforto_id = zc.zona_conforto_id
+            WHERE lab_id = ?""",
+            (id,))
+        if data is not None:
+            return ZonaConforto(*data)

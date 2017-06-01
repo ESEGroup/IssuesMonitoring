@@ -1,54 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>Issues Monitoring</title>
+{% extends 'menu.html' %}
 
+{% block title %}Issues Monitoring{% endblock %}
 
-    <!-- Page CSS Include -->
-    <link rel="stylesheet" href="/static/js/jquery-ui/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/navbar.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
 
-
-
-
-</head>
-
-<body>
-
-    <ul class="nav-bar-ul">
-        <li class="nav-bar-li"><a class = "nav-bar-li-link" href="{{url_for('laboratorios')}}">Laboratórios</a></li>
-        <li class="nav-bar-li"><a id="cadastro-usuario" class = "nav-bar-li-link" href="#">Cadastro de Usuário</a></li>
-        <ul id="hidden-register" class="nav-bar-ul" style="display:none">
-            <li class="nav-bar-suboption"><a class = "nav-bar-li-link active" href="{{url_for('cadastro')}}"><div class="nav-bar-suboption-text">Novo Usuário do Sistema</div></a></li>
-            <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="{{url_for('cadastro_usuario_lab')}}"><div class="nav-bar-suboption-text">Novo Usuário do Laboratório</div></a></li>
-        </ul>
-    </ul>
-
-    <div id="nav-bar">
-
-        <div class="neat-form" id="hidden-form">
-            <form method="POST" action="{{url_for('cadastro')}}">
-                <fieldset>
-                    <legend><span class="number">1</span> Informações de Acesso</legend>
-                    <input type="text" name="login" placeholder="Login (ex.: jcviola)">
-                    <input type="password" name="senha" placeholder="Senha">
-                </fieldset>
-                <fieldset>
-                    <legend><span class="number">2</span> Dados do Usuário</legend>
-                    <input type="text" name="nome" placeholder="Nome Completo">
-                    <input type="text" name="email" placeholder="E-mail">
-                </fieldset>
-                <input type="submit" value="Cadastrar Usuário do Sistema" />
-            </form>
-        </div>
-
+{% block content %}
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Cadastro de Usuário do Sistema</h3>
     </div>
 
-
-    <!-- Page Javascript Include -->
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/navbar.js"></script>
-</body>
-</html>
+    <div class="neat-form" id="hidden-form">
+        <form>
+            <fieldset>
+                <legend><span class="number">1</span> Informações de Acesso</legend>
+                <input type="text" name="login" placeholder="Login (ex.: jcviola)">
+                <input type="password" name="senha" placeholder="Senha">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Dados do Usuário</legend>
+                <input type="text" name="nome" placeholder="Nome Completo">
+                <input type="text" name="email" placeholder="E-mail">
+            </fieldset>
+            <input type="submit" value="Cadastrar Usuário do Sistema" />
+        </form>
+    </div>
+</div>
+{% endblock %}

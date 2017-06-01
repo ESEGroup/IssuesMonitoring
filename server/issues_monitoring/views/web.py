@@ -36,13 +36,8 @@ def gerenciar_post():
     endereco = request.form.get("endereco-lab") or ''
     intervalo_parser = request.form.get("intervalo-parser") or ''
     intervalo_arduino = request.form.get("intervalo-arduino") or ''
-    temp_min = request.form.get("temp-min") or ''
-    temp_max = request.form.get("temp-max") or ''
-    umid_min = request.form.get("umid-min") or ''
-    umid_max = request.form.get("umid-max") or ''
 
-    args = [lab_id, nome, endereco, intervalo_parser,
-            intervalo_arduino, temp_min, temp_max, umid_min, umid_max]
+    args = [lab_id, nome, endereco, intervalo_parser, intervalo_arduino]
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
@@ -56,7 +51,8 @@ def laboratorios():
 
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('labs.html',
-                           laboratorios=laboratorios)
+                           laboratorios=laboratorios,
+                           pagina='laboratorios')
 
 @app.route('/laboratorio/<id>/<nome>')
 def laboratorio(id, nome):
@@ -97,12 +93,32 @@ def login_post():
         kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado"}
     return redirect(url_for('login', **kwargs))
 
-@app.route('/cadastro-lab')
-def cadastro_lab():
-    if not admin_autenticado():
-        return redirect(url_for('login'))
-    return render_template('cadastro_lab.html',
-                           autenticado=autenticado())
+@app.route('/zona-de-conforto/<id>/')
+@app.route('/zona-de-conforto/<id>/<nome>')
+def zona_de_conforto(id, nome=None):
+    zc = controllers.obter_zona_de_conforto(id)
+    return render_template('alterar_zona_conforto.html',
+                           lab_id=id,
+                           lab_nome=nome,
+                           pagina='zona_de_conforto',
+                           zona_conforto=zc)
+
+@app.route('/zona-de-conforto/<id>/', methods=["POST"])
+@app.route('/zona-de-conforto/<id>/<nome>', methods=["POST"])
+def zona_de_conforto_post(id, nome=None):
+    temp_min = request.form.get("temp-min") or ''
+    temp_max = request.form.get("temp-max") or ''
+    umid_min = request.form.get("umid-min") or ''
+    umid_max = request.form.get("umid-max") or ''
+
+    args = [temp_min, temp_max, umid_min, umid_max, id]
+    if "" not in args:
+        controllers.atualizar_zona_de_conforto(*args)
+        kwargs = {"c" : "Zona de Conforto atualizada com sucesso!"}
+        return redirect(url_for("gerenciar", **kwargs))
+    else:
+        kwargs = {"e" : "Por favor preencha todos os campos!"}
+        return redirect(url_for('zona_de_conforto', **kwargs))
 
 @app.route('/cadastro-lab', methods=["POST"])
 def cadastro_lab_post():
@@ -128,6 +144,7 @@ def cadastro_lab_post():
 @app.route('/cadastro')
 def cadastro():
     return render_template('cadastro_usuario_sistema.html',
+                           pagina='cadastro',
                            autenticado=autenticado())
 
 @app.route('/cadastro', methods=['POST'])
@@ -177,12 +194,9 @@ def cadastro_usuario_lab():
         kwargs = {"e" : "Primeiro, cadastre um laboratório"}
         return redirect(url_for("cadastro_lab", **kwargs))
 
-    usuarios = controllers.obter_usuarios_laboratorios()
     return render_template('cadastro_usuario_lab.html',
-                           laboratorios=laboratorios,
-                           usuarios=usuarios,
-                           admin=admin_autenticado(),
-                           autenticado=autenticado())
+                           pagina='cadastro_usuario_lab',
+                           laboratorios=laboratorios)
 
 @app.route('/adicionar-usuario-lab', methods=['POST'])
 def adicionar_usuario_lab():
@@ -302,10 +316,11 @@ def log_eventos(lab_id, dia):
     proximo_dia = controllers.data_proximo_evento_mydenox(lab_id, dia)
     dia_anterior = controllers.data_evento_anterior_mydenox(lab_id, dia)
 
-    return render_template('logs_entrada_saida.html',
+    return render_template('log_presenca.html',
                            eventos=log_eventos,
                            proximo_dia=proximo_dia,
                            dia_anterior=dia_anterior,
+                           pagina='log_eventos',
                            lab_id=lab_id,
                            dia=dia)
 

@@ -1,251 +1,30 @@
 {% extends 'menu.html' %}
-{% block title %}
-Gerenciar
-{% endblock %}
 
-{% block menu %}
-    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
-    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
-    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
-    <li><a href="{{url_for('usuarios_laboratorios')}}">Listar Usuarios de Lab</a></li>
-    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="css/gerenciar.css" />
 {% endblock %}
 
 {% block content %}
-<h2 class="center">Gerenciar</h2>
-
-<hr>
-
-{% if usuarios_sistema|len > 0 %}
-<div class="campos">
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Login</th>
-                <th>E-mail</th>
-                <th>Admin</th>
-                <th>Aprovado</th>
-                {% if admin %}
-                <th>Editar</th>
-                <th>Excluir</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for usuario in usuarios_sistema %}
-            <tr>
-                <td>{{usuario.nome}}</td>
-                <td>{{usuario.login}}</td>
-                <td>{{usuario.email}}</td>
-                {% if admin %}
-                <form method="POST" action="{{url_for('editar_status_administrador')}}">
-                    <input type="hidden" name="id-user" value="{{usuario.id}}">
-                    <input type="hidden" name="admin" value="{{(not usuario.admin)|int}}">
-                    <td><input type="submit" value="{% if usuario.admin %}[-]{% else %}[+]{% endif %}"></td>
-                </form>
-                <form method="POST" action="{{url_for('editar_autorizacao_usuario')}}">
-                    <input type="hidden" name="id-user" value="{{usuario.id}}">
-                    <input type="hidden" name="data" value="{{usuario.data_aprovacao}}">
-                    <td><input type="submit" value="{% if (usuario.data_aprovacao|data) != '-' %}[-]{% else %}[+]{% endif %}"></td>
-                </form>
-                <form action="{{url_for('editar_usuario_sistema', user_id=usuario.id)}}">
-                    <td><input type="submit" value="Editar"></td>
-                </form>
-                <form method="POST" action="{{url_for('remover_usuario_sistema', user_id=usuario.id)}}">
-                    <td><input type="submit" value="Excluir"></td>
-                </form>
-                {% else %}
-                <td>{{usuario.admin|bool}}</td>
-                <td>{{usuario.data_aprovacao|data}}</td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% else %}
-<h1>Não há usuários de sistema</h1>
-{% endif %}
-
-{% if laboratorios|len > 0 %}
-{% for lab in laboratorios %}
-<div class="campos">
-    <a href="/{{lab.id}}/usuarios-presentes"><input value="Usuários Presentes" type="submit"></a>
-    <a href="/{{lab.id}}/log-eventos"><input value="Log dos Eventos" type="submit"></a>
-    <form method="POST" action="{{url_for('gerenciar')}}">
-        <input type="hidden" name="id-lab" value="{{lab.id}}">
-        <div>
-            <p>Nome do Laboratório:</p>
-            <input type="text" name="nome-lab" value="{{lab.nome}}" {% if not admin %}readonly{% endif %}>
+<div id="nav-bar">
+    <div id = "escolher-lab">
+        <div class="page-title">
+            <h3>Laboratório de Engenharia de Software</h3>
         </div>
-
-        <div>
-            <p>Endereço:</p>
-            <input type="text" name="endereco-lab" value="{{lab.endereco}}" {% if not admin %}readonly{% endif %}>
+        <div class="lab-container">
+            <a href="log_presenca.html" class="lab-btn btn-blue" style="background: url(css/images/Clipboard.gif) no-repeat top; background-size: 110px 145px; background-position: 55% 19%;"><span class="lab-txt">Presença no Laboratório</span></a>
+            <a href="gerenciar_membros.html" class="lab-btn btn-blue" style="background: url(css/images/members.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Membros</span></a>
+            <a href="gerenciar_equipamentos.html" class="lab-btn btn-blue" style="background: url(css/images/tools.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Equipamentos</span></a>
+            <p></p>
+            <a href="alterar_zona_conforto.html" class="lab-btn btn-blue" style="background: url(css/images/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Alterar Zona de Conforto</span></a>
+            <a href="alterar_dados_cadastrais.html" class="lab-btn btn-blue" style="background: url(css/images/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Dados Cadastrais</span></a>
         </div>
-
-        <div>
-            <p>Intervalo de coleta do parser (s):</p>
-            <input type="text" name="intervalo-parser" value="{{lab.intervalo_parser}}" {% if not admin %}readonly{% endif %}>
+        <div class="div-botao-estilizado">
+            <a href="labs.html" class="btn-estilizado btn-estilizado-blue">Escolher Outro Laboratório</a>
         </div>
-
-        <div>
-            <p>Intervalo de coleta do Arduino (s):</p>
-            <input type="text" name="intervalo-arduino" value="{{lab.intervalo_arduino}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <h3>Zona de Conforto do laboratório</h3>
-
-        <div>
-            <p>Temperatura mínima (°C):</p>
-            <input type="text" name="temp-min" value="{{lab.zona_conforto_lab.temp_min}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Temperatura máxima (°C):</p>
-            <input type="text" name="temp-max" value="{{lab.zona_conforto_lab.temp_max}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Umidade mínima (%):</p>
-            <input type="text" name="umid-min" value="{{lab.zona_conforto_lab.umidade_min}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        <div>
-            <p>Umidade máxima (%):</p>
-            <input type="text" name="umid-max" value="{{lab.zona_conforto_lab.umidade_max}}" {% if not admin %}readonly{% endif %}>
-        </div>
-
-        {% if admin %}
-        <input type="submit" value="Editar">
-        {% endif %}
-    </form>
-
-    {% if lab.membros|len > 0 or admin %}
-    <div>
-        <h3>Lista de membros:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id de usuário</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Data de aprovação</th>
-                    {% if admin %}
-                    <th>-</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for m in lab.membros %}
-                <tr>
-                    <td>{{m.user_id}}</td>
-                    <td>{{m.nome}}</td>
-                    <td>{{m.email}}</td>
-                    {% if (m.data_aprovacao|data) == "-" and admin %}
-                        <form method="POST" action="{{url_for('autorizar_usuario_lab')}}">
-                            <input type="hidden" value="{{lab.id}}" name="id-lab">
-                            <input type="hidden" value="{{m.user_id}}" name="id-user">
-                            <td><input type="submit" value="Aprovar"></td>
-                        </form>
-                    {% else %}
-                        <td>{{m.data_aprovacao|data}}</td>
-                    {% endif %}
-                    {% if admin %}
-                    <form method="POST" action="{{url_for('remover_usuario_lab')}}">
-                        <input type="hidden" value="{{lab.id}}" name="id-lab">
-                        <input type="hidden" value="{{m.user_id}}" name="id-user">
-                        <td><input type="submit" value="[X]"></td>
-                    </form>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            {% if admin %}
-                {% set user_ids = lab.membros|user_ids %}
-                {% if usuarios_lab|len > 0 and usuarios_lab|len != user_ids|len %}
-                <form method="POST" action="{{url_for('adicionar_usuario_lab')}}">
-                    <tr>
-                        <input type="hidden" value="{{lab.id}}" name="id-lab">
-                        <td>-</td>
-                        <td><select name="id-user">
-                            {% for u in usuarios_lab %}
-                                {% if u.user_id not in user_ids %}
-                                <option value="{{u.user_id}}">{{u.nome}}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select></td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td><input type="submit" value="Adicionar"></td>
-                    </tr>
-                </form>
-                {% endif %}
-                <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
-                    <tr>
-                        <input type="hidden" value="{{lab.id}}" name="id-lab">
-                        <td><input type="text" name="id-user"></td>
-                        <td><input type="text" name="nome"></td>
-                        <td><input type="text" name="email"></td>
-                        <td>Aprovar: <input type="checkbox" name="aprovar"></td>
-                        <td><input type="submit" value="Cadastrar"></td>
-                    </tr>
-                </form>
-            {% endif %}
-            </tbody>
-        </table>
     </div>
-    {% endif %}
 
-    {% if lab.equipamentos|len > 0 or admin %}
-    <div>
-        <h3>Lista de equipamentos:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Endereço MAC</th>
-                    <th>Temperatura mínima</th>
-                    <th>Temperatura máxima</th>
-                    {% if admin %}
-                    <th>-</th>
-                    {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for e in lab.equipamentos %}
-                    <tr>
-                        <td>{{e.MAC}}</td>
-                        <td>{{e.temp_min}}</td>
-                        <td>{{e.temp_max}}</td>
-                        {% if admin %}
-                        <form method="POST" action="{{url_for('remover_equipamento')}}">
-                            <input type="hidden" value="{{e.id}}" name="id-equipamento">
-                            <td><input type="submit" value="[X]"></td>
-                        </form>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                    {% if admin %}
-                    <form method="POST" action="{{url_for('cadastro_equipamento')}}">
-                        <tr>
-                            <input type="hidden" name="id-lab" value="{{lab.id}}">
-                            <td><input type="text" name="endereco-mac"></td>
-                            <td><input type="text" name="temp-min"></td>
-                            <td><input type="text" name="temp-max"></td>
-                            <td><input type="submit" value="Cadastrar"></td>
-                        </tr>
-                    </form>
-                    {% endif %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
 </div>
-{% endfor %}
-{% else %}
-    <h3 class="center">Não há laboratórios</h3>
-    {% if admin %}
-    <a href="{{url_for('cadastro_lab')}}"><button class="center"><h3>Cadastrar laboratório</h3></button></a>
-    {% endif %}
-{% endif %}
 {% endblock %}
