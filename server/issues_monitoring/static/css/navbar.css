@@ -134,17 +134,21 @@ body {
     cursor: pointer
 }
 
-/* CSS referente a mensagem de erro: */
+/* CSS referente a mensagens de erro e de sucesso: */
 
 .error-msg, .success-msg{
     max-width: 520px;
     padding: 10px 20px;
     margin: 0 auto;
+    margin-top: -12px;
 }
 
 .ui-state-success {
-    border: 1px solid #022a00;
-    background-color: #1abc9c;
-    color: #022a00;
-    margin-top: 10px;
+    border: 1px solid #0eb906;
+    background-color: #baffb6;
+    color: #085c04;
+}
+
+.ui-icon {
+    color: #085c04;
 }
