@@ -5,25 +5,7 @@ from .. import app, Config, controllers
 
 @app.route('/')
 def root():
-    if not autenticado():
-        return redirect(url_for('login'))
     return redirect(url_for('laboratorios'))
-
-@app.route('/gerenciar')
-def gerenciar():
-    if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
-        return redirect(url_for('login', **kwargs))
-
-    admin = admin_autenticado()
-    usuarios_sistema = controllers.obter_usuarios_sistema()
-    usuarios_lab = controllers.obter_usuarios_laboratorios()
-    laboratorios = controllers.obter_informacoes_labs()
-    return render_template('gerenciar.html',
-                           admin=admin,
-                           usuarios_sistema=usuarios_sistema,
-                           usuarios_lab=usuarios_lab,
-                           laboratorios=laboratorios)
 
 @app.route('/gerenciar', methods=["POST"])
 def gerenciar_post():
@@ -54,12 +36,6 @@ def laboratorios():
                            laboratorios=laboratorios,
                            pagina='laboratorios')
 
-@app.route('/laboratorio/<id>/<nome>')
-def laboratorio(id, nome):
-    laboratorio = controllers.obter_laboratorio(id)
-    return render_template('gerenciar.html',
-                           lab=laboratorio)
-
 @app.route('/logout')
 def logout():
     session.clear()
@@ -89,13 +65,26 @@ def login_post():
         session['expiration'] = now + Config.session_duration
         kwargs = {}
     else:
-        session.pop('id', None)
+        session.clear()
         kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado"}
     return redirect(url_for('login', **kwargs))
 
+@app.route('/laboratorio/<id>/')
+@app.route('/laboratorio/<id>/<nome>')
+def laboratorio(id, nome=""):
+    if not autenticado():
+        return redirect(url_for('login'))
+    laboratorio = controllers.obter_laboratorio(id)
+    return render_template('gerenciar.html',
+                           laboratorio=laboratorio,
+                           lab_id=laboratorio.id,
+                           lab_nome=laboratorio.nome)
+
 @app.route('/zona-de-conforto/<id>/')
 @app.route('/zona-de-conforto/<id>/<nome>')
-def zona_de_conforto(id, nome=None):
+def zona_de_conforto(id, nome=""):
+    if not autenticado():
+        return redirect(url_for('login'))
     zc = controllers.obter_zona_de_conforto(id)
     return render_template('alterar_zona_conforto.html',
                            lab_id=id,
@@ -105,7 +94,9 @@ def zona_de_conforto(id, nome=None):
 
 @app.route('/zona-de-conforto/<id>/', methods=["POST"])
 @app.route('/zona-de-conforto/<id>/<nome>', methods=["POST"])
-def zona_de_conforto_post(id, nome=None):
+def zona_de_conforto_post(id, nome=""):
+    if not autenticado():
+        return redirect(url_for('login'))
     temp_min = request.form.get("temp-min") or ''
     temp_max = request.form.get("temp-max") or ''
     umid_min = request.form.get("umid-min") or ''
@@ -115,10 +106,10 @@ def zona_de_conforto_post(id, nome=None):
     if "" not in args:
         controllers.atualizar_zona_de_conforto(*args)
         kwargs = {"c" : "Zona de Conforto atualizada com sucesso!"}
-        return redirect(url_for("gerenciar", **kwargs))
+        return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
         kwargs = {"e" : "Por favor preencha todos os campos!"}
-        return redirect(url_for('zona_de_conforto', **kwargs))
+        return redirect(url_for('zona_de_conforto', id=id, nome=nome, **kwargs))
 
 @app.route('/cadastro-lab', methods=["POST"])
 def cadastro_lab_post():
@@ -286,42 +277,45 @@ def remover_equipamento():
     kwargs = {"c" : "Equipamento removido com sucesso!"}
     return redirect(url_for('laboratorios', **kwargs))
 
-@app.route('/<lab_id>/usuarios-presentes')
-def usuarios_presentes(lab_id):
+@app.route('/usuarios-presentes/<id>/<nome>')
+def usuarios_presentes(id, nome):
     if not autenticado():
         return redirect(url_for('login'))
 
-    usuarios_presentes = controllers.usuarios_presentes(lab_id)
+    usuarios_presentes = controllers.usuarios_presentes(id)
     hoje_formatado = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     return render_template('usuarios_presentes.html',
-                           lab_id=lab_id,
+                           lab_id=id,
+                           lab_nome=nome,
                            hoje=hoje_formatado,
                            usuarios_presentes=usuarios_presentes)
 
-@app.route('/<lab_id>/log-eventos')
-def log_eventos_hoje(lab_id):
+@app.route('/log-eventos/<id>/<nome>')
+def log_eventos_hoje(id, nome):
     _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     return redirect(url_for('log_eventos',
-                            lab_id=lab_id,
+                            id=id,
+                            nome=nome,
                             dia=_hoje))
 
-@app.route('/<lab_id>/log-eventos/<dia>')
-def log_eventos(lab_id, dia):
+@app.route('/log-eventos/<id>/<nome>/<dia>')
+def log_eventos(id, nome, dia):
     if not autenticado():
         return redirect(url_for('login'))
 
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    log_eventos = controllers.log_eventos(lab_id, dia)
+    log_eventos = controllers.log_eventos(id, dia)
 
-    proximo_dia = controllers.data_proximo_evento_mydenox(lab_id, dia)
-    dia_anterior = controllers.data_evento_anterior_mydenox(lab_id, dia)
+    proximo_dia = controllers.data_proximo_evento_mydenox(id, dia)
+    dia_anterior = controllers.data_evento_anterior_mydenox(id, dia)
 
     return render_template('log_presenca.html',
                            eventos=log_eventos,
                            proximo_dia=proximo_dia,
                            dia_anterior=dia_anterior,
                            pagina='log_eventos',
-                           lab_id=lab_id,
+                           lab_id=id,
+                           lab_nome=nome,
                            dia=dia)
 
 @app.route('/usuarios-laboratorios')

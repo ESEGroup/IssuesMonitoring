@@ -17,7 +17,8 @@
 
     <div class="page-title">
         <h3>Alterar a Zona de Conforto</h3>
-        <h4>Laboratório de Engenharia de Software</h4>
+        
+        <h4>{{zona_conforto.nome_laboratorio}}</h4>
     </div>
 
     <div class="neat-form">
@@ -42,7 +43,7 @@
             <input type="submit" value="Salvar Informações" />
         </form>
         <div class="div-botao-estilizado">
-            <a href="gerenciar.html" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
+            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
         </div>
     </div>
 

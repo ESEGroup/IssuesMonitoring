@@ -3,26 +3,26 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="js/jquery-ui/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="css/gerenciar.css" />
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/gerenciar.css" />
 {% endblock %}
 
 {% block content %}
 <div id="nav-bar">
     <div id = "escolher-lab">
         <div class="page-title">
-            <h3>Laboratório de Engenharia de Software</h3>
+            <h3>{{laboratorio.nome}}</h3>
         </div>
         <div class="lab-container">
-            <a href="log_presenca.html" class="lab-btn btn-blue" style="background: url(css/images/Clipboard.gif) no-repeat top; background-size: 110px 145px; background-position: 55% 19%;"><span class="lab-txt">Presença no Laboratório</span></a>
-            <a href="gerenciar_membros.html" class="lab-btn btn-blue" style="background: url(css/images/members.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Membros</span></a>
-            <a href="gerenciar_equipamentos.html" class="lab-btn btn-blue" style="background: url(css/images/tools.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Equipamentos</span></a>
+            <a href="{{url_for('log_eventos_hoje', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/Clipboard.gif) no-repeat top; background-size: 110px 145px; background-position: 55% 19%;"><span class="lab-txt">Presença no Laboratório</span></a>
+            <a href="gerenciar_membros.html" class="lab-btn btn-blue" style="background: url(/static/img/members.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Membros</span></a>
+            <a href="gerenciar_equipamentos.html" class="lab-btn btn-blue" style="background: url(/static/img/tools.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Equipamentos</span></a>
             <p></p>
-            <a href="alterar_zona_conforto.html" class="lab-btn btn-blue" style="background: url(css/images/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Alterar Zona de Conforto</span></a>
-            <a href="alterar_dados_cadastrais.html" class="lab-btn btn-blue" style="background: url(css/images/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Dados Cadastrais</span></a>
+            <a href="{{url_for('zona_de_conforto', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Alterar Zona de Conforto</span></a>
+            <a href="alterar_dados_cadastrais.html" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Dados Cadastrais</span></a>
         </div>
         <div class="div-botao-estilizado">
-            <a href="labs.html" class="btn-estilizado btn-estilizado-blue">Escolher Outro Laboratório</a>
+            <a href="{{url_for('laboratorios')}}" class="btn-estilizado btn-estilizado-blue">Escolher Outro Laboratório</a>
         </div>
     </div>
 

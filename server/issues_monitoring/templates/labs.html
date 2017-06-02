@@ -20,8 +20,9 @@
             <h3>Selecionar Laboratório</h3>
         </div>
         <div class="lab-container">
-            {% for lab in laboratorios %}
+            {% for i, lab in laboratorios|enumerate %}
             <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}"><span class="lab-txt">{{lab.nome}}</span></a>
+            {% if i % 3 == 0 %}<p></p>{% endif %}
             {% endfor %}
         </div>
         <div class="div-botao-estilizado">

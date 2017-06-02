@@ -2,12 +2,13 @@ from . import db
 
 class ZonaConforto:
     def __init__(self, temp_min, temp_max, umidade_min, umidade_max,
-                 lab_id = None, id = None):
+                 lab_id = None, id = None, nome_laboratorio = None):
         self.temp_min = temp_min
         self.temp_max = temp_max
         self.umidade_min = umidade_min
         self.umidade_max = umidade_max
         self.lab_id = lab_id
+        self.nome_laboratorio = nome_laboratorio
         self.id = id
 
     def cadastrar(self):
@@ -42,7 +43,8 @@ class ZonaConforto:
         data = db.fetchone("""
             SELECT zc.temp_min, zc.temp_max,
                    zc.umid_min, zc.umid_max,
-                   l.lab_id, zc.zona_conforto_id
+                   l.lab_id, zc.zona_conforto_id,
+                   l.nome
             FROM Zona_de_Conforto_Lab as zc
             INNER JOIN Lab as l
               ON l.zona_conforto_id = zc.zona_conforto_id
