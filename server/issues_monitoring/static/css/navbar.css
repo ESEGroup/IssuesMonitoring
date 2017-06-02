@@ -136,9 +136,15 @@ body {
 
 /* CSS referente a mensagem de erro: */
 
-.error-msg{
+.error-msg, .success-msg{
     max-width: 520px;
     padding: 10px 20px;
-    margin: -10px auto;
-    margin-bottom: 10px;
+    margin: 0 auto;
+}
+
+.ui-state-success {
+    border: 1px solid #022a00;
+    background-color: #1abc9c;
+    color: #022a00;
+    margin-top: 10px;
 }

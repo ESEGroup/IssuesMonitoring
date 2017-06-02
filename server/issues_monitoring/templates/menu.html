@@ -66,6 +66,24 @@
     </ul>
 
     <div>
+    {% if request.args.get('e') %}
+    <div class="ui-widget error-msg">
+	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Erro: </strong>{{request.args.get('e')}}</p>
+	    </div>
+    </div>
+    {% endif %}
+
+    {% if request.args.get('c') %}
+    <div class="ui-widget success-msg">
+	    <div class="ui-state-success ui-corner-all" style="padding: 0 .7em;">
+		    <p><span class="ui-icon ui-icon-circle-check" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Sucesso: </strong>{{request.args.get('c')}}</p>
+	    </div>
+    </div>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
     </div>
