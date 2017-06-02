@@ -133,3 +133,12 @@ body {
 .dropdown:hover {
     cursor: pointer
 }
+
+/* CSS referente a mensagem de erro: */
+
+.error-msg{
+    max-width: 520px;
+    padding: 10px 20px;
+    margin: -10px auto;
+    margin-bottom: 10px;
+}

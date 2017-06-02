@@ -20,8 +20,17 @@
         <h4>Faça login para acessar o sistema Issues Monitoring</h4>
     </div>
 
-    <div class="neat-form" id="hidden-form" method="POST" action="{{url_for('login')}}">
-        <form>
+    {% if true %}
+    <div class="ui-widget error-msg">
+	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+		    <strong>Erro:</strong> Login e senha incorretos.</p>
+	    </div>
+    </div>
+    {% endif %}
+
+    <div class="neat-form" id="hidden-form">
+        <form method="POST" action="{{url_for('login')}}">
             <fieldset>
                 <legend><span class="number">!</span> Informações de Acesso</legend>
                 <input type="text" name="login" placeholder="Login (ex.: jcviola)">
@@ -29,6 +38,8 @@
             </fieldset>
             <input type="submit" value="Entrar" />
         </form>
+
     </div>
+
 </div>
 {% endblock %}
