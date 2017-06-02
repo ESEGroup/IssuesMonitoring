@@ -54,7 +54,7 @@
 .neat-form input[type="date"]:focus,
 .neat-form input[type="datetime"]:focus,
 .neat-form input[type="email"]:focus,
-.neat-form input[type="password"],
+.neat-form input[type="password"]:focus,
 .neat-form input[type="number"]:focus,
 .neat-form input[type="search"]:focus,
 .neat-form input[type="time"]:focus,
