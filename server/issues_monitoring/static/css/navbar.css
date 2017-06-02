@@ -152,3 +152,7 @@ body {
 .ui-icon {
     color: #085c04;
 }
+
+.ui-state-success .ui-icon {
+    background-image: url("images/ui-icons_085c04_256x240.png") !important;
+}
