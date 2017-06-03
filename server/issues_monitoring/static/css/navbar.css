@@ -136,7 +136,7 @@ body {
 
 /* CSS referente a mensagens de erro e de sucesso: */
 
-.error-msg, .success-msg{
+.error-msg, .success-msg, .msg{
     max-width: 520px;
     padding: 10px 20px;
     margin: 0 auto;

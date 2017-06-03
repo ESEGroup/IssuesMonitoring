@@ -143,10 +143,10 @@ def usuarios_laboratorio(id, nome=""):
         return redirect(url_for('login', **kwargs))
 
     usuarios_laboratorio = controllers.obter_usuarios_laboratorio(id)
-    usuarios = controllers.obter_usuarios_laboratorios()
 
+    usuarios_tmp = controllers.obter_usuarios_laboratorios()
     usuarios_lab_ids = [u.user_id for u in usuarios_laboratorio]
-    usuarios = [u for usuario in usuarios if usuario.user_id not in usuarios_lab_ids]
+    usuarios = [usuario for usuario in usuarios_tmp if usuario.user_id not in usuarios_lab_ids]
 
     return render_template('lista_membros.html',
                            lab_id=id,
