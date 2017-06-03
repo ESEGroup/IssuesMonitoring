@@ -10,12 +10,14 @@
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/switch_view.js"></script>
 <script src="/static/js/labs.js"></script>
 {% endblock %}
 
 {% block content %}
 <div id="nav-bar">
-    <div id="escolher-lab">
+
+    <div id="view1">
         <div class="page-title">
             <h3>Selecionar Laboratório</h3>
         </div>
@@ -30,7 +32,7 @@
         </div>
     </div>
 
-    <div class="neat-form" id="hidden-form" style="display:none">
+    <div class="neat-form" id="view2" style="display:none">
         <form method="POST" action="cadastro-lab">
             <fieldset>
                 <legend><span class="number">1</span> Informações do Laboratório</legend>
@@ -73,5 +75,6 @@
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
         </div>
     </div>
+
 </div>
 {% endblock %}

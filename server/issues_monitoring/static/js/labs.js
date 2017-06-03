@@ -1,17 +1,3 @@
-//JS para o toggle entre escolher lab e cadastrar lab:
-
-$(document).ready(function(){
-    $("#switch-view").click(function(){
-        $("#hidden-form").toggle(400);
-        $("#escolher-lab").toggle(400);
-    });
-    $("#switch-back").click(function(){
-        $("#hidden-form").toggle(400);
-        $("#escolher-lab").toggle(400);
-    });
-});
-
-
 //JS para os sliders de handle unico presentes em cadastrar lab:
 
 var rangeSlider = function(){

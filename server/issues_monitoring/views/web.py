@@ -139,6 +139,7 @@ def cadastro():
                            pagina='cadastro',
                            autenticado=autenticado())
 
+
 @app.route('/cadastro', methods=['POST'])
 def cadastro_post():
     login = request.form.get('login') or ''
