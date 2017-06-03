@@ -51,25 +51,23 @@ def cadastro_usuario_sistema(login, senha, email, nome):
 def adicionar_usuario_lab(lab_id, user_id):
     UsuarioLab.adicionar_ao_laboratorio(lab_id, user_id)
 
-def autorizar_usuario_lab(lab_id, user_id):
-    AdministradorSistema.autorizar_usuario_lab(lab_id, user_id)
+def aprovar_usuario_lab(user_id, aprovar):
+    AdministradorSistema.autorizar_usuario_lab(user_id, aprovar)
 
 def obter_usuario_lab(user_id):
     return UsuarioLab.obter(user_id)
 
+def obter_usuarios_laboratorio(id):
+    return UsuarioLab.obter_do_laboratorio(id)
+
 def obter_usuarios_laboratorios():
     return UsuarioLab.obter_todos()
 
-def cadastro_usuario_lab(lab_id, user_id, nome, email, aprovar=False):
+def cadastro_usuario_lab(lab_id, user_id, nome, email):
     if not UsuarioLab.existe(user_id):
-        data_aprovacao = None
-        if aprovar:
-            data_aprovacao = int(datetime.now().timestamp())
-
         usuario = UsuarioLab(user_id,
                              nome,
                              email,
-                             data_aprovacao,
                              lab_id=lab_id)
         usuario.cadastrar()
         return True

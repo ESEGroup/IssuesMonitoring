@@ -29,8 +29,7 @@ def atualizar_zona_de_conforto(temp_min, temp_max, umid_min, umid_max, lab_id):
     zona_conforto.editar()
 
 def atualizar_informacoes_lab(lab_id, nome, endereco, intervalo_parser,
-                              intervalo_arduino, temp_min, temp_max,
-                              umid_min, umid_max):
+                              intervalo_arduino):
     laboratorio = Laboratorio(nome,
                               endereco,
                               intervalo_parser,

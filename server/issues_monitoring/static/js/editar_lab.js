@@ -17,3 +17,7 @@ var rangeSlider = function(){
     });
   });
 };
+
+$(function() {
+    rangeSlider();
+});

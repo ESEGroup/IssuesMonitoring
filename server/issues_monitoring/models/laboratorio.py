@@ -47,11 +47,13 @@ class Laboratorio:
             return_id=True)
 
     def obter(id):
-        data = db.fetchone("""SELECT nome, lab_id
+        data = db.fetchone("""SELECT nome, endereco, intervalo_parser,
+                                     intervalo_arduino, lab_id
                               FROM LAB
                               WHERE lab_id = ?;""", (id,))
         if data is not None:
-            return Laboratorio(data[0], None, None, None, None, data[1])
+            return Laboratorio(*data[:-1],
+                               id=data[-1])
 
     def obter_todos():
         data = db.fetchall("SELECT nome, lab_id FROM Lab")

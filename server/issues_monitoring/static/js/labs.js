@@ -18,11 +18,10 @@ var rangeSlider = function(){
   });
 };
 
-rangeSlider();
-
-//JS para os sliders de dois handles presentes em cadastrar lab:
-
 $(function() {
+    rangeSlider();
+
+    //JS para os sliders de dois handles presentes em cadastrar lab:
     $("#slider-temp").slider({
         range: true,
         min: 10,
@@ -50,4 +49,8 @@ $(function() {
         }
     });
     $("#umidade-lab").val($("#slider-umidade").slider("values", 0) + "% a " + $("#slider-umidade").slider("values", 1) + "%");
+
+    if (location.hash === "#cadastrar") {
+        show_last_view();
+    }
 });
