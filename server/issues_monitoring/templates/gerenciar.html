@@ -10,12 +10,14 @@
 {% block content %}
 <div id="nav-bar">
     <div id = "escolher-lab">
+
         <div class="page-title">
             <h3>{{laboratorio.nome}}</h3>
         </div>
+
         <div class="lab-container">
-            <a href="{{url_for('log_eventos_hoje', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/Clipboard.gif) no-repeat top; background-size: 110px 145px; background-position: 55% 19%;"><span class="lab-txt">Presença no Laboratório</span></a>
-            <a href="gerenciar_membros.html" class="lab-btn btn-blue" style="background: url(/static/img/members.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Membros</span></a>
+            <a href="{{url_for('log_eventos_hoje', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/Clipboard.gif) no-repeat top; background-size: 110px 125px; background-position: 55% 19%;"><span class="lab-txt">Presença no Laboratório</span></a>
+            <a href="gerenciar_membros.html" class="lab-btn btn-blue" style="background: url(/static/img/members.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Membros Associados</span></a>
             <a href="gerenciar_equipamentos.html" class="lab-btn btn-blue" style="background: url(/static/img/tools.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Equipamentos</span></a>
             <p></p>
             <a href="{{url_for('zona_de_conforto', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Alterar Zona de Conforto</span></a>

@@ -1,0 +1,51 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/editar_lab.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+
+    <div class="page-title">
+        <h3>Alterar Dados Cadastrais do Laboratório</h3>
+        <h4>Nome do Laboratório</h4>
+    </div>
+
+    <div class="neat-form">
+        <form method="POST">
+            <fieldset>
+                <legend><span class="number">1</span> Informações do Laboratório</legend>
+                <input type="text" name="nome" placeholder="Nome do Laboratório">
+                <textarea type="email" name="endereco" placeholder="Endereço (opcional)"></textarea>     
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Intervalos de coleta</legend>
+                <div class="legenda-cadastro">Parser (em minutos):</div>
+                <div class="range-slider">
+                    <input class="range-slider__range" name="intervalo-parser" type="range" value="3" min="0.5" max="20" step="0.5">
+                    <span class="range-slider__value">0</span>
+                </div>
+                <div class="legenda-cadastro">Arduino (em minutos):</div>
+                <div class="range-slider">
+                    <input class="range-slider__range" name="intervalo-arduino" type="range" value="3" min="0.5" max="20" step="0.5">
+                    <span class="range-slider__value">0</span>
+                </div>
+            </fieldset>
+            <input type="submit" value="Salvar Informações" />
+        </form>
+        <div class="div-botao-estilizado">
+            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

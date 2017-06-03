@@ -78,7 +78,8 @@ def laboratorio(id, nome=""):
     return render_template('gerenciar.html',
                            laboratorio=laboratorio,
                            lab_id=laboratorio.id,
-                           lab_nome=laboratorio.nome)
+                           lab_nome=laboratorio.nome,
+                           pagina='gerenciar')
 
 @app.route('/zona-de-conforto/<id>/')
 @app.route('/zona-de-conforto/<id>/<nome>')
