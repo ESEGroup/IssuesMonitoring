@@ -1,5 +1,5 @@
 from ..models import Laboratorio, Evento, UsuarioLab, Arduino, Medida_Lab, Medida_Equip
-from ..models.check_condicoes import check_for_forgotten_lights, check_for_environment_conditions, check_for_equipment_temperature
+from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature
 import sqlite3
 import json
 
