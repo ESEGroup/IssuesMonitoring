@@ -40,7 +40,7 @@ def login_post():
         kwargs = {}
     else:
         session.clear()
-        kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado"}
+        kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado."}
     return redirect(url_for('login', **kwargs))
 
 @app.route('/selecionar-laboratorio')
@@ -59,7 +59,7 @@ def laboratorios():
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
-    kwargs = {"c" : "Informações atualizadas com sucesso!"}
+    kwargs = {"c" : "Informações atualizadas com sucesso."}
     return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
 
 @app.route('/laboratorio/<id>/')
@@ -105,6 +105,15 @@ def editar_laboratorio_post(id, nome=""):
     intervalo_parser = request.form.get("intervalo-parser") or ''
     intervalo_arduino = request.form.get("intervalo-arduino") or ''
 
+    args = [id, nome, endereco, intervalo_parser, intervalo_arduino]
+    if "" not in args:
+        controllers.atualizar_informacoes_lab(*args)
+        kwargs = {"c" : "Informações cadastrais atualizadas com sucesso."}
+        return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
+    else:
+        kwargs = {"e" : "Por favor, preencha todos os campos."}
+        return redirect(url_for('zona_de_conforto', id=id, nome=nome, **kwargs))
+
 @app.route('/zona-de-conforto/<id>/')
 @app.route('/zona-de-conforto/<id>/<nome>')
 def zona_de_conforto(id, nome=""):
@@ -135,10 +144,10 @@ def zona_de_conforto_post(id, nome=""):
     args = [temp_min, temp_max, umid_min, umid_max, id]
     if "" not in args:
         controllers.atualizar_zona_de_conforto(*args)
-        kwargs = {"c" : "Zona de Conforto atualizada com sucesso!"}
+        kwargs = {"c" : "Zona de Conforto atualizada com sucesso."}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
-        kwargs = {"e" : "Por favor preencha todos os campos!"}
+        kwargs = {"e" : "Por favor, preencha todos os campos."}
         return redirect(url_for('zona_de_conforto', id=id, nome=nome, **kwargs))
 
 @app.route('/usuarios-lab/<id>/')
@@ -180,7 +189,7 @@ def cadastro_lab():
     if "" not in args:
         controllers.cadastro_laboratorio(*args)
 
-    kwargs = {"c" : "Laboratório cadastrado com sucesso!"}
+    kwargs = {"c" : "Laboratório cadastrado com sucesso."}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/cadastro')
@@ -202,7 +211,7 @@ def cadastro_post():
                                                     senha,
                                                     email,
                                                     nome):
-            kwargs = {"e": "Login ou e-mail já utilizados"}
+            kwargs = {"e": "Login ou e-mail já utilizados."}
             return redirect(url_for("cadastro", **kwargs))
     kwargs = {"c": "Usuário enviado para aprovação!"}
     return redirect(url_for('login', **kwargs))
@@ -227,9 +236,9 @@ def adicionar_usuario_lab(id, nome):
     user_id = request.form.get('id-user') or '' 
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
-        kwargs = {'c': "Usuário adicionado ao laboratório com sucesso"}
+        kwargs = {'c': "Usuário adicionado ao laboratório com sucesso."}
     else:
-        kwargs = {'e': "Por favor, escolha um usuário"}
+        kwargs = {'e': "Por favor, escolha um usuário."}
 
     return redirect(url_for('usuarios_laboratorio', id=id, nome=nome, **kwargs))
 
@@ -237,7 +246,7 @@ def adicionar_usuario_lab(id, nome):
 def cadastro_usuario_lab():
     laboratorios = controllers.obter_laboratorios()
     if len(laboratorios) == 0:
-        kwargs = {"e" : "Primeiro, cadastre um laboratório"}
+        kwargs = {"e" : "Primeiro, cadastre um laboratório."}
         return redirect(url_for("laboratorios", _anchor="cadastrar", **kwargs))
 
     return render_template('cadastro_usuario_lab.html',
@@ -258,9 +267,9 @@ def cadastro_usuario_lab_post():
         success = controllers.cadastro_usuario_lab(*args)
 
     if not success:
-        kwargs = {"e": "Id de usuário já existe"}
+        kwargs = {"e": "Id de usuário já existente."}
     else:
-        kwargs = {"c" : "Usuário cadastrado com sucesso!"}
+        kwargs = {"c" : "Usuário cadastrado com sucesso."}
 
     if autenticado():
         url = 'laboratorio'
@@ -282,7 +291,7 @@ def cadastro_equipamento():
     if "" not in args:
         controllers.cadastro_equipamento(*args)
 
-    kwargs = {"c" : "Equipamento cadastrado com sucesso!"}
+    kwargs = {"c" : "Equipamento cadastrado com sucesso."}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
@@ -337,9 +346,9 @@ def aprovar_usuario_post(id):
     controllers.aprovar_usuario(id, aprovar)
 
     if aprovar:
-        kwargs = {"c": "Usuário aprovado com sucesso"}
+        kwargs = {"c": "Usuário aprovado com sucesso."}
     else:
-        kwargs = {"c": "Aprovação do usuário removida com sucesso"}
+        kwargs = {"c": "Aprovação do usuário removida com sucesso."}
 
     return redirect(url_for('laboratorios', **kwargs))
 
@@ -351,14 +360,14 @@ def editar_status_administrador(id):
     aprovar = request.form.get('aprovar') == 'true'
     controllers.editar_status_administrador(id, aprovar)
 
-    kwargs = {"c": "Status de administrador alterado com sucesso"}
+    kwargs = {"c": "Status de administrador alterado com sucesso."}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/equipamentos-lab/<id>/')
 @app.route('/equipamentos-lab/<id>/<nome>')
 def equipamentos_laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     return render_template('lista_equipamentos.html',
