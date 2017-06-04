@@ -23,6 +23,9 @@ def work():
     except NoMessages:
         debug("No e-mails to parse.")
         return
+    except:
+        log("Unexpected Error.")
+        return
 
     data = parse_messages(messages)
 
