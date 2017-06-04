@@ -1,33 +1,36 @@
 {% extends 'menu.html' %}
-{% block title %}
-Login
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/jquery-ui/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/labs.css" />
 {% endblock %}
 
-{% block menu %}
-<li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
-<li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/labs.js"></script>
 {% endblock %}
 
 {% block content %}
-<h2 class="center">Login</h2>
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Bem-vindo</h3>
+        <h4>Faça login para acessar o sistema Issues Monitoring.</h4>
+    </div>
 
-<hr>
+    <div class="neat-form" id="hidden-form">
+        <form method="POST" action="{{url_for('login')}}">
+            <fieldset>
+                <legend><span class="number">!</span> Informações de Acesso</legend>
+                <input type="text" name="login" placeholder="Login (ex.: jcviola)">
+                <input type="password" name="senha" placeholder="Senha">
+            </fieldset>
+            <input type="submit" value="Entrar" />
+        </form>
 
-<div class="campos">
-    <form class="form" method="POST" action="{{url_for('login')}}">
-        <div>
-            <p>Usuário:</p>
-            <input type="text" name="login">
-        </div>
+    </div>
 
-        <div>
-            <p>Senha:</p>
-            <input type="password" name="senha">
-        </div>
-
-        <div>
-            <input type="submit" value="Enviar">
-        </div>
-    </form>
 </div>
 {% endblock %}

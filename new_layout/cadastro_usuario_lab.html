@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <title>Issues Monitoring</title>
+
+
+    <!-- Page CSS Include -->
+    <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/navbar.css" />
+    <link rel="stylesheet" type="text/css" href="css/form.css" />
+
+
+
+
+</head>
+
+<body>
+
+    <ul class="nav-bar-ul">
+        <li class="nav-bar-li"><a class = "nav-bar-li-link" href="labs.html">Laboratório</a></li>
+        <li class="nav-bar-li"><a id="cadastro-usuario" class = "nav-bar-li-link" href="#">Cadastro de Usuário</a></li>
+        <ul id="hidden-register" class="nav-bar-ul">
+            <li class="nav-bar-suboption"><a class = "nav-bar-li-link" href="cadastro_usuario_sistema.html"><div class="nav-bar-suboption-text">Novo Usuário do Sistema</div></a></li>
+            <li class="nav-bar-suboption"><a class = "nav-bar-li-link active" href="cadastro_usuario_lab.html"><div class="nav-bar-suboption-text">Novo Usuário do Laboratório</div></a></li>
+        </ul>
+    </ul>
+
+    <div id="nav-bar">
+
+        <div class="page-title">
+            <h3>Cadastro de Usuário do Laboratório</h3>
+        </div>
+
+        <div class="neat-form" id="hidden-form">
+            <form>
+                <fieldset>
+                    <legend><span class="number">1</span> Laboratório Associado</legend>
+                    <select name="id-lab">
+                        <optgroup label="Laboratórios">
+                            <option value="lab1">Laboratório de Engenharia de Software</option>
+                            <option value="lab2">Laboratório de Sistemas</option>
+                        </optgroup>    
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">2</span> Identificação MyDenox</legend>
+                    <input type="text" name="id-user" placeholder="Mesmo ID registrado no sistema MyDenox">
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">3</span> Dados do Usuário</legend>
+                    <input type="text" name="nome" placeholder="Nome Completo">
+                    <input type="text" name="email" placeholder="E-mail">
+                </fieldset>
+                <input type="submit" value="Cadastrar Usuário do Laboratório" />
+            </form>
+        </div>
+
+    </div>
+
+
+    <!-- Page Javascript Include -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/navbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/aprovar.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+    <div id="view1">
+        <div class="page-title">
+            <h3>Aprovar Usuários do Sistema</h3>
+            <h4>Os usuários do sistema aguardando aprovação encontram-se abaixo.</h4>
+        </div>
+        
+        {% if usuarios|len > 0 %}
+        <table class="table-fill">
+            <thead>
+                <tr>
+                    <th class="text-left">Nome</th>
+                    <th class="text-left">E-mail</th>
+                    <th class="text-left">Aprovado</th>
+                    <th class="text-left">Administrador</th>
+                </tr>
+            </thead>
+            <tbody class="table-hover">
+                {% for usuario in usuarios %}
+                <tr>
+                    <td class="text-left" title="{{usuario.login}}">{{usuario.nome}}</td>
+                    <td class="text-left">{{usuario.email}}</td>
+                    <td class="text-left">
+                        <label class="switch">
+                            <input type="checkbox" data-url="{{url_for('aprovar_usuario_post', id=usuario.id)}}" class="aprovar" {% if usuario.data_aprovacao|existe %}checked="checked"{% endif %}>
+                            <div class="check-slide round"></div>
+                        </label>
+                    </td>
+                    <td class="text-left">
+                        <label class="switch">
+                            <input type="checkbox" data-url="{{url_for('editar_status_administrador', id=usuario.id)}}" class="aprovar" {% if usuario.admin %}checked="checked"{% endif %}>
+                            <div class="check-slide round"></div>
+                        </label>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="ui-widget msg">
+            <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                <strong>Erro: </strong>Não há usuários do sistema aguardando aprovação.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="div-botao-estilizado">
+            <a href="{{url_for('laboratorios')}}" class="btn-estilizado btn-estilizado-blue">Selecionar Laboratório</a>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

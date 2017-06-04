@@ -1,49 +1,31 @@
 {% extends 'menu.html' %}
-{% block title %}
-Cadastro Usuario Sistema
-{% endblock %}
 
-{% block menu %}
-    {% if autenticado %}
-    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
-    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
-    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
-    {% else %}
-    <li><a href="{{url_for('login')}}">Login</a></li>
-    {% endif %}
-    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 {% endblock %}
 
 {% block content %}
-<h2 class="center">Cadastro de usuário</h2>
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Cadastro de Usuário do Sistema</h3>
+    </div>
 
-<hr>
-
-<div class="campos cadastro">
-    <form class="form" method="POST" action="{{url_for('cadastro')}}">
-        <div>
-            <p>Login</p>
-            <input type="text" name="login">
-        </div>
-
-       <div>
-            <p>Senha</p>
-            <input type="password" name="senha">
-        </div>
-
-        <div>
-            <p>E-mail:</p>
-            <input type="text" name="email">
-        </div>
-
-        <div>
-            <p>Nome:</p>
-            <input type="text" name="nome">
-        </div>
-
-        <div>
-            <input type="submit" value="Registrar">
-        </div>
-    </form>
+    <div class="neat-form" id="hidden-form">
+        <form method="POST" action="{{url_for('cadastro')}}">
+            <fieldset>
+                <legend><span class="number">1</span> Informações de Acesso</legend>
+                <input type="text" name="login" placeholder="Login (ex.: jcviola)">
+                <input type="password" name="senha" placeholder="Senha">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Dados do Usuário</legend>
+                <input type="text" name="nome" placeholder="Nome Completo">
+                <input type="text" name="email" placeholder="E-mail">
+            </fieldset>
+            <input type="submit" value="Cadastrar Usuário do Sistema" />
+        </form>
+    </div>
 </div>
 {% endblock %}

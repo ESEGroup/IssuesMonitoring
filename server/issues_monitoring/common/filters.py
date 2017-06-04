@@ -40,6 +40,10 @@ def user_ids(usuarios):
 def _len(l):
     return len(l)
 
+@app.template_filter('enumerate')
+def _enumerate(l):
+    return enumerate(l)
+
 @app.template_filter('bool')
 def _bool(b):
     return {True: "Sim", False: "Não"}.get(b, "-")
