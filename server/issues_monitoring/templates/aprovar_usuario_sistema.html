@@ -9,6 +9,7 @@
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/aprovar.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -19,6 +20,7 @@
             <h4>Abaixo, estão os usuários do sistema aguardando aprovação.</h4>
         </div>
         
+        {% if usuarios|len > 0 %}
         <table class="table-fill">
             <thead>
                 <tr>
@@ -29,19 +31,19 @@
                 </tr>
             </thead>
             <tbody class="table-hover">
-                {% for usuario in usuarios_laboratorio %}
+                {% for usuario in usuarios %}
                 <tr>
-                    <td class="text-left" label="INSIRA LOGIN DO USUARIO AQUI">{{usuario.nome}}</td>
+                    <td class="text-left" title="{{usuario.login}}">{{usuario.nome}}</td>
                     <td class="text-left">{{usuario.email}}</td>
                     <td class="text-left">
                         <label class="switch">
-                            <input type="checkbox" data-url="{{url_for('aprovar_usuario_lab', id=usuario.user_id)}}" class="aprovar" {% if usuario.data_aprovacao %}checked="checked"{% endif %}>
+                            <input type="checkbox" data-url="{{url_for('aprovar_usuario_post', id=usuario.id)}}" class="aprovar" {% if usuario.data_aprovacao|existe %}checked="checked"{% endif %}>
                             <div class="check-slide round"></div>
                         </label>
                     </td>
                     <td class="text-left">
                         <label class="switch">
-                            <input type="checkbox" data-url="{{url_for('aprovar_usuario_lab', id=usuario.user_id)}}" class="aprovar" {% if usuario.data_aprovacao %}checked="checked"{% endif %}>
+                            <input type="checkbox" data-url="{{url_for('editar_status_administrador', id=usuario.id)}}" class="aprovar" {% if usuario.admin %}checked="checked"{% endif %}>
                             <div class="check-slide round"></div>
                         </label>
                     </td>
@@ -49,16 +51,17 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        {% else %}
         <div class="ui-widget msg">
             <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
                 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
                 <strong>Erro: </strong>Não há usuários do sistema aguardando aprovação.</p>
             </div>
         </div>
+        {% endif %}
 
         <div class="div-botao-estilizado">
-            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+            <a href="{{url_for('laboratorios')}}" class="btn-estilizado btn-estilizado-blue">Selecionar Laboratório</a>
         </div>
     </div>
 

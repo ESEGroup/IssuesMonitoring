@@ -12,7 +12,7 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
-<script src="/static/js/lista_membros.js"></script>
+<script src="/static/js/aprovar.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -27,6 +27,7 @@
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-view">Associar Usuário de Laboratório Existente</a>
         </div>
         
+        {% if usuarios_laboratorio|len > 0 %}
         <table class="table-fill">
             <thead>
                 <tr>
@@ -50,6 +51,14 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="ui-widget msg">
+            <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                <strong>Erro: </strong>Não há usuários cadastrados no laboratório.</p>
+            </div>
+        </div>
+        {% endif %}
 
         <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
@@ -69,10 +78,11 @@
 
         {% if usuarios|len > 0 %}
         <div class="neat-form">
-            <form>
+            <form method="POST"
+            action="{{url_for('adicionar_usuario_lab', id=lab_id, nome=lab_nome)}}">
                 <fieldset>
                     <legend><span class="number">!</span> Escolher Usuário do Laboratório</legend>
-                    <select name="id-lab">
+                    <select name="id-user">
                         <optgroup label="Usuários do Laboratório">
                             {% for usuario in usuarios %}
                             <option value="{{usuario.user_id}}">{{usuario.nome}}</option>

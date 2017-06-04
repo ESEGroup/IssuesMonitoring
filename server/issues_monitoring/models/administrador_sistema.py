@@ -26,7 +26,7 @@ class AdministradorSistema(UsuarioSistema):
             WHERE user_id = ?;""", (data_aprovacao,
                                     user_id))
 
-    def editar_autorizacao_usuario(user_id, aprovar):
+    def aprovar_usuario(user_id, aprovar):
         if aprovar:
             data_aprovacao = int(datetime.now().timestamp())
         else:

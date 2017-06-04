@@ -101,6 +101,7 @@
 .neat-form input[type="button"]:hover
 {
     background: #109177;
+    cursor: pointer;
 }
 
 .legenda-cadastro {

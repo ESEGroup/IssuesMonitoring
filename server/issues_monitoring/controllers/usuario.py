@@ -21,8 +21,8 @@ def remover_usuario_sistema(user_id):
 def editar_status_administrador(user_id, admin):
     AdministradorSistema.editar_status_administrador(user_id, admin)
 
-def editar_autorizacao_usuario(user_id, autorizar):
-    AdministradorSistema.editar_autorizacao_usuario(user_id, autorizar)
+def aprovar_usuario(user_id, aprovar):
+    AdministradorSistema.aprovar_usuario(user_id, aprovar)
 
 def enviar_emails_cadastro_usuario():
     admins = AdministradorSistema.obter_administradores()
