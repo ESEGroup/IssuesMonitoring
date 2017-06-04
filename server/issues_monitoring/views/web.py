@@ -65,7 +65,7 @@ def laboratorios():
 @app.route('/laboratorio/<id>/<nome>')
 def laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     laboratorio = controllers.obter_laboratorio(id)
@@ -80,7 +80,7 @@ def laboratorio(id, nome=""):
 @app.route('/editar-laboratorio/<id>/<nome>')
 def editar_laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     laboratorio = controllers.obter_laboratorio(id)
@@ -96,16 +96,18 @@ def editar_laboratorio(id, nome=""):
 @app.route('/editar-laboratorio/<id>/<nome>', methods=["POST"])
 def editar_laboratorio_post(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     nome = request.form.get("nome") or ''
-    endereco = request.form.get("endereco") or ''
+    endereco = request.form.get("endereco") or ' '
     intervalo_parser = request.form.get("intervalo-parser") or ''
     intervalo_arduino = request.form.get("intervalo-arduino") or ''
 
     args = [id, nome, endereco, intervalo_parser, intervalo_arduino]
     if "" not in args:
+        if (endereco is ' '):
+            args[2] = ''
         controllers.atualizar_informacoes_lab(*args)
         kwargs = {"c" : "Informações cadastrais atualizadas com sucesso."}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
@@ -117,7 +119,7 @@ def editar_laboratorio_post(id, nome=""):
 @app.route('/zona-de-conforto/<id>/<nome>')
 def zona_de_conforto(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     zc = controllers.obter_zona_de_conforto(id)
@@ -132,7 +134,7 @@ def zona_de_conforto(id, nome=""):
 @app.route('/zona-de-conforto/<id>/<nome>', methods=["POST"])
 def zona_de_conforto_post(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     temp_min = request.form.get("temp-min") or ''
@@ -153,7 +155,7 @@ def zona_de_conforto_post(id, nome=""):
 @app.route('/usuarios-lab/<id>/<nome>')
 def usuarios_laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     usuarios_laboratorio = controllers.obter_usuarios_laboratorio(id)
@@ -176,7 +178,7 @@ def cadastro_lab():
         return redirect(url_for('login'))
 
     nome = request.form.get("nome") or ""
-    endereco = request.form.get("endereco") or ""
+    endereco = request.form.get("endereco") or " "
     intervalo_parser = request.form.get("intervalo-parser") or ""
     intervalo_arduino = request.form.get("intervalo-arduino") or ""
     temp_min = request.form.get("temp-min") or ""
@@ -186,9 +188,12 @@ def cadastro_lab():
     args = [nome, endereco, intervalo_parser, intervalo_arduino,
             temp_min, temp_max, umid_min, umid_max]
     if "" not in args:
+        if (endereco is " "):
+            args[1] = ""
         controllers.cadastro_laboratorio(*args)
-
-    kwargs = {"c" : "Laboratório cadastrado com sucesso."}
+        kwargs = {"c" : "Laboratório cadastrado com sucesso."}
+    else:
+        kwargs = {"e" : "Por favor, lembre-se de preencher o nome do laboratório."}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/cadastro')
@@ -229,7 +234,7 @@ def aprovar_usuario_lab(id):
 @app.route('/adicionar-usuario-lab/<id>/<nome>', methods=["POST"])
 def adicionar_usuario_lab(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
+        kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login'))
 
     user_id = request.form.get('id-user') or '' 
