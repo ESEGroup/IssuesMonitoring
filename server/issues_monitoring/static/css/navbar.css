@@ -141,6 +141,7 @@ body {
     padding: 10px 20px;
     margin: 0 auto;
     margin-top: -12px;
+    line-height: 120%;
 }
 
 .ui-state-success {
@@ -159,4 +160,29 @@ body {
 
 .hidden {
     display: none;
+}
+
+
+/* CSS referente ao botao de logout: */
+
+.logout-img {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    top: 4px;
+    background: url(/static/img/logout.png) no-repeat top;
+    background-size: 20px 20px; /*Tamanho da imagem de logout*/
+    background-position: 10% 10%; /*Posicao da imagem de logout*/
+}
+
+.logout-txt {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.logout-btn {
+    position:absolute; 
+    bottom:0;
+    width: 100%;
 }

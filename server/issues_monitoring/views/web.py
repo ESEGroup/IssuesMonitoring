@@ -46,8 +46,7 @@ def login_post():
 @app.route('/selecionar-laboratorio')
 def laboratorios():
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login"}
-        return redirect(url_for('login', **kwargs))
+        return redirect(url_for('login'))
 
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('labs.html',
