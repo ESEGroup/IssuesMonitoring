@@ -1,92 +1,40 @@
 {% extends 'menu.html' %}
-{% block title %}
-Cadastro Usuario Laboratório
-{% endblock %}
 
-{% block menu %}
-    {% if autenticado %}
-    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
-    <li><a href="{{url_for('cadastro_lab')}}">Cadastrar Laboratório</a></li>
-    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
-    {% else %}
-    <li><a href="{{url_for('login')}}">Login</a></li>
-    {% endif %}
-    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 {% endblock %}
 
 {% block content %}
-<h2 class="center">Cadastrar Usuário do Laboratório</h2>
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Cadastro de Usuário do Laboratório</h3>
+    </div>
 
-<hr>
-
-{% if autenticado and laboratorios|len > 0 and usuarios|len > 0 %}
-<div class="campos cadastro">
-    <h3>Adicionar usuário existente a laboratório</h3>
-    <form method="POST" action="{{url_for('adicionar_usuario_lab')}}">
-        <div>
-            <p>Laboratório:</p>
-            <select name="id-lab">
-                {% for lab in laboratorios %}
-                <option value="{{lab.id}}">{{lab.nome}}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <p>Usuário:</p>
-            <select name="id-user">
-                {% for u in usuarios %}
-                <option value="{{u.user_id}}">{{u.nome}}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <input type="submit" value="Adicionar">
-        </div>
-    </form>
-</div>
-{% endif %}
-
-<div class="campos cadastro">
-    <h3>Cadastrar novo usuário</h3>
-    <form method="POST" action="{{url_for('cadastro_usuario_lab')}}">
-        <div>
-            <p>Laboratório:</p>
-            <select name="id-lab">
-                {% if laboratorios %}
-                {% for lab in laboratorios %}
-                <option value="{{lab.id}}">{{lab.nome}}</option>
-                {% endfor %}
-                {% endif %}
-            </select>
-        </div>
-
-        <div>
-            <p>Id de usuário:</p>
-            <input type="text" name="id-user">
-        </div>
-
-        <div>
-            <p>Nome Completo:</p>
-            <input type="text" name="nome">
-        </div>
-
-        <div>
-            <p>E-mail:</p>
-            <input type="text" name="email" />
-        </div>
-
-        {% if admin %}
-        <div>
-            <p>Aprovar:</p>
-            <input type="checkbox" name="aprovar">
-        </div>
-        {% endif %}
-
-        <div>
-            <input type="submit" value="Registrar">
-        </div>
-    </form>
+    <div class="neat-form" id="hidden-form">
+        <form method="POST">
+            <fieldset>
+                <legend><span class="number">1</span> Laboratório Associado</legend>
+                <select name="id-lab">
+                    <optgroup label="Laboratórios">
+                        {% for lab in laboratorios %}
+                        <option value="{{lab.id}}">{{lab.nome}}</option>
+                        {% endfor %}
+                    </optgroup>    
+                </select>
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Identificação MyDenox</legend>
+                <input type="text" name="id-user" placeholder="Mesmo ID registrado no sistema MyDenox">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">3</span> Dados do Usuário</legend>
+                <input type="text" name="nome" placeholder="Nome Completo">
+                <input type="text" name="email" placeholder="E-mail">
+            </fieldset>
+            <input type="submit" value="Cadastrar Usuário do Laboratório" />
+        </form>
+    </div>
 </div>
 {% endblock %}

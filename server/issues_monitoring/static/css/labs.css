@@ -1,0 +1,7 @@
+/* CSS referente ao botao de opcao de laboratorio: */
+
+.lab-btn {
+    background: url(/static/img/scientist.png) no-repeat top;
+    background-size: 110px 145px; /*Tamanho da imagem do lab*/
+    background-position: 55% 15%; /*Centraliza a imagem do lab*/
+}

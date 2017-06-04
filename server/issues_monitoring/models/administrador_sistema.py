@@ -15,14 +15,18 @@ class AdministradorSistema(UsuarioSistema):
             admins += [AdministradorSistema(*d, hash=True)]
         return admins
 
-    def autorizar_usuario_lab(lab_id, user_id):
-        data_aprovacao = int(datetime.now().timestamp())
+    def autorizar_usuario_lab(user_id, autorizar):
+        if autorizar:
+            data_aprovacao = int(datetime.now().timestamp())
+        else:
+            data_aprovacao = None
         db.execute("""
             UPDATE User_Lab
             SET data_aprov = ?
             WHERE user_id = ?;""", (data_aprovacao,
                                     user_id))
-    def editar_autorizacao_usuario(user_id, aprovar):
+
+    def aprovar_usuario(user_id, aprovar):
         if aprovar:
             data_aprovacao = int(datetime.now().timestamp())
         else:

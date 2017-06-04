@@ -24,15 +24,22 @@ class UsuarioLab(Usuario):
         return UsuarioLab(*data)
 
     def obter_todos():
-        data = db.fetchall("""SELECT user_id, nome, email, data_aprov
-                            FROM User_Lab;""")
+        data = db.fetchall("SELECT user_id, nome, email, data_aprov FROM User_Lab")
+        return [UsuarioLab(*d) for d in data]
+
+    def obter_do_laboratorio(id):
+        data = db.fetchall("""SELECT u.user_id, u.nome, u.email, u.data_aprov
+                            FROM User_Lab u
+                            INNER JOIN Presenca p
+                              ON p.user_id = u.user_id
+                            WHERE p.lab_id = ?;""", (id,))
         return [UsuarioLab(*d) for d in data]
 
     def registrar_presenca(eventos):
         usuarios_presenca = []
         tupla_eventos = []
         for e in eventos:
-            usuarios_presenca += [(e.evento == "IN", e.user_id)]
+            usuarios_presenca += [(e.evento == "IN", e.user_id, e.lab_id)]
             tupla_eventos += [(e.epoch,
                                e.user_id,
                                e.lab_id,
@@ -41,7 +48,8 @@ class UsuarioLab(Usuario):
         db.executemany("""
             UPDATE Presenca
             SET presente = ?
-            WHERE user_id = ?;""",
+            WHERE user_id = ?
+                  AND lab_id = ?;""",
             usuarios_presenca)
         db.executemany("""
             INSERT INTO Log_Presenca

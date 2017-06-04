@@ -1,0 +1,50 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/alterar_zona_conforto.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+
+    <div class="page-title">
+        <h3>Alterar a Zona de Conforto</h3>        
+        <h4>{{lab_nome}}</h4>
+    </div>
+
+    <div class="neat-form">
+        <form method="POST">
+            <fieldset>
+                <legend><span class="number">!</span> Zona de Conforto</legend>
+                <div class="legenda-cadastro">Temperatura do laboratório:</div>
+                <div class="div-double-slider">
+                    <div id="slider-temp" class="double-slider"></div>
+                    <input type="hidden" name="temp-min" id="temp-min" value="{{zona_conforto.temp_min}}">
+                    <input type="hidden" name="temp-max" id="temp-max" value="{{zona_conforto.temp_max}}">
+                    <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                </div>
+                <div class="legenda-cadastro">Umidade do laboratório:</div>
+                <div class="div-double-slider">
+                    <div id="slider-umidade" class="double-slider"></div>
+                    <input type="hidden" name="umid-min" id="umid-min" value="{{zona_conforto.umidade_min}}">
+                    <input type="hidden" name="umid-max" id="umid-max" value="{{zona_conforto.umidade_max}}">
+                    <span class="double-slider-value"><input type="url" id="umidade-lab" class="slider-bounds-lab" readonly></span>
+                </div>
+            </fieldset>
+            <input type="submit" value="Salvar Informações" />
+        </form>
+        <div class="div-botao-estilizado">
+            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
