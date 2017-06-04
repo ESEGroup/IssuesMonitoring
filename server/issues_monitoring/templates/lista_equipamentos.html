@@ -1,0 +1,27 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Lista de Equipamentos</h3>
+    </div>
+
+    <div class="ui-widget msg">
+        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Erro: </strong>Esta funcionalidade estará disponível na próxima versão do sistema.</p>
+        </div>
+    </div>
+
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+    </div>
+
+</div>
+{% endblock %}

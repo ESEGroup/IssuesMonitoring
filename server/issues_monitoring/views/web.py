@@ -389,6 +389,7 @@ def editar_usuario_sistema_post(user_id):
     kwargs = {"c" : "Usuário editado com sucesso!"}
     return redirect(url_for('laboratorios', **kwargs))
 
+
 def remover_usuario_sistema(user_id):
     if not admin_autenticado():
         return redirect(url_for('laboratorios'))

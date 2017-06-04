@@ -5,7 +5,7 @@
 {% block header %}
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="/static/css/log_presenca.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/lista_membros.css" />
 {% endblock %}
 
@@ -57,7 +57,9 @@
     </div>
 
     <div id="view2" style="display:none">
+
         <div class="page-title">
+            <h3>Associar Usuário de Laboratório</h3>
             <h4>{{lab_nome}}</h4>
         </div>
 
@@ -71,7 +73,7 @@
                 <fieldset>
                     <legend><span class="number">!</span> Escolher Usuário do Laboratório</legend>
                     <select name="id-lab">
-                        <optgroup label="Laboratórios">
+                        <optgroup label="Usuários do Laboratório">
                             {% for usuario in usuarios %}
                             <option value="{{usuario.user_id}}">{{usuario.nome}}</option>
                             {% endfor %}
