@@ -7,8 +7,8 @@ Created on Wed May 17 00:20:42 2017
 
 from ..common.mail import send_email
 from ..models import  AdministradorSistema
+import os.path
 from . import db
-
 
 def get_lab_name(lab_id):
     data = db.fetchone("""SELECT nome FROM Lab WHERE lab_id = ?;""", (lab_id,))
@@ -17,8 +17,7 @@ def get_lab_name(lab_id):
 
 #returns -1 if lights are; x > 0 otherwise, x = number of (last person present + admins who will receive emails)
 def check_for_forgotten_lights(lab_id):
-    data = db.fetchall("""SELECT User_Lab.email
-                          FROM User_Lab, Presenca WHERE User_Lab.user_id = Presenca.user_id AND Presenca.presente=1 AND Presenca.lab_id = ?;""", (lab_id,))
+    data = db.fetchall("""SELECT User_Lab.email FROM User_Lab, Presenca WHERE User_Lab.user_id = Presenca.user_id AND Presenca.presente=1 AND Presenca.lab_id = ?;""", (lab_id,))
     present_users =[]
     for row in data:
         present_users.append(str(row[0]))
@@ -39,7 +38,6 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
 
             admins = AdministradorSistema.obter_administradores()
             emails = [a.email for a in admins]
-
             data = db.fetchone("""SELECT u.email
                                   FROM Log_Presenca l, User_Lab u WHERE l.lab_id=? AND l.evento='OUT' AND l.user_id = u.user_id ORDER BY l.data DESC;""", (lab_id,))
             emails += [data[0]]
@@ -49,6 +47,8 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
         #lights were off
         else:
             return -1
+    else:
+        return "presentes"
 
 
 #returns -1 if temperature is ok; x > 0 otherwise, x = number of present people + admins who will receive emails
@@ -118,7 +118,7 @@ def check_for_abnormal_humidity(lab_id):
     current_umid = data[0]
 
     if (current_umid < umid_min or current_umid > umid_max):
-        lab_name = getLabName(lab_id)
+        lab_name = get_lab_name(lab_id)
         subject = "Aviso de umidade anormal"
         msg_content = """
 Caro responsável,
