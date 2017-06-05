@@ -183,3 +183,6 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        return 1
+    else:
+        return -1

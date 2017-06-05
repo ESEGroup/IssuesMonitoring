@@ -35,9 +35,13 @@ from . import check_condicoes as cc
 
 # #ajeitar BD para proxima etapa
 
-# #se umidade estiver normal, retorna -1
-def test_checkIfHumidityIsOk():
-	assert cc.check_for_abnormal_humidity(1) == -1
+# se temperatura do equipamento estiver normal, retorna -1
+# def test_checkIfEquipTempIsOk():
+# 	assert cc.check_for_equipment_temperature(1, 1) == -1
+
+# se temperatura do equipamento estiver anormal, retorna 1
+def test_checkIfEquipTempIsNotOk():
+	assert cc.check_for_equipment_temperature(1, 1) == 1
 
 
 
