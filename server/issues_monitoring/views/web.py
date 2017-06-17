@@ -40,7 +40,7 @@ def login_post():
         kwargs = {}
     else:
         session.clear()
-        kwargs = {"e": "Usuário ou senha incorretos ou usuário não aprovado."}
+        kwargs = {"e": "Usuário ou senha incorretos ou usuário não autorizado."}
     return redirect(url_for('login', **kwargs))
 
 @app.route('/selecionar-laboratorio')
@@ -217,7 +217,7 @@ def cadastro_post():
                                                     nome):
             kwargs = {"e": "Login ou e-mail já utilizados."}
             return redirect(url_for("cadastro", **kwargs))
-    kwargs = {"c": "Usuário enviado para aprovação!"}
+    kwargs = {"c": "Usuário enviado para autorização!"}
     return redirect(url_for('login', **kwargs))
 
 @app.route('/aprovar-usuario-lab/<id>', methods=["POST"])
@@ -227,7 +227,7 @@ def aprovar_usuario_lab(id):
 
     aprovar = request.form.get('aprovar') == 'true'
     controllers.aprovar_usuario_lab(id, aprovar)
-    kwargs = {"c" : "Aprovação alterada com sucesso!"}
+    kwargs = {"c" : "Autorização alterada com sucesso!"}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/adicionar-usuario-lab/<id>/', methods=["POST"])
@@ -350,9 +350,9 @@ def aprovar_usuario_post(id):
     controllers.aprovar_usuario(id, aprovar)
 
     if aprovar:
-        kwargs = {"c": "Usuário aprovado com sucesso."}
+        kwargs = {"c": "Usuário autorizado com sucesso."}
     else:
-        kwargs = {"c": "Aprovação do usuário removida com sucesso."}
+        kwargs = {"c": "Autorização do usuário removida com sucesso."}
 
     return redirect(url_for('laboratorios', **kwargs))
 
