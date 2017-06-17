@@ -21,10 +21,6 @@
             <h3>Membros Presentes Neste Momento</h3>
             <h4>{{lab_nome}}</h4>
         </div>
-
-        <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-view">Ver Log de Presença</a>
-        </div>
         
         {% if usuarios_presentes|len > 0 %}
         <table class="table-fill">
@@ -38,7 +34,7 @@
             <tbody class="table-hover">
                 {% for usuario in usuarios_presentes %}
                 <tr>
-                    <td class="text-left">{{usuario.nome}}</td>
+                    <td class="text-left" title="{{usuario.user_id}}">{{usuario.nome}}</td>
                     <td class="text-left">{{usuario.email}}</td>
                     <td class="text-left">{{usuario.data_entrada|hora_min}}</td>
                 </tr>
@@ -54,6 +50,10 @@
         </div>
         {% endif %}
 
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-view">Ver Log de Presença</a>
+        </div>
+
         <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
@@ -63,10 +63,6 @@
         <div class="page-title">
             <h3>Log de Presença de {{dia|dia_mes_ano}}</h3>
             <h4>{{lab_nome}}</h4>
-        </div>
-
-        <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Ver Membros Presentes</a>
         </div>
 
         {% if eventos|len > 0 %}
@@ -96,6 +92,10 @@
             </div>
         </div>
         {% endif %}
+
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Ver Membros Presentes</a>
+        </div>
 
         <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
