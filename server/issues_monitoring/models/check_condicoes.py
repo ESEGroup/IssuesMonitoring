@@ -10,6 +10,10 @@ from ..models import  AdministradorSistema
 import os.path
 from . import db
 
+def get_equip_ids(lab_id):
+    data = db.fetchall("""SELECT equip_id FROM Equip WHERE Equip.lab_id = ?;""", (lab_id,))
+    return [d[0] for d in data]    
+
 def get_lab_name(lab_id):
     data = db.fetchone("""SELECT nome FROM Lab WHERE lab_id = ?;""", (lab_id,))
     lab_name = data[0]
@@ -40,7 +44,8 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
             emails = [a.email for a in admins]
             data = db.fetchone("""SELECT u.email
                                   FROM Log_Presenca l, User_Lab u WHERE l.lab_id=? AND l.evento='OUT' AND l.user_id = u.user_id ORDER BY l.data DESC;""", (lab_id,))
-            emails += [data[0]]
+            if data is not None:
+                emails += [data[0]]
             send_email(subject, msg_content, emails)
             return len(emails)
 
