@@ -26,6 +26,8 @@
             <a href="{{url_for('zona_de_conforto', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Alterar Zona de Conforto</span></a>
 
             <a href="{{url_for('editar_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Dados Cadastrais</span></a>
+            
+            <a href="{{url_for('mostrar_grafico', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Mostrar Gráfico</span></a>            
         </div>
         <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorios')}}" class="btn-estilizado btn-estilizado-blue">Escolher Outro Laboratório</a>

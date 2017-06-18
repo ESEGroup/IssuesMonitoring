@@ -58,6 +58,3 @@ thread = Thread(target=reset_presencas_meia_noite)
 thread.daemon = True
 thread.start()
 
-
-checar_condicoes_no_intervalo()
-

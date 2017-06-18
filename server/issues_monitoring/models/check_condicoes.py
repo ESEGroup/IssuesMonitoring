@@ -9,6 +9,34 @@ from ..common.mail import send_email
 from ..models import  AdministradorSistema
 import os.path
 from . import db
+import json
+
+def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
+    if (temperatura == "on" and umidade=="on"):       
+        data = db.fetchall("""
+            SELECT data, temp, umid
+            FROM Log_Lab 
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data;""", (lab_id, dia, prox_dia))
+    elif (temperatura == "on"):
+        data = db.fetchall("""
+            SELECT data, temp
+            FROM Log_Lab
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data;""", (lab_id, dia, prox_dia))
+    elif (umidade == "on"):
+        data = db.fetchall("""
+            SELECT data, umid
+            FROM Log_Lab
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data;""", (lab_id, dia, prox_dia))
+    return data
 
 def get_equip_ids(lab_id):
     data = db.fetchall("""SELECT equip_id FROM Equip WHERE Equip.lab_id = ?;""", (lab_id,))

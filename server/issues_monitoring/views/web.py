@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
 from ..common.utils import autenticado, admin_autenticado, hoje
 from .. import app, Config, controllers
+import json
 
 @app.route('/')
 def root():
@@ -382,3 +383,149 @@ def equipamentos_laboratorio(id, nome=""):
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""
+
+# @app.route('/escolher-grafico/')
+# def escolher_grafico(id):
+#     json.dumps(temp_data)
+#     return render_template('grafico.html',
+#                             lab_id=id,
+#                             pagina='grafico')
+
+@app.route('/mostrar-grafico/<id>/')
+def mostrar_grafico(id):
+    # temp_data=controllers.get_data_log(id)
+    # json.dumps(temp_data)
+    return render_template('grafico.html',
+                            lab_id=id,
+                            pagina='mostrar_grafico')
+
+@app.route('/mostrar-grafico/<id>/', methods=["POST"])
+def mostrar_grafico_post(id):
+    temperatura = request.form.get("temperatura") or ''
+    umidade = request.form.get("umidade") or ''
+    intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
+    dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
+    dia = 1497668400
+    cols = [0, 0]
+
+    interval = int(intervalo_grafico)*60
+    interval = 8000
+    
+    args = [temperatura, umidade, dia, id]
+    temp_data = controllers.get_data_log(*args)
+    json.dumps(temp_data)
+    arrayOfEpochs = json.loads(temp_data)
+
+    if (temperatura == "on"):
+        cols[0] = 1
+
+    if (umidade == "on"):
+        cols[1] = 1   
+
+    result_means = [] 
+
+    if (temperatura == "on" and umidade == "on"):
+        result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
+    elif (temperatura == "on"):
+        result_means = getIntervalMeans(interval, arrayOfEpochs)
+    elif (umidade == "on"):
+        result_means = getIntervalMeans(interval, arrayOfEpochs)
+
+    return render_template('grafico.html',
+                            lab_id=id,
+                            pagina='mostrar_grafico',
+                            temp_data=result_means,
+                            cols=cols,
+                            intervalo_grafico=intervalo_grafico)
+
+
+def getIntervalMeans(interval, arrayOfEpochs):
+    temp = arrayOfEpochs[0][0]
+    for i in range(len(arrayOfEpochs)):
+        arrayOfEpochs[i][0] -= temp
+   
+    if(len(arrayOfEpochs)<1):
+        return #invalid entry
+    
+    numberOfIntervals = int((86400)/interval)
+    print("Number of intervals is: %i" %numberOfIntervals)
+    intervalIndex = 0
+    #will save the interval means like [[interval1, mean1], [interval2, mean2],...]
+    intervalMeans = [] 
+
+    #do the first exception(00:00), gets means from 00:00 till interval/2
+    mean = 0.0
+    counter = 0
+    numberOfSamples = 0
+    currentEpoch = 0
+    while(currentEpoch < interval/2):
+        currentEpoch = float(arrayOfEpochs[counter][0])
+        print ("Current epoch = %f" %currentEpoch)
+        if(currentEpoch<interval/2):
+            print("Added to first mean")
+            #Then save this value on the current mean calculation
+            mean+= arrayOfEpochs[counter][1]
+            counter = counter + 1
+            numberOfSamples +=1
+        #repeats until currentEpoch gets an epoch that surpasses interval/2
+    if (numberOfSamples>0):
+        mean = mean/numberOfSamples
+        intervalMeans += [[intervalIndex, mean]]
+        intervalIndex+=1
+    #now for the rest of the intervals(except the last one)
+    for i in range (intervalIndex, numberOfIntervals):
+        mean = 0.0
+        numberOfSamples = 0.
+        while(currentEpoch < i*interval + interval/2 and counter < len(arrayOfEpochs)):
+            print ("Current epoch = %f" %currentEpoch)
+            currentEpoch = float(arrayOfEpochs[counter][0])
+            if(currentEpoch<i*interval + interval/2):
+                print ("Added to mean %i" %i)
+                #Then save this value on the current mean calculation
+                mean+= arrayOfEpochs[counter][1]
+                counter = counter + 1
+                numberOfSamples +=1.
+        if (numberOfSamples>0):
+            mean = mean/numberOfSamples
+            intervalMeans += [[intervalIndex, mean]]
+            intervalIndex+=1                
+    
+    i+=1
+    mean = 0.0
+    numberOfSamples = 0
+    #now for the final one, the right extreme
+    #while it doesn't overflow to the following day...
+    while(currentEpoch < interval*numberOfIntervals and counter < len(arrayOfEpochs)):
+        currentEpoch = float(arrayOfEpochs[counter][0])
+        print ("Current epoch = %f" %currentEpoch)
+        if(currentEpoch < 86400):
+            print ("Added to mean %i" %i)
+            mean+= arrayOfEpochs[counter][1]
+            counter = counter + 1
+            numberOfSamples +=1
+        #repeats until currentEpoch gets an epoch that surpasses the day's seconds limit
+    if (numberOfSamples>0):
+        mean = mean/numberOfSamples
+        intervalMeans += [[intervalIndex, mean]]
+    return intervalMeans
+
+def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
+    arrayOfTempEpochs = []
+    arrayOfHumidEpochs = []
+    
+    for i in range( len(arrayOfTempAndHumidEpochs)):
+        arrayOfTempEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][1]]]
+        arrayOfHumidEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][2]]]
+        
+    tempMeans = getIntervalMeans(interval, arrayOfTempEpochs)
+    HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs)
+    
+    #will have a structure of [[interval1, tempMean1, humidMean1], [interval2, tempMean2, humidMean2], ...]
+    tempAndHumidMeans = []
+    #assuming they have the same number of intervals:
+    for i in range(len(tempMeans)):
+        #gets [intervalI, tempMeanI, humidMeanI]
+        tempAndHumidMeans +=[[tempMeans[i][0], tempMeans[i][1], HumidMeans[i][1]]]
+        
+    return tempAndHumidMeans

@@ -1,8 +1,9 @@
 from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
                       ZonaConforto)
-from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids
+from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids, get_data_graphic
 from threading import Thread
 from time import sleep
+import json
 
 def cadastro_laboratorio(nome, endereco, intervalo_parser,
                           intervalo_arduino, temp_min, temp_max,
@@ -84,3 +85,9 @@ def check_condicoes_ambiente(lab_id):
 
       for eq in equips:
         check_for_equipment_temperature(eq,lab_id)            
+
+def get_data_log(temperatura, umidade, dia, lab_id):
+  prox_dia = dia + 60 * 60 * 24 + 1
+  dia -= 1
+  json_string = json.dumps(get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id))
+  return json_string
