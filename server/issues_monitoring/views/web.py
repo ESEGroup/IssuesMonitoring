@@ -393,8 +393,6 @@ def robots_txt():
 
 @app.route('/mostrar-grafico/<id>/')
 def mostrar_grafico(id):
-    # temp_data=controllers.get_data_log(id)
-    # json.dumps(temp_data)
     return render_template('grafico.html',
                             lab_id=id,
                             pagina='mostrar_grafico')
@@ -529,3 +527,34 @@ def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
         tempAndHumidMeans +=[[tempMeans[i][0], tempMeans[i][1], HumidMeans[i][1]]]
         
     return tempAndHumidMeans
+
+@app.route('/mostrar-relatorio/<id>/')
+def mostrar_relatorio(id):
+    return render_template('relatorio.html',
+                            lab_id=id)
+
+@app.route('/mostrar-relatorio/<id>/', methods=["POST"])
+def mostrar_relatorio_post(id):
+    dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
+    dia = 1497668400
+
+    args = [dia, id]
+    temp_data = controllers.get_log_presence_list(*args)
+    json.dumps(temp_data)
+    arrayOfLog = json.loads(temp_data)
+    for i in range(len(arrayOfLog)):
+        print(arrayOfLog[i][0])
+    print (arrayOfLog)
+
+    # for i in range(len(arrayOfLog)):
+    #     if (arrayOfLog[i][1] == "IN"):
+    #         arrayOfLog[i][1] = 1
+    #     elif (arrayOfLog[i][1] == "OUT"):
+    #         arrayOfLog[i][1] = 0
+    # print (arrayOfLog)
+
+    return render_template('relatorio.html',
+                            lab_id=id,
+                            pagina='mostrar_relatorio',
+                            temp_data=arrayOfLog)    
