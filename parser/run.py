@@ -41,7 +41,7 @@ def work():
         debug("Events registered.")
 
         # Server returns wait_for until next run (in minutes)
-        received_wait_for = int(response.text)
+        received_wait_for = float(response.text)
 
         if received_wait_for == -1:
             log("Invalid token.")
