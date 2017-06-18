@@ -42,3 +42,6 @@ def reset_presencas_meia_noite():
         sleep(segundos_ate)
         emails = Laboratorio.reset_lista_presenca()
         enviar_email_presenca_zerada(emails)
+
+def ultima_atualizacao_parser():
+    return Laboratorio.ultima_atualizacao_parser()

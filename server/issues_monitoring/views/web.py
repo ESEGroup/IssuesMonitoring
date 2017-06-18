@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, session
-from datetime import datetime
+from datetime import datetime, timedelta
 from ..common.utils import autenticado, admin_autenticado, hoje
 from .. import app, Config, controllers
+from ..models import Laboratorio
 
 @app.route('/')
 def root():
@@ -237,7 +238,7 @@ def adicionar_usuario_lab(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login'))
 
-    user_id = request.form.get('id-user') or '' 
+    user_id = request.form.get('id-user') or ''
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
         kwargs = {'c': "Usuário adicionado ao laboratório com sucesso."}
@@ -375,10 +376,48 @@ def equipamentos_laboratorio(id, nome=""):
         return redirect(url_for('login', **kwargs))
 
     return render_template('lista_equipamentos.html',
-                           admin=admin_autenticado(),
-                           lab_id=id,
-                           lab_nome=nome,
-                           pagina="equipamentos_laboratorio")
+                           admin   = admin_autenticado(),
+                           lab_id  = id,
+                           lab_nome= nome,
+                           pagina  = "equipamentos_laboratorio")
+
+@app.route('/system-status')
+def system_status():
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    # pegar as infos do banco
+    timestamp_parser = float(controllers.ultima_atualizacao_parser())
+    tempos_arduinos = controllers.ultima_atualizacao_arduino()
+    agora = datetime.today()
+    status_componente = "OK"
+    dados = []
+
+    # parsear as infos e preencher o dicionario com os dados
+    if ((datetime(1970, 1, 1) + timedelta(seconds=timestamp_parser)) <
+        (agora - timedelta(minutes=controllers.obter_intervalo_parser()))):
+        status_componente = "Fora do Ar"
+
+    dados += [{"nome_componente"    : "Parser",
+               "ultima_atualizacao" : timestamp_parser,
+               "status"             : status_componente}]
+
+    for lab_id in tempos_arduinos:
+        status_componente = "OK"
+        print(tempos_arduinos[lab_id])
+        if ((datetime(1970, 1, 1) + timedelta(seconds=float(tempos_arduinos[lab_id]))) <
+            (agora - timedelta(minutes=Laboratorio.obter_intervalo_arduino(lab_id)))):
+            print ("ENTROU")
+            status_componente = "Fora do Ar"
+
+        dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
+                   "ultima_atualizacao" : float(tempos_arduinos[lab_id]),
+                   "status"             : status_componente}]
+
+    return render_template('system-status.html',
+                            componentes = dados,
+                            pagina = 'system-status')
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""
