@@ -59,6 +59,10 @@ class Laboratorio:
         data = db.fetchall("SELECT nome, lab_id FROM Lab")
         return [Laboratorio(d[0], None, None, None, None, d[1]) for d in data]
 
+    def obter_todos_ids():
+        data = db.fetchall("SELECT lab_id FROM Lab;")
+        return [d[0] for d in data]        
+
     def obter_informacoes():
         data = db.fetchall("""
             SELECT l.lab_id, l.nome, l.endereco, l.intervalo_parser,

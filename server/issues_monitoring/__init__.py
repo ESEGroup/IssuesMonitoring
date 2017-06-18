@@ -9,7 +9,7 @@ try:
 except:
     from config import Config
     from db import DB
-from .controllers import reset_presencas_meia_noite
+from .controllers import reset_presencas_meia_noite, checar_condicoes_no_intervalo
 
 class NoTokenParser(KeyboardInterrupt):
     pass
@@ -57,3 +57,7 @@ def no_cache_dynamic(response):
 thread = Thread(target=reset_presencas_meia_noite)
 thread.daemon = True
 thread.start()
+
+
+checar_condicoes_no_intervalo()
+
