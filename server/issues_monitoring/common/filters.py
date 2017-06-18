@@ -11,21 +11,21 @@ def data(timestamp):
     if timestamp in [None, ""]:
         return "-"
     timestamp = float(timestamp)
-    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
+    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%d/%m/%Y %H:%M")
 
 @app.template_filter('hora_min')
 def hora_min(timestamp):
     if timestamp in [None, ""]:
         return "-"
     timestamp = float(timestamp)
-    return datetime.fromtimestamp(timestamp).strftime("%H:%M")
+    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%H:%M")
 
 @app.template_filter('dia_mes_ano')
 def dia_mes_ano(timestamp):
     if timestamp in [None, ""]:
         return "-"
     timestamp = float(timestamp)
-    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y")
+    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%d/%m/%Y")
 
 @app.template_filter('existe')
 def existe(var):
