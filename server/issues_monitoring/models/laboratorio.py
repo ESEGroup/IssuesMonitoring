@@ -19,7 +19,7 @@ class Laboratorio:
         self.membros           = membros
 
     def registrar_medidas(medida):
-        epoch = int(datetime.now().timestamp())
+        epoch = int(datetime.today().timestamp())
         #insert lab info
         db.execute('''
             INSERT INTO Log_Lab
@@ -127,7 +127,7 @@ class Laboratorio:
 
         events = []
         emails = []
-        now = int(datetime.now().timestamp())
+        now = int(datetime.today().timestamp())
         for d in data:
             events += [(now, d[0], d[2], "OUT")]
             emails += [d[1]]
