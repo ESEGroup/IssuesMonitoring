@@ -19,6 +19,7 @@ def login():
 
     return render_template('login.html',
                            pagina='login',
+                           autenticado=autenticado(),
                            admin=admin_autenticado())
 
 @app.route('/login', methods=['POST'])
@@ -51,6 +52,7 @@ def laboratorios():
     laboratorios = controllers.obter_informacoes_labs()
     return render_template('labs.html',
                            laboratorios=laboratorios,
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina='laboratorios')
 
@@ -73,6 +75,7 @@ def laboratorio(id, nome=""):
                            laboratorio=laboratorio,
                            lab_id=laboratorio.id,
                            lab_nome=laboratorio.nome,
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina='gerenciar')
 
@@ -88,6 +91,7 @@ def editar_laboratorio(id, nome=""):
     return render_template('editar_lab.html',
                            lab_id=id,
                            lab_nome=nome,
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina='editar_laboratorio',
                            laboratorio=laboratorio)
@@ -126,6 +130,7 @@ def zona_de_conforto(id, nome=""):
     return render_template('alterar_zona_conforto.html',
                            lab_id=zc.lab_id,
                            lab_nome=zc.nome_laboratorio,
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina='zona_de_conforto',
                            zona_conforto=zc)
@@ -169,6 +174,7 @@ def usuarios_laboratorio(id, nome=""):
                            lab_nome=nome,
                            usuarios=usuarios,
                            usuarios_laboratorio=usuarios_laboratorio,
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina="usuarios_laboratorio")
 
@@ -200,6 +206,7 @@ def cadastro_lab():
 def cadastro():
     return render_template('cadastro_usuario_sistema.html',
                            pagina='cadastro',
+                           autenticado=autenticado(),
                            admin=admin_autenticado())
 
 @app.route('/cadastro', methods=['POST'])
@@ -255,6 +262,7 @@ def cadastro_usuario_lab():
 
     return render_template('cadastro_usuario_lab.html',
                            pagina='cadastro_usuario_lab',
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            laboratorios=laboratorios)
 
@@ -325,6 +333,7 @@ def log_eventos(id, nome, dia):
                            dia_anterior=dia_anterior,
                            usuarios_presentes=usuarios_presentes,
                            pagina='log_eventos',
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            lab_id=id,
                            lab_nome=nome,
@@ -338,6 +347,7 @@ def aprovar_usuario():
     usuarios = controllers.obter_usuarios_sistema()
     return render_template('aprovar_usuario_sistema.html',
                            pagina='aprovar_usuario',
+                           autenticado=autenticado(),
                            admin=True,
                            usuarios=usuarios)
 
@@ -375,6 +385,7 @@ def equipamentos_laboratorio(id, nome=""):
         return redirect(url_for('login', **kwargs))
 
     return render_template('lista_equipamentos.html',
+                           autenticado=autenticado(),
                            admin=admin_autenticado(),
                            lab_id=id,
                            lab_nome=nome,
