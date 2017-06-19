@@ -12,7 +12,7 @@
 <body>
     <ul class="nav-bar-ul">
         <li class="nav-bar-li">
-            <a class="nav-bar-li-link {% if pagina in ['laboratorios', 'gerenciar'] %}active{% endif %}" 
+            <a class="nav-bar-li-link {% if pagina in ['laboratorios', 'gerenciar'] %}active{% endif %}"
                href="{{url_for('laboratorios')}}">Laboratório</a>
         </li>
 
@@ -36,7 +36,7 @@
             </a>
         </li>
         <li class="nav-bar-suboption">
-            <a class="nav-bar-li-link {% if pagina == 'zona_de_conforto' %}active{% endif %}" 
+            <a class="nav-bar-li-link {% if pagina == 'zona_de_conforto' %}active{% endif %}"
                href="{{url_for('zona_de_conforto', id=lab_id, nome=lab_nome)}}">
                 <div class="nav-bar-suboption-text">Alterar Zona de Conforto</div>
             </a>
@@ -54,7 +54,7 @@
         </li>
         <ul id="hidden-register" class="nav-bar-ul" {% if pagina not in ['cadastro', 'cadastro_usuario_lab', 'aprovar_usuario_sistema'] %}style="display:none"{% endif %}>
             <li class="nav-bar-suboption">
-                <a class="nav-bar-li-link {% if pagina == 'cadastro' %}active{% endif %}" 
+                <a class="nav-bar-li-link {% if pagina == 'cadastro' %}active{% endif %}"
                    href="{{url_for('cadastro')}}">
                     <div class="nav-bar-suboption-text">Novo Usuário do Sistema</div>
                 </a>
@@ -74,6 +74,10 @@
             </li>
             {% endif %}
         </ul>
+        <li class="nav-bar-li">
+            <a class="nav-bar-li-link {% if pagina == 'system-status' %}active{% endif %}"
+               href="{{url_for('system_status')}}">Status do Sistema</a>
+        </li>
 
         <li class="nav-bar-li logout-btn">
             <a class="nav-bar-li-link"

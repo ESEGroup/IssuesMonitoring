@@ -1,0 +1,97 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  
+    $("#slider-intervalo").slider({
+        range: true,
+        min: 0,
+        max: 120,
+        values: [$("#intervalo-min").val(), $("#intervalo-max").val()],
+        slide: function( event, ui ) {
+            $("#intervalo-lab").val(ui.values[0] + "% a " + ui.values[1] + "%");
+            $("#intervalo-min").val(ui.values[0]);
+            $("#intervalo-max").val(ui.values[1]);
+        }
+    });
+    $("#intervalo-lab").val($("#slider-intervalo").slider("values", 0) + "% a " + $("#slider-intervalo").slider("values", 1) + "%");
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+  
+  cols = JSON.parse("{{cols}}");
+  header_t = ['Data']
+
+    if(cols[0] == 1){
+        header_t.push('Temperatura')
+    }
+    if(cols[1] == 1){
+        header_t.push('Umidade')
+    }
+
+  mydata=JSON.parse('{{temp_data}}');
+  // for (var i=0;i<mydata.length;i++){
+  //   mydata[i][0] = new Date(mydata[i][0]*1000);
+  //   mydata[i][0].toLocaleString();
+  //   // mydate = mydata[i][0].toGMTString() + mydata[i][0].toLocaleString();
+  // }
+  haha = [header_t].concat(mydata)
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(haha);
+
+    var options = {
+      title: 'Gráfico de Temperatura e Umidade',
+      curveType: 'function',
+      legend: { position: 'bottom' }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+    chart.draw(data, options);
+  }
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+
+    <div class="page-title">
+        <h3>Gráfico</h3>        
+        <h4>{{lab_id}}</h4>
+    </div>
+    <div class="neat-form">
+        <form method="POST">
+            <fieldset>
+                <div class="legenda-cadastro">Tipo do gráfico:</div>
+                <div class="graphic_mode">
+                    <input type="checkbox" name="temperatura" id="temperatura">Temperatura
+                    <input type="checkbox" name="umidade" id="umidade">Umidade
+                </div>
+                <div class="legenda-cadastro">Intervalo do gráfico (em min):</div>
+<!--                 <div class="div-double-slider">
+                    <div id="slider-intervalo" class="double-slider"></div>
+                    <input type="hidden" name="intervalo-min" id="intervalo-min" value="5">
+                    <input type="hidden" name="intervalo-max" id="intervalo-max" value="100">
+                    <span class="double-slider-value"><input type="url" id="intervalo-lab" class="slider-bounds-lab" readonly></span>
+                </div> -->
+                <input type="text" name="intervalo_grafico" id="intervalo_grafico"
+            </fieldset>
+            <input type="submit" id="graphic" value="Gerar gráfico" />
+        </form>
+    </div>
+
+    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+
+</div>
+{% endblock %}

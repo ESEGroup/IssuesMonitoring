@@ -20,7 +20,7 @@ def parse_messages(messages):
         dt = datetime.strptime(time, "%d/%m/%Y %H:%M")
         epoch = dt.timestamp()
 
-        # Remove [] from [EVENT-lab_id-user_id] and split them to register
+        # Remove [] from [EVENT-user_id-lab_id] and split them to register
         args = event[1:-1].split("-")
 
         # Allow static events (no user_id or lab_id) e.g. opening the door
