@@ -1,0 +1,86 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript">
+condicoes_ambiente=JSON.parse('{{condicoes_ambiente}}');
+console.log(condicoes_ambiente)
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+
+    <div class="page-title">
+        <h3>Relatório</h3>        
+        <h4>{{lab_id}}</h4>
+    </div>
+    <div class="neat-form">
+        <form method="POST">
+            <fieldset>
+                <div class="legenda-cadastro">Intervalo (em min):</div>
+                <!-- <input type="text" name="day" id="day" -->                
+                <input type="text" name="intervalo_relatorio" id="intervalo_relatorio">
+            </fieldset>
+            <input type="submit" id="report" value="Gerar relatório" />
+        </form>
+    </div>
+
+    {% if log_presenca|len > 0 %}
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th class="text-left">Nome</th>
+                <th class="text-left">Entrada</th>
+                <th class="text-left">Saída</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            {% for user_log in log_presenca %}
+            <tr>
+                <td class="text-left">{{user_log[0]}}</td>
+                <td class="text-left">{{user_log[1]}}</td>
+                <td class="text-left">{{user_log[2]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="ui-widget msg">
+        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Erro: </strong>Não há registro de entrada e saída.</p>
+        </div>
+    </div>
+    {% endif %}
+    {% if condicoes_ambiente|len > 0 %}
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th class="text-left">Data</th>
+                <th class="text-left">Temperatura</th>
+                <th class="text-left">Umidade</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            {% for cond in condicoes_ambiente %}
+            <tr>
+                <td class="text-left">{{cond[0]}}</td>
+                <td class="text-left">{{cond[1]}}</td>
+                <td class="text-left">{{cond[2]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+    {% endif %}
+</div>
+{% endblock %}

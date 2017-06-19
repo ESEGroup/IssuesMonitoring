@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
+import time
 from ..common.utils import autenticado, admin_autenticado, hoje
 from .. import app, Config, controllers
 import json
@@ -404,11 +405,11 @@ def mostrar_grafico_post(id):
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
     dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    dia = 1497668400
+    # dia = 1497668400
     cols = [0, 0]
 
     interval = int(intervalo_grafico)*60
-    interval = 8000
+    # interval = 8000
     
     args = [temperatura, umidade, dia, id]
     temp_data = controllers.get_data_log(*args)
@@ -537,24 +538,78 @@ def mostrar_relatorio(id):
 def mostrar_relatorio_post(id):
     dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    dia = 1497668400
+    # dia = 1497668400
 
-    args = [dia, id]
-    temp_data = controllers.get_log_presence_list(*args)
-    json.dumps(temp_data)
-    arrayOfLog = json.loads(temp_data)
-    for i in range(len(arrayOfLog)):
-        print(arrayOfLog[i][0])
-    print (arrayOfLog)
+    dateTomorrow = dia+24*60*60. -1. 
+    args = [dia, dateTomorrow, id]
+    temp_data = controllers.log_usuario(*args)
 
-    # for i in range(len(arrayOfLog)):
-    #     if (arrayOfLog[i][1] == "IN"):
-    #         arrayOfLog[i][1] = 1
-    #     elif (arrayOfLog[i][1] == "OUT"):
-    #         arrayOfLog[i][1] = 0
-    # print (arrayOfLog)
+    presenceList = organizePresenceList(dia, temp_data)
+    for i in presenceList:
+        i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
+        i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
+
+    intervalo_relatorio = request.form.get("intervalo_relatorio") or 60 #em min
+
+    interval = int(intervalo_relatorio)*60
+    # interval = 8000
+    
+    args = ["on", "on", dia, id]
+    chart_data = controllers.get_data_log(*args)
+    json.dumps(chart_data)
+    arrayOfEpochs = json.loads(chart_data)
+
+    result_means = [] 
+    result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
 
     return render_template('relatorio.html',
                             lab_id=id,
                             pagina='mostrar_relatorio',
-                            temp_data=arrayOfLog)    
+                            log_presenca=presenceList,
+                            condicoes_ambiente=result_means)    
+
+
+
+#presence: comes in the form of [[name, date, event], ...], event = IN/OUT
+def organizePresenceList(currentDayEpoch, presence):
+    presenceList = []
+    currentIndex = 0
+    currentlyPresent = False
+    timeUserArrived = 0
+    currentName = presence[0].nome#gets currentName
+    while(currentIndex < len(presence)):
+        # we're still talking about the same person
+        if(currentName==presence[currentIndex].nome):
+            #if the user just got in, save the time it got in
+            if(currentlyPresent == False and presence[currentIndex].evento=="IN"):
+                currentlyPresent = True
+                timeUserArrived= presence[currentIndex].data_evento
+                
+            #OR, if the user was present but just got out, save in list that IN-OUT cycle
+            elif(currentlyPresent == True and presence[currentIndex].evento=="OUT"):
+                currentlyPresent = False
+                presenceList+= [[presence[currentIndex].nome, timeUserArrived,presence[currentIndex].data_evento]]
+                
+            
+            #else, it's just a repetition of IN or OUT, so ignore
+            #jump to next entry on list
+            currentIndex+=1
+            
+        #the person we are talking about is now another one
+        else: 
+            #before moving on, check if last person on list got out; if they didn't, they forgot to punch out, so we need to...
+            #say that they punched out at the end of the day
+            if currentlyPresent:
+                currentlyPresent = False
+                #write their last IN-OUT cycle
+                presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
+            currentName = presence[currentIndex].nome                   
+        
+    #EXCEPTION: In case the last user only got in and didn't punch out, we need to make sure we get their last IN-OUT cycle
+    if currentlyPresent:
+        currentlyPresent = False
+        #write their last IN-OUT cycle
+        presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
+    
+    return presenceList
+    

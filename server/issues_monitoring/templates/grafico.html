@@ -11,19 +11,6 @@
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-  
-    $("#slider-intervalo").slider({
-        range: true,
-        min: 0,
-        max: 120,
-        values: [$("#intervalo-min").val(), $("#intervalo-max").val()],
-        slide: function( event, ui ) {
-            $("#intervalo-lab").val(ui.values[0] + "% a " + ui.values[1] + "%");
-            $("#intervalo-min").val(ui.values[0]);
-            $("#intervalo-max").val(ui.values[1]);
-        }
-    });
-    $("#intervalo-lab").val($("#slider-intervalo").slider("values", 0) + "% a " + $("#slider-intervalo").slider("values", 1) + "%");
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawChart);
   
@@ -79,13 +66,7 @@
                     <input type="checkbox" name="umidade" id="umidade">Umidade
                 </div>
                 <div class="legenda-cadastro">Intervalo do gráfico (em min):</div>
-<!--                 <div class="div-double-slider">
-                    <div id="slider-intervalo" class="double-slider"></div>
-                    <input type="hidden" name="intervalo-min" id="intervalo-min" value="5">
-                    <input type="hidden" name="intervalo-max" id="intervalo-max" value="100">
-                    <span class="double-slider-value"><input type="url" id="intervalo-lab" class="slider-bounds-lab" readonly></span>
-                </div> -->
-                <input type="text" name="intervalo_grafico" id="intervalo_grafico"
+                <input type="text" name="intervalo_grafico" id="intervalo_grafico">
             </fieldset>
             <input type="submit" id="graphic" value="Gerar gráfico" />
         </form>
