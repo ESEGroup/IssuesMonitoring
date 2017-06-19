@@ -432,7 +432,7 @@ def system_status():
     return render_template('system-status.html',
                             componentes = dados,
                             pagina = 'system-status')
->>>>>>> 03f4bd32ce8ac79d257dbce33627d7a47f743f16
+
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""
