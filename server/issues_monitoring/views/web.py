@@ -399,7 +399,7 @@ def system_status():
 
     # parsear as infos e preencher o dicionario com os dados
     if ((datetime.fromtimestamp(timestamp_parser)) <
-        (agora - timedelta(minutes=controllers.obter_intervalo_parser()))):
+        (agora - timedelta(minutes=(2*controllers.obter_intervalo_parser())))):
         status_componente = "Fora do Ar"
 
     dados += [{"nome_componente"    : "Parser",
@@ -410,7 +410,7 @@ def system_status():
         status_componente = "OK"
         print(tempos_arduinos[lab_id])
         if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
-            (agora - timedelta(minutes=Laboratorio.obter_intervalo_arduino(lab_id)))):
+            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id))))):
             print ("ENTROU")
             status_componente = "Fora do Ar"
 
