@@ -38,15 +38,6 @@ def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
             ORDER BY data;""", (lab_id, dia, prox_dia))
     return data
 
-def get_presence_data(dateToday, dateTomorrow, lab_id):
-    data = db.fetchall("""
-              SELECT User_Lab.nome, Log_Presenca.data, Log_Presenca.evento
-              FROM Log_Presenca 
-              INNER JOIN User_Lab ON Log_Presenca.user_id = User_Lab.user_id
-              WHERE Log_Presenca.lab_id = ? AND Log_Presenca.data >= ? AND Log_Presenca.data <= ?
-              ORDER BY nome ASC, data ASC""", (lab_id, dateToday, dateTomorrow,))
-    return data
-
 def get_equip_ids(lab_id):
     data = db.fetchall("""SELECT equip_id FROM Equip WHERE Equip.lab_id = ?;""", (lab_id,))
     return [d[0] for d in data]
