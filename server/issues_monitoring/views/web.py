@@ -388,14 +388,14 @@ def system_status():
         return redirect(url_for('login', **kwargs))
 
     # pegar as infos do banco
-    timestamp_parser = float(controllers.ultima_atualizacao_parser())
-    tempos_arduinos = controllers.ultima_atualizacao_arduino()
+    timestamp_parser = int(controllers.ultima_atualizacao_parser())
+    tempos_arduinos  = controllers.ultima_atualizacao_arduino()
     agora = datetime.today()
     status_componente = "OK"
     dados = []
 
     # parsear as infos e preencher o dicionario com os dados
-    if ((datetime(1970, 1, 1) + timedelta(seconds=timestamp_parser)) <
+    if ((datetime.fromtimestamp(timestamp_parser)) <
         (agora - timedelta(minutes=controllers.obter_intervalo_parser()))):
         status_componente = "Fora do Ar"
 
@@ -406,13 +406,13 @@ def system_status():
     for lab_id in tempos_arduinos:
         status_componente = "OK"
         print(tempos_arduinos[lab_id])
-        if ((datetime(1970, 1, 1) + timedelta(seconds=float(tempos_arduinos[lab_id]))) <
+        if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
             (agora - timedelta(minutes=Laboratorio.obter_intervalo_arduino(lab_id)))):
             print ("ENTROU")
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
-                   "ultima_atualizacao" : float(tempos_arduinos[lab_id]),
+                   "ultima_atualizacao" : int(tempos_arduinos[lab_id]),
                    "status"             : status_componente}]
 
     return render_template('system-status.html',

@@ -12,7 +12,7 @@ from . import db
 
 def get_equip_ids(lab_id):
     data = db.fetchall("""SELECT equip_id FROM Equip WHERE Equip.lab_id = ?;""", (lab_id,))
-    return [d[0] for d in data]    
+    return [d[0] for d in data]
 
 def get_lab_name(lab_id):
     data = db.fetchone("""SELECT nome FROM Lab WHERE lab_id = ?;""", (lab_id,))
@@ -29,6 +29,9 @@ def check_for_forgotten_lights(lab_id):
     if(len(present_users)==0):
         data = db.fetchone("""SELECT lum
                               FROM Log_Lab WHERE lab_id = ? ORDER BY data DESC;""", (lab_id,))
+        if data is None:
+            print ("Lab_Id {} is returning None".format(lab_id))
+            return -2
         lights_on = (data[0] == 1)
 
         if(lights_on):
@@ -65,7 +68,7 @@ def check_for_abnormal_temperature(lab_id):
 
     temp_min=data[0]
     temp_max=data[1]
-    
+
 
     data = db.fetchone("""
         SELECT temp
@@ -100,7 +103,7 @@ Pedimos que procure uma solução quanto a isso.
         return len(emails)
 
     #normal temperature
-    else: 
+    else:
         return -1
 
 

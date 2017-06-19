@@ -19,7 +19,7 @@ class Laboratorio:
         self.membros           = membros
 
     def registrar_medidas(medida):
-        epoch = int(datetime.now().timestamp())
+        epoch = int(datetime.today().timestamp())
         #insert lab info
         db.execute('''
             INSERT INTO Log_Lab
@@ -131,7 +131,7 @@ class Laboratorio:
 
         events = []
         emails = []
-        now = int(datetime.now().timestamp())
+        now = int(datetime.today().timestamp())
         for d in data:
             events += [(now, d[0], d[2], "OUT")]
             emails += [d[1]]
@@ -167,8 +167,9 @@ class Laboratorio:
     def ultima_atualizacao_parser():
         data = db.fetchone("""
             SELECT data
-            FROM Log_Presenca
+            FROM Log_Parser
             ORDER BY data DESC;""")
+        print ("DATA PARSER: {}".format(data))
         if data is not None:
             return data[0]
         return "-10"
@@ -189,3 +190,12 @@ class Laboratorio:
                 last_log_lab[lab.id] = data[0][0]
         print(last_log_lab)
         return last_log_lab
+
+    def registrar_log_parser():
+        epoch = int(datetime.today().timestamp())
+        print (epoch)
+        db.execute('''
+            INSERT INTO Log_Parser
+            (data)
+            VALUES (?);''', (epoch,))
+        return True

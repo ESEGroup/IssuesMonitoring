@@ -31,7 +31,7 @@
             {% for componente in componentes %}
             <tr>
                 <td class="text-left">{{componente["nome_componente"]}}</td>
-                <td class="text-left">{{componente["ultima_atualizacao"]|data}}</td>
+                <td class="text-left">{{componente["ultima_atualizacao"]|data_segundos}}</td>
                 <td class="text-left">{{componente["status"]}}</td>
             </tr>
             {% endfor %}
