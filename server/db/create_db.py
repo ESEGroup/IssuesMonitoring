@@ -102,6 +102,13 @@ def work():
             admin BOOLEAN NOT NULL);
     """)
 
+    cursor.execute("""
+    CREATE TABLE Log_Parser(
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            data INTEGER NOT NULL,
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id));
+    """)
+
     conn.commit()
     conn.close()
 
