@@ -6,7 +6,7 @@ from . import db
 
 class UsuarioLab(Usuario):
     def __init__(self, user_id, nome, email, data_aprovacao = None,
-                 laboratorio = None, lab_id = None, data_entrada = None):
+                 laboratorio = None, lab_id = None, data_entrada = None, data_evento = None, evento = None):
         super().__init__(nome, email, data_aprovacao)
         self.user_id = user_id
         self.nome = nome
@@ -15,6 +15,8 @@ class UsuarioLab(Usuario):
         self.lab_id = lab_id
         self.laboratorio = laboratorio
         self.data_entrada = data_entrada
+        self.data_evento = data_evento
+        self.evento = evento
 
     def obter(user_id):
         data = db.fetchone("""SELECT user_id, nome, email, data_aprov
@@ -194,3 +196,18 @@ class UsuarioLab(Usuario):
         if data is not None:
             return data[0]
         return dia
+
+    def get_presence_data(dateToday, dateTomorrow, lab_id):
+      data = db.fetchall("""
+                SELECT User_Lab.user_id, User_Lab.nome, User_Lab.email, Log_Presenca.data, Log_Presenca.evento
+                FROM Log_Presenca 
+                INNER JOIN User_Lab ON Log_Presenca.user_id = User_Lab.user_id
+                WHERE Log_Presenca.lab_id = ? AND Log_Presenca.data >= ? AND Log_Presenca.data <= ?
+                ORDER BY nome ASC, data ASC""", (lab_id, dateToday, dateTomorrow,))
+      log_presenca = []
+      log_presenca_set = set()
+      for d in data:
+        if d[0] not in log_presenca_set:
+          log_presenca_set.add(d[0])
+        log_presenca += [UsuarioLab(*d[:-2], data_evento=d[-2], evento=d[-1])]
+      return log_presenca

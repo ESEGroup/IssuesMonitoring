@@ -1,0 +1,49 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/log_presenca.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/switch_view.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="view1">
+    <div class="page-title">
+        <h3>Status do Sistema</h3>
+    </div>
+    {% if componentes|len > 0 %}
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th class="text-left">Componente</th>
+                <th class="text-left">Data da Última Atualização</th>
+                <th class="text-left">Status do Componente</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            {% for componente in componentes %}
+            <tr>
+                <td class="text-left">{{componente["nome_componente"]}}</td>
+                <td class="text-left">{{componente["ultima_atualizacao"]|data_segundos}}</td>
+                <td class="text-left">{{componente["status"]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="ui-widget msg">
+        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Erro: </strong>Não foi possível listar os status dos componentes do sistema.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

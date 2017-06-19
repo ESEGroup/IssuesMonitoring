@@ -95,3 +95,6 @@ def data_proximo_evento_mydenox(lab_id, dia):
 
 def data_evento_anterior_mydenox(lab_id, dia):
     return UsuarioLab.data_evento_anterior(lab_id, dia)
+
+def log_usuario(dateToday, dateTomorrow, lab_id):
+    return UsuarioLab.get_presence_data(dateToday, dateTomorrow, lab_id) 

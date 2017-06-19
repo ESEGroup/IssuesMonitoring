@@ -1,11 +1,15 @@
 import sqlite3
+import os.path
 
 class DB:
     def __init__(self, name):
         self.name = name
+        # self.base_dir = os.path.dirname(os.path.abspath(__file__))
 
     def connect(self):
         conn = sqlite3.connect(self.name)
+        # db_path = os.path.join(self.base_dir, "Issues.db")
+        # conn = sqlite3.connect(db_path)
         return conn
 
     def __execute(self, function, query, arguments, return_id, fetch):
