@@ -408,10 +408,10 @@ def system_status():
 
     for lab_id in tempos_arduinos:
         status_componente = "OK"
-        print(tempos_arduinos[lab_id])
+        #print(tempos_arduinos[lab_id])
         if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
             (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id))))):
-            print ("ENTROU")
+            #print ("ENTROU")
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
