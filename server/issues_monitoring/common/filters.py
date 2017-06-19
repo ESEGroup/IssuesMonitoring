@@ -25,14 +25,15 @@ def hora_min(timestamp):
     if timestamp in [None, ""]:
         return "-"
     timestamp = int(timestamp)
-    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%H:%M")
+    return datetime.fromtimestamp(timestamp).strftime("%H:%M")
+
 
 @app.template_filter('dia_mes_ano')
 def dia_mes_ano(timestamp):
     if timestamp in [None, ""]:
         return "-"
     timestamp = int(timestamp)
-    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%d/%m/%Y")
+    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y")
 
 @app.template_filter('existe')
 def existe(var):
