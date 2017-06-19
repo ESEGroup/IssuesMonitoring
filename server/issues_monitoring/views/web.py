@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, session
-from datetime import datetime
+from datetime import datetime, timedelta
 from ..common.utils import autenticado, admin_autenticado, hoje
 from .. import app, Config, controllers
+from ..models import Laboratorio
 import json
 
 @app.route('/')
@@ -238,7 +239,7 @@ def adicionar_usuario_lab(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login'))
 
-    user_id = request.form.get('id-user') or '' 
+    user_id = request.form.get('id-user') or ''
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
         kwargs = {'c': "Usuário adicionado ao laboratório com sucesso."}
@@ -376,10 +377,48 @@ def equipamentos_laboratorio(id, nome=""):
         return redirect(url_for('login', **kwargs))
 
     return render_template('lista_equipamentos.html',
-                           admin=admin_autenticado(),
-                           lab_id=id,
-                           lab_nome=nome,
-                           pagina="equipamentos_laboratorio")
+                           admin   = admin_autenticado(),
+                           lab_id  = id,
+                           lab_nome= nome,
+                           pagina  = "equipamentos_laboratorio")
+
+@app.route('/system-status')
+def system_status():
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    # pegar as infos do banco
+    timestamp_parser = int(controllers.ultima_atualizacao_parser())
+    tempos_arduinos  = controllers.ultima_atualizacao_arduino()
+    agora = datetime.today()
+    status_componente = "OK"
+    dados = []
+
+    # parsear as infos e preencher o dicionario com os dados
+    if ((datetime.fromtimestamp(timestamp_parser)) <
+        (agora - timedelta(minutes=controllers.obter_intervalo_parser()))):
+        status_componente = "Fora do Ar"
+
+    dados += [{"nome_componente"    : "Parser",
+               "ultima_atualizacao" : timestamp_parser,
+               "status"             : status_componente}]
+
+    for lab_id in tempos_arduinos:
+        status_componente = "OK"
+        print(tempos_arduinos[lab_id])
+        if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
+            (agora - timedelta(minutes=Laboratorio.obter_intervalo_arduino(lab_id)))):
+            print ("ENTROU")
+            status_componente = "Fora do Ar"
+
+        dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
+                   "ultima_atualizacao" : int(tempos_arduinos[lab_id]),
+                   "status"             : status_componente}]
+
+    return render_template('system-status.html',
+                            componentes = dados,
+                            pagina = 'system-status')
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""
@@ -409,7 +448,7 @@ def mostrar_grafico_post(id):
 
     interval = int(intervalo_grafico)*60
     interval = 8000
-    
+
     args = [temperatura, umidade, dia, id]
     temp_data = controllers.get_data_log(*args)
     json.dumps(temp_data)
@@ -419,9 +458,9 @@ def mostrar_grafico_post(id):
         cols[0] = 1
 
     if (umidade == "on"):
-        cols[1] = 1   
+        cols[1] = 1
 
-    result_means = [] 
+    result_means = []
 
     if (temperatura == "on" and umidade == "on"):
         result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
@@ -442,15 +481,15 @@ def getIntervalMeans(interval, arrayOfEpochs):
     temp = arrayOfEpochs[0][0]
     for i in range(len(arrayOfEpochs)):
         arrayOfEpochs[i][0] -= temp
-   
+
     if(len(arrayOfEpochs)<1):
         return #invalid entry
-    
+
     numberOfIntervals = int((86400)/interval)
     print("Number of intervals is: %i" %numberOfIntervals)
     intervalIndex = 0
     #will save the interval means like [[interval1, mean1], [interval2, mean2],...]
-    intervalMeans = [] 
+    intervalMeans = []
 
     #do the first exception(00:00), gets means from 00:00 till interval/2
     mean = 0.0
@@ -487,8 +526,8 @@ def getIntervalMeans(interval, arrayOfEpochs):
         if (numberOfSamples>0):
             mean = mean/numberOfSamples
             intervalMeans += [[intervalIndex, mean]]
-            intervalIndex+=1                
-    
+            intervalIndex+=1
+
     i+=1
     mean = 0.0
     numberOfSamples = 0
@@ -511,21 +550,21 @@ def getIntervalMeans(interval, arrayOfEpochs):
 def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
     arrayOfTempEpochs = []
     arrayOfHumidEpochs = []
-    
+
     for i in range( len(arrayOfTempAndHumidEpochs)):
         arrayOfTempEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][1]]]
         arrayOfHumidEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][2]]]
-        
+
     tempMeans = getIntervalMeans(interval, arrayOfTempEpochs)
     HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs)
-    
+
     #will have a structure of [[interval1, tempMean1, humidMean1], [interval2, tempMean2, humidMean2], ...]
     tempAndHumidMeans = []
     #assuming they have the same number of intervals:
     for i in range(len(tempMeans)):
         #gets [intervalI, tempMeanI, humidMeanI]
         tempAndHumidMeans +=[[tempMeans[i][0], tempMeans[i][1], HumidMeans[i][1]]]
-        
+
     return tempAndHumidMeans
 
 @app.route('/mostrar-relatorio/<id>/')
@@ -557,4 +596,4 @@ def mostrar_relatorio_post(id):
     return render_template('relatorio.html',
                             lab_id=id,
                             pagina='mostrar_relatorio',
-                            temp_data=arrayOfLog)    
+                            temp_data=arrayOfLog)
