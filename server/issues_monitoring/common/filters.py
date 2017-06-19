@@ -10,22 +10,29 @@ def trans_evento(evento):
 def data(timestamp):
     if timestamp in [None, ""]:
         return "-"
-    timestamp = float(timestamp)
+    timestamp = int(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M")
+
+@app.template_filter('data_segundos')
+def data(timestamp):
+    if timestamp in [None, ""]:
+        return "-"
+    timestamp = int(timestamp)
+    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M:%S")
 
 @app.template_filter('hora_min')
 def hora_min(timestamp):
     if timestamp in [None, ""]:
         return "-"
-    timestamp = float(timestamp)
-    return datetime.fromtimestamp(timestamp).strftime("%H:%M")
+    timestamp = int(timestamp)
+    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%H:%M")
 
 @app.template_filter('dia_mes_ano')
 def dia_mes_ano(timestamp):
     if timestamp in [None, ""]:
         return "-"
-    timestamp = float(timestamp)
-    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y")
+    timestamp = int(timestamp)
+    return (datetime(1970, 1, 1) + timedelta(seconds=timestamp)).strftime("%d/%m/%Y")
 
 @app.template_filter('existe')
 def existe(var):

@@ -1,5 +1,4 @@
 from ..models import Laboratorio, Evento, UsuarioLab, Arduino, Medida_Lab, Medida_Equip
-from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature
 import sqlite3
 import json
 
@@ -33,11 +32,6 @@ def registrar_medidas(j):
                                     m['sensacao_termica'],
                                     l_equips)
             Laboratorio.registrar_medidas(medida_lab)
-            check_for_forgotten_lights(lab_id)
-            check_for_abnormal_temperature(lab_id)
-            check_for_abnormal_humidity(lab_id)
-            for eq in l_equips:
-                check_for_equipment_temperature(eq.equip_id,lab_id)
 
         except KeyError:
             pass
@@ -51,3 +45,6 @@ def listar_todos_mac_arduino():
     for a in data:
         mac_arduinos += [a[len(a)-1]]
     return str(mac_arduinos)
+
+def ultima_atualizacao_arduino():
+    return Laboratorio.ultima_atualizacao_arduino()

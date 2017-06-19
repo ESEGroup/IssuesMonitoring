@@ -21,7 +21,40 @@ def work():
         log("Failed to connect with e-mail server to parse messages.")
         return
     except NoMessages:
-        debug("No e-mails to parse.")
+        debug("No e-mails to parse. Update wait_for time")
+        response = post_request(API_ENDPOINT,
+                                data="")
+        try:
+            received_wait_for = float(response.text)
+
+            if received_wait_for == -1:
+                log("Invalid token.")
+                if not DEBUG:
+                    mark_as_unread(ids)
+                return
+            elif received_wait_for == -2:
+                log("Database error.")
+                if not DEBUG:
+                    mark_as_unread(ids)
+                return
+
+            debug("Received {} (minutes) from the server, "
+                  "to wait until next execution.".format(
+                  received_wait_for))
+
+            if 0 < received_wait_for <= MAX_WAITING_PERIOD:
+                wait_for = received_wait_for
+            else:
+                debug("Ignoring {} as it's not between 1 and {}".format(
+                      received_wait_for,
+                      MAX_WAITING_PERIOD))
+        except RequestException:
+            log("Failed to connect to Server")
+            if not DEBUG:
+                mark_as_unread(ids)
+        except ValueError:
+            log("Received {} from the Server, failed to convert to int "
+                "to wait for (in minutes)".format(response.text))
         return
     except:
         log("Unexpected Error.")
@@ -41,7 +74,7 @@ def work():
         debug("Events registered.")
 
         # Server returns wait_for until next run (in minutes)
-        received_wait_for = int(response.text)
+        received_wait_for = float(response.text)
 
         if received_wait_for == -1:
             log("Invalid token.")

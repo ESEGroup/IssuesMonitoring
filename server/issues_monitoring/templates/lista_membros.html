@@ -39,7 +39,7 @@
             <tbody class="table-hover">
                 {% for usuario in usuarios_laboratorio %}
                 <tr>
-                    <td class="text-left">{{usuario.nome}}</td>
+                    <td class="text-left" title="{{usuario.user_id}}">{{usuario.nome}}</td>
                     <td class="text-left">{{usuario.email}}</td>
                     <td class="text-left">
                         <label class="switch">

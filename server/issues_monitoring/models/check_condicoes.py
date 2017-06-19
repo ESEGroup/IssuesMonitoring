@@ -9,6 +9,38 @@ from ..common.mail import send_email
 from ..models import  AdministradorSistema
 import os.path
 from . import db
+import json
+
+def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
+    if (temperatura == "on" and umidade=="on"):       
+        data = db.fetchall("""
+            SELECT data, temp, umid
+            FROM Log_Lab 
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data;""", (lab_id, dia, prox_dia))
+    elif (temperatura == "on"):
+        data = db.fetchall("""
+            SELECT data, temp
+            FROM Log_Lab
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data;""", (lab_id, dia, prox_dia))
+    elif (umidade == "on"):
+        data = db.fetchall("""
+            SELECT data, umid
+            FROM Log_Lab
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data;""", (lab_id, dia, prox_dia))
+    return data
+
+def get_equip_ids(lab_id):
+    data = db.fetchall("""SELECT equip_id FROM Equip WHERE Equip.lab_id = ?;""", (lab_id,))
+    return [d[0] for d in data]
 
 def get_lab_name(lab_id):
     data = db.fetchone("""SELECT nome FROM Lab WHERE lab_id = ?;""", (lab_id,))
@@ -25,6 +57,9 @@ def check_for_forgotten_lights(lab_id):
     if(len(present_users)==0):
         data = db.fetchone("""SELECT lum
                               FROM Log_Lab WHERE lab_id = ? ORDER BY data DESC;""", (lab_id,))
+        if data is None:
+            print ("Lab_Id {} is returning None".format(lab_id))
+            return -2
         lights_on = (data[0] == 1)
 
         if(lights_on):
@@ -40,7 +75,8 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
             emails = [a.email for a in admins]
             data = db.fetchone("""SELECT u.email
                                   FROM Log_Presenca l, User_Lab u WHERE l.lab_id=? AND l.evento='OUT' AND l.user_id = u.user_id ORDER BY l.data DESC;""", (lab_id,))
-            emails += [data[0]]
+            if data is not None:
+                emails += [data[0]]
             send_email(subject, msg_content, emails)
             return len(emails)
 
@@ -60,7 +96,7 @@ def check_for_abnormal_temperature(lab_id):
 
     temp_min=data[0]
     temp_max=data[1]
-    
+
 
     data = db.fetchone("""
         SELECT temp
@@ -95,7 +131,7 @@ Pedimos que procure uma solução quanto a isso.
         return len(emails)
 
     #normal temperature
-    else: 
+    else:
         return -1
 
 
