@@ -12,15 +12,19 @@ from . import db
 import json
 
 def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
-    if (temperatura == "on" and umidade=="on"):       
+    data = []
+    print (temperatura, umidade, dia, prox_dia, lab_id)
+    if (temperatura == "on" and umidade=="on"):
+        print("Entrou Temp Umid")
         data = db.fetchall("""
             SELECT data, temp, umid
-            FROM Log_Lab 
+            FROM Log_Lab
             WHERE lab_id = ?
             AND data > ?
             AND data < ?
             ORDER BY data;""", (lab_id, dia, prox_dia))
     elif (temperatura == "on"):
+        print("Entrou Temp")
         data = db.fetchall("""
             SELECT data, temp
             FROM Log_Lab
@@ -29,6 +33,7 @@ def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
             AND data < ?
             ORDER BY data;""", (lab_id, dia, prox_dia))
     elif (umidade == "on"):
+        print("Entrou Umid")
         data = db.fetchall("""
             SELECT data, umid
             FROM Log_Lab
@@ -36,6 +41,7 @@ def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
             AND data > ?
             AND data < ?
             ORDER BY data;""", (lab_id, dia, prox_dia))
+    print("Data: {}".format(data))
     return data
 
 def get_equip_ids(lab_id):

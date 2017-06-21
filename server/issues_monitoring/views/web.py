@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
 import time
 from datetime import datetime, timedelta
-from ..common.utils import autenticado, admin_autenticado, hoje
+from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio
 import json
@@ -419,10 +419,8 @@ def system_status():
 
     for lab_id in tempos_arduinos:
         status_componente = "OK"
-        #print(tempos_arduinos[lab_id])
         if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
             (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id))))):
-            #print ("ENTROU")
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
@@ -431,7 +429,8 @@ def system_status():
 
     return render_template('system-status.html',
                             componentes = dados,
-                            pagina = 'system-status')
+                            pagina = 'system-status',
+                            autenticado=autenticado())
 
 @app.route('/robots.txt')
 def robots_txt():
@@ -463,10 +462,20 @@ def mostrar_grafico_post(id):
     interval = int(intervalo_grafico)*60
     # interval = 8000
     args = [temperatura, umidade, dia, id]
+    print (args)
     temp_data = controllers.get_data_log(*args)
     json.dumps(temp_data)
     arrayOfEpochs = json.loads(temp_data)
 
+    if (arrayOfEpochs == []):
+        print ("Deu ruim!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        kwargs = {"error_message": "Não existem dados para o período selecionado. Por favor, selecione outro período"}
+        return render_template('grafico.html',
+                               lab_id=id,
+                               pagina='mostrar_grafico',
+                               **kwargs)
+
+    print("Array of Epochs: {}".format(arrayOfEpochs))
     if (temperatura == "on"):
         cols[0] = 1
 
@@ -568,6 +577,8 @@ def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
         arrayOfTempEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][1]]]
         arrayOfHumidEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][2]]]
 
+    print ("Array Temp: {}".format(arrayOfTempEpochs))
+    print ("Array Humid: {}".format(arrayOfHumidEpochs))
     tempMeans = getIntervalMeans(interval, arrayOfTempEpochs)
     HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs)
 
@@ -591,7 +602,7 @@ def mostrar_relatorio_post(id):
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
     # dia = 1497668400
 
-    dateTomorrow = dia+24*60*60. -1. 
+    dateTomorrow = dia+24*60*60. -1.
     args = [dia, dateTomorrow, id]
     temp_data = controllers.log_usuario(*args)
     presenceList = []
@@ -606,12 +617,12 @@ def mostrar_relatorio_post(id):
 
     interval = int(intervalo_relatorio)*60
     interval = 8000
-    
+
     args = ["on", "on", dia, id]
     chart_data = controllers.get_data_log(*args)
     json.dumps(chart_data)
     arrayOfEpochs = json.loads(chart_data)
-    result_means = [] 
+    result_means = []
     if (len(arrayOfEpochs)>0):
         result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
 
@@ -619,7 +630,7 @@ def mostrar_relatorio_post(id):
                             lab_id=id,
                             pagina='mostrar_relatorio',
                             log_presenca=presenceList,
-                            condicoes_ambiente=result_means)    
+                            condicoes_ambiente=result_means)
 
 
 
@@ -637,31 +648,31 @@ def organizePresenceList(currentDayEpoch, presence):
             if(currentlyPresent == False and presence[currentIndex].evento=="IN"):
                 currentlyPresent = True
                 timeUserArrived= presence[currentIndex].data_evento
-                
+
             #OR, if the user was present but just got out, save in list that IN-OUT cycle
             elif(currentlyPresent == True and presence[currentIndex].evento=="OUT"):
                 currentlyPresent = False
                 presenceList+= [[presence[currentIndex].nome, timeUserArrived,presence[currentIndex].data_evento]]
-                
-            
+
+
             #else, it's just a repetition of IN or OUT, so ignore
             #jump to next entry on list
             currentIndex+=1
-            
+
         #the person we are talking about is now another one
-        else: 
+        else:
             #before moving on, check if last person on list got out; if they didn't, they forgot to punch out, so we need to...
             #say that they punched out at the end of the day
             if currentlyPresent:
                 currentlyPresent = False
                 #write their last IN-OUT cycle
                 presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
-            currentName = presence[currentIndex].nome                   
-        
+            currentName = presence[currentIndex].nome
+
     #EXCEPTION: In case the last user only got in and didn't punch out, we need to make sure we get their last IN-OUT cycle
     if currentlyPresent:
         currentlyPresent = False
         #write their last IN-OUT cycle
         presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
-    
+
     return presenceList

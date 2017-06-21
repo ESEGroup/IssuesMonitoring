@@ -37,11 +37,8 @@ def reset_presencas_meia_noite():
             day   = hoje.day,
             month = hoje.month,
             year  = hoje.year) + timedelta(days=1)
-        print("Proxima execucao: " + str(proxima_execucao))
-        print("Hoje: " + str(hoje))
         delta_t = proxima_execucao - hoje
         segundos_ate = delta_t.seconds + 1
-        print("segundos ate: " + str(segundos_ate))
         sleep(segundos_ate)
         emails = Laboratorio.reset_lista_presenca()
         enviar_email_presenca_zerada(emails)

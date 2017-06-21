@@ -9,10 +9,10 @@ def autenticado():
     tem_user_id = session.get('id') is not None
 
     expira = session.get('expiration') or 0
-    nao_expirado = expira > datetime.now().timestamp()
+    nao_expirado = expira > datetime.today().timestamp()
     _autenticado = tem_user_id and nao_expirado
     if _autenticado:
-        now = int(datetime.now().timestamp())
+        now = int(datetime.today().timestamp())
         session['expiration'] = now + Config.session_duration
     return nao_expirado and tem_user_id
 
@@ -24,8 +24,11 @@ def random_string(n):
     return ''.join(choice(alfabeto) for i in range(n))
 
 def hoje():
-    agora = datetime.now()
+    agora = datetime.today()
     hoje = int(datetime(day=agora.day,
                         month=agora.month,
                         year=agora.year).timestamp())
     return hoje
+
+def agora():
+    return int(datetime.today().timestamp())
