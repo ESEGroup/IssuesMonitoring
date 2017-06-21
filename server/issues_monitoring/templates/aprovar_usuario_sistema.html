@@ -17,7 +17,7 @@
     <div id="view1">
         <div class="page-title">
             <h3>Aprovar Usuários do Sistema</h3>
-            <h4>Os usuários do sistema aguardando aprovação encontram-se abaixo.</h4>
+            <h4>Os usuários do sistema aguardando autorização encontram-se abaixo.</h4>
         </div>
         
         {% if usuarios|len > 0 %}
@@ -26,7 +26,7 @@
                 <tr>
                     <th class="text-left">Nome</th>
                     <th class="text-left">E-mail</th>
-                    <th class="text-left">Aprovado</th>
+                    <th class="text-left">Autorizado</th>
                     <th class="text-left">Administrador</th>
                 </tr>
             </thead>
@@ -55,7 +55,7 @@
         <div class="ui-widget msg">
             <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
                 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-                <strong>Erro: </strong>Não há usuários do sistema aguardando aprovação.</p>
+                <strong>Erro: </strong>Não há usuários do sistema aguardando autorização.</p>
             </div>
         </div>
         {% endif %}

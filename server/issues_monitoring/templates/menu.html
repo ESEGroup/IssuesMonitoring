@@ -79,11 +79,12 @@
                href="{{url_for('system_status')}}">Status do Sistema</a>
         </li>
 
+        {% if autenticado %}
         <li class="nav-bar-li logout-btn">
             <a class="nav-bar-li-link"
                href="{{url_for('logout')}}"><div class="logout-img"></div><span class="logout-txt">Logout</span></a>
         </li>
-
+        {% endif %}
     </ul>
 
     <div>

@@ -12,9 +12,17 @@ function show_last_view() {
 
 $(document).ready(function(){
     $("#switch-view").click(function(){
-        show_first_view();
+        var anchor = document.getElementById("view2");
+        location.hash = "#" + anchor.getAttribute("anchor");
+        location.reload();
     });
     $("#switch-back").click(function(){
-        show_last_view();
+        location.hash = "";
+        location.reload();
     });
+
+    var anchor = document.getElementById("view2");
+    if (location.hash === "#" + anchor.getAttribute("anchor")) {
+        show_first_view();
+    }
 });

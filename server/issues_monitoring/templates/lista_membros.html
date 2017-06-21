@@ -24,7 +24,7 @@
         </div>
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-view">Associar Usuário de Laboratório Existente</a>
+            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Associar Usuário de Laboratório Existente</a>
         </div>
         
         {% if usuarios_laboratorio|len > 0 %}
@@ -33,7 +33,7 @@
                 <tr>
                     <th class="text-left">Nome</th>
                     <th class="text-left">E-mail</th>
-                    <th class="text-left">Aprovado</th>
+                    <th class="text-left">Autorizado</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    <div id="view2" style="display:none">
+    <div anchor="associar" id="view2" style="display:none">
 
         <div class="page-title">
             <h3>Associar Usuário de Laboratório</h3>
