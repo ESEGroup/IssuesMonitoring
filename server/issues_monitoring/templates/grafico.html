@@ -13,7 +13,7 @@
 <script type="text/javascript">
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawChart);
-  
+
   cols = JSON.parse("{{cols}}");
   header_t = ['Data']
 
@@ -54,9 +54,17 @@
 <div id="nav-bar">
 
     <div class="page-title">
-        <h3>Gráfico</h3>        
-        <h4>{{lab_id}}</h4>
+        <h3>Gráfico</h3>
+        <h4>{{request.args.get('nome')}}</h4>
     </div>
+    {% if error_message %}
+    <div class="ui-widget error-msg hidden">
+	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Erro: </strong>{{error_message}}</p>
+	    </div>
+    </div>
+    {% endif %}
     <div class="neat-form">
         <form method="POST">
             <fieldset>
