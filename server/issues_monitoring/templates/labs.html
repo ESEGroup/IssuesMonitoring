@@ -3,19 +3,40 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="/static/jquery-ui/jquery-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/gerenciar.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/labs.css" />
+<link rel="stylesheet" href="/static/css/rmodal-js/animate.css" type="text/css" />
+<link rel="stylesheet" href="/static/css/rmodal-js/rmodal.css" type="text/css" />
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript" src="/static/css/rmodal-js/rmodal.js"></script>
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
 <script src="/static/js/labs.js"></script>
 {% endblock %}
 
 {% block content %}
+<div id="delete-popup" class="modal">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>Deseja excluir LAB?</strong>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="modalExcluirLab.close();">Cancelar</button>
+                    <button class="btn btn-primary" type="button" onclick="#">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div id="nav-bar">
 
     <div id="view1">
@@ -24,7 +45,10 @@
         </div>
         <div class="lab-container">
             {% for i, lab in laboratorios|enumerate %}
-            <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}"><span class="lab-txt">{{lab.nome}}</span></a>
+            <input type="image" src="/static/img/delete.png" alt="Submit" class="delete-btn">
+            <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}">
+                <span class="lab-txt">{{lab.nome}}</span>
+            </a>
             {% if (i+1) % 3 == 0 %}<p></p>{% endif %}
             {% endfor %}
         </div>
