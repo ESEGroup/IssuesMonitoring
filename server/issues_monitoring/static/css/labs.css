@@ -16,16 +16,3 @@
     height: 30px;
 }
 
-.modal {
-    position: absolute;
-}
-
-.modal-content {
-    margin-top: 120px;
-}
-
-.modalDialogTitle {
-    width: 360px;
-    background: transparent;
-    border: none;
-}
