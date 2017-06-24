@@ -23,10 +23,6 @@
             <h4>{{lab_nome}}</h4>
         </div>
 
-        <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Associar Usuário de Laboratório Existente</a>
-        </div>
-        
         {% if usuarios_laboratorio|len > 0 %}
         <table class="table-fill">
             <thead>
@@ -60,6 +56,10 @@
         </div>
         {% endif %}
 
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Associar Usuário de Laboratório Existente</a>
+        </div>
+        
         <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
