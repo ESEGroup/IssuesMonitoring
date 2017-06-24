@@ -190,3 +190,13 @@ class Laboratorio:
             (data)
             VALUES (?);''', (epoch,))
         return True
+
+    def remover(id):
+        db.execute("""
+            DELETE FROM Zona_de_Conforto_Lab
+            WHERE zona_conforto_id in (
+                SELECT zona_conforto_id FROM Lab
+                WHERE lab_id = ?);""", (id,))
+        db.execute("""
+            DELETE FROM Lab
+            WHERE lab_id = ?;""", (id,))

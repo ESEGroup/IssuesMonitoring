@@ -21,6 +21,9 @@ def cadastro_laboratorio(nome, endereco, intervalo_parser,
                               zona_de_conforto)
     laboratorio.cadastrar()
 
+def remover_laboratorio(id):
+    Laboratorio.remover(id)
+
 def obter_informacoes_labs():
     return Laboratorio.obter_informacoes()
 

@@ -34,9 +34,7 @@ $(function() {
         }
     });
     $("#temp-lab").val($("#slider-temp").slider("values", 0) + "ºC a " + $("#slider-temp").slider("values", 1) + "ºC");
-} );
 
-$(function() {
     $("#slider-umidade").slider({
         range: true,
         min: 0,
@@ -49,4 +47,16 @@ $(function() {
         }
     });
     $("#umidade-lab").val($("#slider-umidade").slider("values", 0) + "% a " + $("#slider-umidade").slider("values", 1) + "%");
+
+    var del = document.getElementsByClassName("delete-btn");
+    for (var i = 0; i < del.length; ++i) {
+        del[i].addEventListener("click", function(ev) {
+            var lab_nome = ev.target.getAttribute("data-lab-nome"),
+                url = ev.target.getAttribute("data-url");
+            if (confirm("Deseja apagar o laboratório " + lab_nome + "?")) {
+                var reload = function() { location.reload(); };
+                ajax(url, null, reload, reload);
+            }
+        });
+    }
 });

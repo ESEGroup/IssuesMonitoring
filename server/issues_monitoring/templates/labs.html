@@ -12,6 +12,7 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
+<script src="/static/js/ajax.js"></script>
 <script src="/static/js/labs.js"></script>
 {% endblock %}
 
@@ -24,7 +25,11 @@
         </div>
         <div class="lab-container">
             {% for i, lab in laboratorios|enumerate %}
-            <input type="image" src="/static/img/delete.png" alt="Submit" class="delete-btn">
+            {% if admin %}
+            <input data-url="{{url_for('remover_laboratorio', id=lab.id)}}" 
+                   data-lab-nome="{{lab.nome}}" type="image" src="/static/img/delete.png"
+                   alt="Submit" class="delete-btn">
+            {% endif %}
             <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}">
                 <span class="lab-txt">{{lab.nome}}</span>
             </a>

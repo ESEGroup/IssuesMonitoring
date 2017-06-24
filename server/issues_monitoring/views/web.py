@@ -83,6 +83,14 @@ def laboratorio(id, nome=""):
                            admin=admin_autenticado(),
                            pagina='gerenciar')
 
+@app.route('/remover-laboratorio/<id>/', methods=["POST"])
+def remover_laboratorio(id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+
+    controllers.remover_laboratorio(id)
+    return 'OK'
+
 @app.route('/editar-laboratorio/<id>/')
 @app.route('/editar-laboratorio/<id>/<nome>')
 def editar_laboratorio(id, nome=""):
