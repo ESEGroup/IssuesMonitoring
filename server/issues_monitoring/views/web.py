@@ -480,7 +480,7 @@ def mostrar_grafico_post(id, nome):
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
     dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    # dia = 1497668400
+    dia = 1497668400
     cols = [0, 0]
 
     interval = int(intervalo_grafico)*60
@@ -511,10 +511,11 @@ def mostrar_grafico_post(id, nome):
     if (temperatura == "on" and umidade == "on"):
         result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
     elif (temperatura == "on"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs)
+        result_means = getIntervalMeans(interval, arrayOfEpochs, dia, dia+86399)
     elif (umidade == "on"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs)
+        result_means = getIntervalMeans(interval, arrayOfEpochs, dia, dia+86399)
 
+    print("result means: ", result_means)
     return render_template('grafico.html',
                             pagina='mostrar_grafico',
                             autenticado=True,
@@ -525,77 +526,96 @@ def mostrar_grafico_post(id, nome):
                             intervalo_grafico=intervalo_grafico)
 
 
-def getIntervalMeans(interval, arrayOfEpochs):
-    temp = arrayOfEpochs[0][0]
-    for i in range(len(arrayOfEpochs)):
-        arrayOfEpochs[i][0] -= temp
+def getIntervalMeans2(interval, arrayOfEpochs, epochBeginning, epochEnding):
+  #exceptions handling
+  if(interval > 7200):
+    print("Error: Interval bigger than 2h")
+    return [[]]
+  elif(len(arrayOfEpochs)<1):
+    print ("Error: entry array is null")
+    return [[]]
 
-    if(len(arrayOfEpochs)<1):
-        return #invalid entry
+  beginningOfInterval = epochBeginning
+  endOfInterval = epochEnding
+  sum = 0.0
 
-    numberOfIntervals = int((86400)/interval)
-    print("Number of intervals is: %i" %numberOfIntervals)
+  meansArray = []
+  currentMeansArray = []
+  intervalIndex = 0
+  intervalLimit = interval
+
+  #adds index as first element always
+  currentMeansArray+= [intervalIndex]
+  for i in range(len(arrayOfEpochs)):
+    if(arrayOfEpochs[i][0]<beginningOfInterval+intervalLimit):
+      print("Adding {} to interval {}".format(arrayOfEpochs[i][1], intervalIndex))
+      currentMeansArray+=[arrayOfEpochs[i][1]]
+    else:
+      print("Surpassed current interval limit, adding array to index {}\n".format(intervalIndex))
+      meansArray+= [currentMeansArray]
+      #update variables
+      intervalIndex+=1
+      intervalLimit+=interval
+      currentMeansArray=[]
+      currentMeansArray+=[intervalIndex]
+      currentMeansArray+=[arrayOfEpochs[i][1]]
+
+
+  #if it leaves the for without even achieving the first interval, or if there is a remainder:
+  #add the last value, the remainder
+  meansArray+=[currentMeansArray]
+
+  #print (meansArray)
+  return meansArray
+
+
+#array of epochs has format = [[epoch1, value1], [epoch2, value2],...]
+def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
+    #exceptions handling
+    if(interval > 7200):
+      print("Error: Interval bigger than 2h")
+      return [[]]
+    elif(len(arrayOfEpochs)<1):
+      print ("Error: entry array is null")
+      return [[]]
+
+    beginningOfInterval = epochBeginning
+    endOfInterval = epochEnding
+    sum = 0.0
+
+    meansArray = []
+    numberOfValuesInInterval = 0
     intervalIndex = 0
-    #will save the interval means like [[interval1, mean1], [interval2, mean2],...]
-    intervalMeans = []
-
-    #do the first exception(00:00), gets means from 00:00 till interval/2
-    mean = 0.0
-    counter = 0
-    numberOfSamples = 0
-    currentEpoch = 0
-    while(currentEpoch < interval/2):
-        currentEpoch = float(arrayOfEpochs[counter][0])
-        print ("Current epoch = %f" %currentEpoch)
-        if(currentEpoch<interval/2):
-            print("Added to first mean")
-            #Then save this value on the current mean calculation
-            mean+= arrayOfEpochs[counter][1]
-            counter = counter + 1
-            numberOfSamples +=1
-        #repeats until currentEpoch gets an epoch that surpasses interval/2
-    if (numberOfSamples>0):
-        mean = mean/numberOfSamples
-        intervalMeans += [[intervalIndex, mean]]
+    intervalLimit = interval
+    minimumValue = arrayOfEpochs[0][1]
+    maximumValue = arrayOfEpochs[0][1]
+    for i in range(len(arrayOfEpochs)):
+      if(arrayOfEpochs[i][0]<beginningOfInterval+intervalLimit):
+        print("Adding %f to current sum", arrayOfEpochs[i][1])
+        sum+=arrayOfEpochs[i][1]
+        minimumValue = min(minimumValue, arrayOfEpochs[i][1])
+        maximumValue = max(maximumValue, arrayOfEpochs[i][1])
+        numberOfValuesInInterval+=1
+      else:
+        #surpassed last interval limit, move onward to next limit
+        mean = sum/numberOfValuesInInterval
+        print("Surpassed current interval limit, adding %f to index %i\n", mean, intervalIndex)
+        meansArray+=[[intervalIndex, mean, minimumValue, maximumValue]]
+        sum=arrayOfEpochs[i][1]
+        minimumValue = arrayOfEpochs[i][1]
+        maximumValue = arrayOfEpochs[i][1]
+        numberOfValuesInInterval=1
         intervalIndex+=1
-    #now for the rest of the intervals(except the last one)
-    for i in range (intervalIndex, numberOfIntervals):
-        mean = 0.0
-        numberOfSamples = 0.
-        while(currentEpoch < i*interval + interval/2 and counter < len(arrayOfEpochs)):
-            print ("Current epoch = %f" %currentEpoch)
-            currentEpoch = float(arrayOfEpochs[counter][0])
-            if(currentEpoch<i*interval + interval/2):
-                print ("Added to mean %i" %i)
-                #Then save this value on the current mean calculation
-                mean+= arrayOfEpochs[counter][1]
-                counter = counter + 1
-                numberOfSamples +=1.
-        if (numberOfSamples>0):
-            mean = mean/numberOfSamples
-            intervalMeans += [[intervalIndex, mean]]
-            intervalIndex+=1
+        intervalLimit+=interval
+    #if it leaves the for without even achieving the first interval, or if there is a remainder:
+    #add the last value, the remainder
+    meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
+      
+    return meansArray
 
-    i+=1
-    mean = 0.0
-    numberOfSamples = 0
-    #now for the final one, the right extreme
-    #while it doesn't overflow to the following day...
-    while(currentEpoch < interval*numberOfIntervals and counter < len(arrayOfEpochs)):
-        currentEpoch = float(arrayOfEpochs[counter][0])
-        print ("Current epoch = %f" %currentEpoch)
-        if(currentEpoch < 86400):
-            print ("Added to mean %i" %i)
-            mean+= arrayOfEpochs[counter][1]
-            counter = counter + 1
-            numberOfSamples +=1
-        #repeats until currentEpoch gets an epoch that surpasses the day's seconds limit
-    if (numberOfSamples>0):
-        mean = mean/numberOfSamples
-        intervalMeans += [[intervalIndex, mean]]
-    return intervalMeans
 
-def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
+
+def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs, epochBeginning, epochEnding):
     arrayOfTempEpochs = []
     arrayOfHumidEpochs = []
 
@@ -605,8 +625,8 @@ def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
 
     print ("Array Temp: {}".format(arrayOfTempEpochs))
     print ("Array Humid: {}".format(arrayOfHumidEpochs))
-    tempMeans = getIntervalMeans(interval, arrayOfTempEpochs)
-    HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs)
+    tempMeans = getIntervalMeans(interval, arrayOfTempEpochs, epochBeginning, epochEnding)
+    HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs, epochBeginning, epochEnding)
 
     #will have a structure of [[interval1, tempMean1, humidMean1], [interval2, tempMean2, humidMean2], ...]
     tempAndHumidMeans = []

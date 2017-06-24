@@ -14,13 +14,31 @@
   var mydata = JSON.parse('{{temp_data}}' || "[]"),
       cols = JSON.parse("{{cols}}" || "[]");
 
+  var temporaria = '{{temp_data}}';
+  console.log(temporaria);
   function drawChart() {
-    var data = google.visualization.arrayToDataTable(haha);
+    var data = new google.visualization.DataTable(); 
+    data.addColumn('number', 'index');
+    data.addColumn('number', 'mean');
+    data.addColumn({id: 'min', type:'number', role: 'interval'});
+    data.addColumn({id: 'max', type:'number', role: 'interval'});
 
-    var options = {
+    data.addRows(mydata);
+
+
+    /*var options = {
       title: 'Gráfico de Temperatura e Umidade',
       curveType: 'function',
       legend: { position: 'bottom' }
+    };*/
+
+    var options = {
+        title:'Grafico',
+        curveType:'function',
+        lineWidth: 4,
+        series: [{'color': '#D3362D'}],
+        intervals: { 'lineWidth':2, 'barWidth': 0.5 },
+        legend: 'none',
     };
 
     var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
