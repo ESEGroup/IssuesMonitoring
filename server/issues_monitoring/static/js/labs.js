@@ -50,27 +50,3 @@ $(function() {
     });
     $("#umidade-lab").val($("#slider-umidade").slider("values", 0) + "% a " + $("#slider-umidade").slider("values", 1) + "%");
 });
-
-
-//JS para o RModal (popup):
-
-window.onload = function () {
-
-    //MODAL PARA EXCLUIR LABORATORIO:
-
-    var modalExcluirLab = new RModal(document.getElementById('delete-popup'));
-
-    //Adiciona um event listener aos botoes de excluir laboratorio:
-
-    var evExcluirLabFunc = function (ev) {
-        ev.preventDefault();
-        modalExcluirLab.open();
-    };
-    
-    $(".delete-btn").click(function (ev) {
-        ev.preventDefault();
-        modalExcluirLab.open();
-    });
-
-    window.modalExcluirLab = modalExcluirLab;
-}

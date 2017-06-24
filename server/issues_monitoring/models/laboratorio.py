@@ -174,19 +174,14 @@ class Laboratorio:
             return data[0]
         return "-10"
 
-    def ultima_atualizacao_arduino():
-        laboratorios = Laboratorio.obter_informacoes()
-        last_log_lab = {}
-        #para cada lab, checar a ultima atualização do arduino
-        for lab in laboratorios:
-            data = db.fetchall("""
-                SELECT data
-                FROM Log_Lab
-                WHERE lab_id = ?
-                ORDER BY data DESC;""", (lab.id,))
-            if len(data) > 0:
-                last_log_lab[lab.id] = data[0][0]
-        return last_log_lab
+    def ultima_atualizacao_arduino(_id):
+        data = db.fetchone("""
+            SELECT data
+            FROM Log_Lab
+            WHERE lab_id = ?
+            ORDER BY data DESC;""", (_id,))
+        if data is not None:
+            return data[0]
 
     def registrar_log_parser():
         epoch = int(datetime.today().timestamp())

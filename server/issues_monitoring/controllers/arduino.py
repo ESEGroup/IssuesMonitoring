@@ -46,5 +46,5 @@ def listar_todos_mac_arduino():
         mac_arduinos += [a[len(a)-1]]
     return str(mac_arduinos)
 
-def ultima_atualizacao_arduino():
-    return Laboratorio.ultima_atualizacao_arduino()
+def ultima_atualizacao_arduino(id):
+    return Laboratorio.ultima_atualizacao_arduino(id)

@@ -9,7 +9,13 @@ def db_error(error):
     return render_template("500.html",
                            autenticado=autenticado()) , 500
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template("404.html",
+                           autenticado=autenticado()) , 404
+
 @app.route('/500')
+@app.errorhandler(500)
 def server_error():
     return render_template("500.html",
                            autenticado=autenticado()) , 500

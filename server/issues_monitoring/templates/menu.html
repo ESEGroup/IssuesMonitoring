@@ -47,6 +47,24 @@
                 <div class="nav-bar-suboption-text">Alterar Dados Cadastrais</div>
             </a>
         </li>
+        <li class="nav-bar-suboption">
+            <a class="nav-bar-li-link {% if pagina == 'mostrar_grafico' %}active{% endif %}"
+               href="{{url_for('mostrar_grafico', id=lab_id, nome=lab_nome)}}">
+                <div class="nav-bar-suboption-text">Mostrar Gráfico</div>
+            </a>
+        </li>
+        <li class="nav-bar-suboption">
+            <a class="nav-bar-li-link {% if pagina == 'mostrar_relatorio' %}active{% endif %}"
+               href="{{url_for('mostrar_relatorio', id=lab_id, nome=lab_nome)}}">
+                <div class="nav-bar-suboption-text">Mostrar Relatório</div>
+            </a>
+        </li>
+        <li class="nav-bar-suboption">
+            <a class="nav-bar-li-link {% if pagina == 'system-status' %}active{% endif %}"
+               href="{{url_for('system_status', id=lab_id, nome=lab_nome)}}">
+                <div class="nav-bar-suboption-text">Status do Sistema</div>
+            </a>
+        </li>
         {% endif %}
 
         <li class="nav-bar-li dropdown">
@@ -74,10 +92,6 @@
             </li>
             {% endif %}
         </ul>
-        <li class="nav-bar-li">
-            <a class="nav-bar-li-link {% if pagina == 'system-status' %}active{% endif %}"
-               href="{{url_for('system_status')}}">Status do Sistema</a>
-        </li>
 
         {% if autenticado %}
         <li class="nav-bar-li logout-btn">
@@ -97,6 +111,15 @@
     </div>
     {% endif %}
 
+    {% if request.args.get('w') %}
+    <div class="ui-widget msg hidden">
+	    <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            <strong>Aviso: </strong>{{request.args.get('w')}}</p>
+	    </div>
+    </div>
+    {% endif %}
+    
     {% if request.args.get('c') %}
     <div class="ui-widget success-msg hidden">
 	    <div class="ui-state-success ui-corner-all" style="padding: 0 .7em;">

@@ -312,6 +312,10 @@ def cadastro_equipamento():
 
 @app.route('/log-eventos/<id>/<nome>/')
 def log_eventos_hoje(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
     _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     return redirect(url_for('log_eventos',
                             id=id,
@@ -351,7 +355,7 @@ def aprovar_usuario():
     usuarios = controllers.obter_usuarios_sistema()
     return render_template('aprovar_usuario_sistema.html',
                            pagina='aprovar_usuario',
-                           autenticado=autenticado(),
+                           autenticado=True,
                            admin=True,
                            usuarios=usuarios)
 
@@ -395,15 +399,15 @@ def equipamentos_laboratorio(id, nome=""):
                            lab_nome= nome,
                            pagina  = "equipamentos_laboratorio")
 
-@app.route('/system-status')
-def system_status():
+@app.route('/status-sistema/<id>/<nome>')
+def system_status(id, nome):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     # pegar as infos do banco
     timestamp_parser = int(controllers.ultima_atualizacao_parser())
-    tempos_arduinos  = controllers.ultima_atualizacao_arduino()
+    tempos_arduinos  = controllers.ultima_atualizacao_arduino(id)
     agora = datetime.today()
     status_componente = "OK"
     dados = []
@@ -417,20 +421,22 @@ def system_status():
                "ultima_atualizacao" : timestamp_parser,
                "status"             : status_componente}]
 
-    for lab_id in tempos_arduinos:
+    if tempos_arduinos is not None:
         status_componente = "OK"
-        if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
-            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id))))):
+        if ((datetime.fromtimestamp(int(tempos_arduinos)) <
+            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id)))))):
             status_componente = "Fora do Ar"
 
-        dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
-                   "ultima_atualizacao" : int(tempos_arduinos[lab_id]),
+        dados += [{"nome_componente"    : "Arduino",
+                   "ultima_atualizacao" : int(tempos_arduinos),
                    "status"             : status_componente}]
 
     return render_template('system-status.html',
-                            componentes = dados,
-                            pagina = 'system-status',
-                            autenticado=autenticado())
+                           lab_id = id,
+                           lab_nome = nome,
+                           componentes = dados,
+                           pagina = 'system-status',
+                           autenticado=autenticado())
 
 @app.route('/robots.txt')
 def robots_txt():
@@ -443,14 +449,24 @@ def robots_txt():
 #                             lab_id=id,
 #                             pagina='grafico')
 
-@app.route('/mostrar-grafico/<id>/')
-def mostrar_grafico(id):
+@app.route('/mostrar-grafico/<id>/<nome>')
+def mostrar_grafico(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
     return render_template('grafico.html',
                             lab_id=id,
+                            lab_nome=nome,
+                            autenticado=True,
                             pagina='mostrar_grafico')
 
-@app.route('/mostrar-grafico/<id>/', methods=["POST"])
-def mostrar_grafico_post(id):
+@app.route('/mostrar-grafico/<id>/<nome>', methods=["POST"])
+def mostrar_grafico_post(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
     temperatura = request.form.get("temperatura") or ''
     umidade = request.form.get("umidade") or ''
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
@@ -492,8 +508,10 @@ def mostrar_grafico_post(id):
         result_means = getIntervalMeans(interval, arrayOfEpochs)
 
     return render_template('grafico.html',
-                            lab_id=id,
                             pagina='mostrar_grafico',
+                            autenticado=True,
+                            lab_id=id,
+                            lab_nome=nome,
                             temp_data=result_means,
                             cols=cols,
                             intervalo_grafico=intervalo_grafico)
@@ -591,13 +609,24 @@ def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
 
     return tempAndHumidMeans
 
-@app.route('/mostrar-relatorio/<id>/')
-def mostrar_relatorio(id):
-    return render_template('relatorio.html',
-                            lab_id=id)
+@app.route('/mostrar-relatorio/<id>/<nome>')
+def mostrar_relatorio(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
 
-@app.route('/mostrar-relatorio/<id>/', methods=["POST"])
-def mostrar_relatorio_post(id):
+    return render_template('relatorio.html',
+                            pagina="mostrar_relatorio",
+                            autenticado=True,
+                            lab_id=id,
+                            lab_nome=nome)
+
+@app.route('/mostrar-relatorio/<id>/<nome>', methods=["POST"])
+def mostrar_relatorio_post(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
     dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
     # dia = 1497668400
@@ -628,6 +657,8 @@ def mostrar_relatorio_post(id):
 
     return render_template('relatorio.html',
                             lab_id=id,
+                            lab_nome=nome,
+                            autenticado=True,
                             pagina='mostrar_relatorio',
                             log_presenca=presenceList,
                             condicoes_ambiente=result_means)

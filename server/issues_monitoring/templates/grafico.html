@@ -11,26 +11,8 @@
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
-
-  cols = JSON.parse("{{cols}}");
-  header_t = ['Data']
-
-    if(cols[0] == 1){
-        header_t.push('Temperatura')
-    }
-    if(cols[1] == 1){
-        header_t.push('Umidade')
-    }
-
-  mydata=JSON.parse('{{temp_data}}');
-  // for (var i=0;i<mydata.length;i++){
-  //   mydata[i][0] = new Date(mydata[i][0]*1000);
-  //   mydata[i][0].toLocaleString();
-  //   // mydate = mydata[i][0].toGMTString() + mydata[i][0].toLocaleString();
-  // }
-  haha = [header_t].concat(mydata)
+  var mydata = JSON.parse('{{temp_data}}' || "[]"),
+      cols = JSON.parse("{{cols}}" || "[]");
 
   function drawChart() {
     var data = google.visualization.arrayToDataTable(haha);
@@ -46,7 +28,29 @@
     chart.draw(data, options);
   }
 
+  if (cols.length > 0) {
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
+      header_t = ['Data']
+
+        if(cols[0] == 1){
+            header_t.push('Temperatura')
+        }
+        if(cols[1] == 1){
+            header_t.push('Umidade')
+        }
+
+      // for (var i=0;i<mydata.length;i++){
+      //   mydata[i][0] = new Date(mydata[i][0]*1000);
+      //   mydata[i][0].toLocaleString();
+      //   // mydate = mydata[i][0].toGMTString() + mydata[i][0].toLocaleString();
+      // }
+      haha = [header_t].concat(mydata)
+  } else {
+      document.getElementById('curve_chart').remove();
+      document.getElementById('warning-chart').style = "";
+  }
 </script>
 {% endblock %}
 
@@ -55,10 +59,10 @@
 
     <div class="page-title">
         <h3>Gráfico</h3>
-        <h4>{{request.args.get('nome')}}</h4>
+        <h4>{{lab_nome}}</h4>
     </div>
     {% if error_message %}
-    <div class="ui-widget error-msg hidden">
+    <div class="ui-widget error-msg">
 	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Erro: </strong>{{error_message}}</p>
@@ -81,6 +85,15 @@
     </div>
 
     <div id="curve_chart" style="width: 900px; height: 500px"></div>
+    <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
+	    <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+            Não há registros o suficiente para gerar um gráfico.</p>
+	    </div>
+    </div>
 
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+    </div>
 </div>
 {% endblock %}

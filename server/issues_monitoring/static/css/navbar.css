@@ -150,12 +150,22 @@ body {
     color: #085c04;
 }
 
+.ui-state-warning {
+    border: 1px solid #aeb906;
+    background-color: #fbffb6;
+    color: #727e00;
+}
+
 .ui-icon {
     color: #085c04;
 }
 
 .ui-state-success .ui-icon {
     background-image: url("/static/img/ui-icons_085c04_256x240.png") !important;
+}
+
+.ui-state-warning .ui-icon {
+    background-image: url("/static/jquery-ui/images/ui-icons_777620_256x240.png") !important;
 }
 
 .hidden {
