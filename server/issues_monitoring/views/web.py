@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, session
+from flask import send_file, current_app as app
 from datetime import datetime
 import time
 from datetime import datetime, timedelta
@@ -6,6 +7,9 @@ from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio
 import json
+
+import pdfkit
+import webbrowser
 
 @app.route('/')
 def root():
@@ -646,7 +650,7 @@ def mostrar_relatorio_post(id, nome):
     presentes_list = controllers.usuarios_presentes(id)
     print ("presentes: ", presentes_list)    
 
-    return render_template('relatorio.html',
+    page = render_template('relatorio.html',
                             lab_id=id,
                             lab_nome=nome,
                             autenticado=True,
@@ -656,6 +660,13 @@ def mostrar_relatorio_post(id, nome):
                             condicoes_ambiente_equip=equip_dict,
                             condicoes_ambiente_lab=lab_temp_umid)
 
+    css = './issues_monitoring/static/css/table.css'
+    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/out.pdf', css=css)
+
+    # return send_file('reports/out.pdf', as_attachment = False)
+    # webbrowser.open_new_tab('./issues_monitoring/reports/out.pdf')
+
+    return page
 
 
 #presence: comes in the form of [[name, date, event], ...], event = IN/OUT
