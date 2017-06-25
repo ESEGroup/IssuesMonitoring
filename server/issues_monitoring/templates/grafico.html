@@ -5,17 +5,32 @@
 {% block header %}
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 {% endblock %}
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <script type="text/javascript">
-  var mydata = JSON.parse('{{temp_data}}' || "[]"),
-      cols = JSON.parse("{{cols}}" || "[]");
+$(function() {
+    $('input[name="daterange"]').daterangepicker({
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        locale: {
+            format: 'DD/MM/YYYY HH:mm:ss'
+        }
+    });
+
+
+  var mydata = JSON.parse('{{temp_data}}' || "[]");
 
   var temporaria = '{{temp_data}}';
-  console.log(temporaria);
+  console.log("hahahahaah")
+  console.log(mydata.length);
   function drawChart() {
     var data = new google.visualization.DataTable(); 
     data.addColumn('number', 'index');
@@ -46,29 +61,16 @@
     chart.draw(data, options);
   }
 
-  if (cols.length > 0) {
+  if (mydata.length > 0) {
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
-
-      header_t = ['Data']
-
-        if(cols[0] == 1){
-            header_t.push('Temperatura')
-        }
-        if(cols[1] == 1){
-            header_t.push('Umidade')
-        }
-
-      // for (var i=0;i<mydata.length;i++){
-      //   mydata[i][0] = new Date(mydata[i][0]*1000);
-      //   mydata[i][0].toLocaleString();
-      //   // mydate = mydata[i][0].toGMTString() + mydata[i][0].toLocaleString();
-      // }
-      haha = [header_t].concat(mydata)
   } else {
       document.getElementById('curve_chart').remove();
       document.getElementById('warning-chart').style = "";
   }
+
+});
+
 </script>
 {% endblock %}
 
@@ -81,10 +83,10 @@
     </div>
     {% if error_message %}
     <div class="ui-widget error-msg">
-	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
-		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Erro: </strong>{{error_message}}</p>
-	    </div>
+        </div>
     </div>
     {% endif %}
     <div class="neat-form">
@@ -95,6 +97,7 @@
                     <input type="checkbox" name="temperatura" id="temperatura">Temperatura
                     <input type="checkbox" name="umidade" id="umidade">Umidade
                 </div>
+                <input type="text" name="daterange" value="17/06/2017 00:00:00 - 18/06/2017 12:00:03" />
                 <div class="legenda-cadastro">Intervalo do gráfico (em min):</div>
                 <input type="text" name="intervalo_grafico" id="intervalo_grafico">
             </fieldset>
@@ -104,10 +107,10 @@
 
     <div id="curve_chart" style="width: 900px; height: 500px"></div>
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
-	    <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
-		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+        <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             Não há registros o suficiente para gerar um gráfico.</p>
-	    </div>
+        </div>
     </div>
 
     <div class="div-botao-estilizado">

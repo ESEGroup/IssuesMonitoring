@@ -477,15 +477,19 @@ def mostrar_grafico_post(id, nome):
 
     temperatura = request.form.get("temperatura") or ''
     umidade = request.form.get("umidade") or ''
+    date = request.form.get("daterange") or ''
+    dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
-    dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
-    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    dia = 1497668400
-    cols = [0, 0]
+    
+    start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
+    print(dates[0])
+    end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
+    print(dates[1])
 
+    # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
+    
     interval = int(intervalo_grafico)*60
-    # interval = 8000
-    args = [temperatura, umidade, dia, id]
+    args = [temperatura, umidade, start_date_epoch, end_date_epoch, id]
     print (args)
     temp_data = controllers.get_data_log(*args)
     json.dumps(temp_data)
@@ -500,20 +504,13 @@ def mostrar_grafico_post(id, nome):
                                **kwargs)
 
     print("Array of Epochs: {}".format(arrayOfEpochs))
-    if (temperatura == "on"):
-        cols[0] = 1
-
-    if (umidade == "on"):
-        cols[1] = 1
 
     result_means = []
 
-    if (temperatura == "on" and umidade == "on"):
-        result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
-    elif (temperatura == "on"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs, dia, dia+86399)
+    if (temperatura == "on"):
+        result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
     elif (umidade == "on"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs, dia, dia+86399)
+        result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
 
     print("result means: ", result_means)
     return render_template('grafico.html',
@@ -522,7 +519,6 @@ def mostrar_grafico_post(id, nome):
                             lab_id=id,
                             lab_nome=nome,
                             temp_data=result_means,
-                            cols=cols,
                             intervalo_grafico=intervalo_grafico)
 
 
