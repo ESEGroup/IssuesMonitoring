@@ -94,9 +94,11 @@ def laboratorio(id, nome=""):
 def remover_laboratorio(id):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
 
     controllers.remover_laboratorio(id)
-    return 'OK'
+    kwargs = {"c" : "Laboratório removido com sucesso!"}
+    return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/editar-laboratorio/<id>/')
 @app.route('/editar-laboratorio/<id>/<nome>')
@@ -419,12 +421,15 @@ def equipamentos_laboratorio(id, nome=""):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
+        
+    equipamentos = controllers.obter_equipamentos(id)
 
     return render_template('lista_equipamentos.html',
                            autenticado=autenticado(),
                            admin   = admin_autenticado(),
                            lab_id  = id,
                            lab_nome= nome,
+                           equipamentos=equipamentos,
                            pagina  = "equipamentos_laboratorio")
 
 @app.route('/status-sistema/<id>/<nome>')
@@ -452,7 +457,7 @@ def system_status(id, nome):
     if tempos_arduinos is not None:
         status_componente = "OK"
         if ((datetime.fromtimestamp(int(tempos_arduinos)) <
-            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id)))))):
+            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(id)))))):
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino",
@@ -727,3 +732,35 @@ def organizePresenceList(currentDayEpoch, presence):
         presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
 
     return presenceList
+
+@app.route('/anomalias/<id>/<nome>')
+def anomalias(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalias = controllers.obter_anomalias(id)
+
+    return render_template('anomalias.html',
+                            anomalias=anomalias,
+                            pagina='anomalias',
+                            autenticado=True,
+                            lab_id=id,
+                            lab_nome=nome)
+
+@app.route('/acao/<id>/<nome>', methods=["POST"])
+def acao(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    id_anomalia = request.form.get("id_anomalia") or ''
+    user_id = session.get("id")
+    descricao_acao = request.form.get("descricao") or ""
+    args = [id_anomalia, user_id, descricao_acao]
+    if "" not in args:
+        controllers.resolver_anomalia(*args)
+
+    return redirect(url_for('anomalias',
+                            id=id,
+                            nome=nome))

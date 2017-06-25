@@ -1,6 +1,4 @@
 from ..models import Laboratorio, Evento, UsuarioLab, Arduino, Medida_Lab, Medida_Equip
-import sqlite3
-import json
 
 def registrar_medidas(j):
     dict_medidas = {}

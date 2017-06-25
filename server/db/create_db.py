@@ -109,10 +109,29 @@ def work():
     """)
 
     cursor.execute("""
+    CREATE TABLE Anomalias(
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            slug CHAR(255) NOT NULL,
+            tipo_anomalia CHAR(255) NOT NULL,
+            descricao_anomalia CHAR(255) NOT NULL);
+    """)
+
+
+    cursor.executemany("""
+    INSERT INTO Anomalias
+    (id, slug, tipo_anomalia, descricao_anomalia)
+    VALUES (?, ?, ?, ?);""",
+    [(1, "temp", "Temperatura", "Temperatura do laboratório fora da Zona de Conforto"),
+     (2, "umid", "Umidade", "Umidade do laboratório fora da Zona de Conforto"),
+     (3, "temp-maq", "Temperatora de Máquina", "Temperatura da máquina {} fora da Zona de Conforto"),
+     (4, "umid-maq", "Umidade de Máquina", "Umidade da máquina {} fora da Zona de Conforto")])
+
+    cursor.execute("""
     CREATE TABLE Log_Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            descricao CHAR(255) NOT NULL,
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
+            id_anomalia INTEGER NOT NULL REFERENCES Anomalias(id),
             resolvido BOOLEAN NOT NULL);
     """)
 
@@ -120,8 +139,9 @@ def work():
     CREATE TABLE Log_Acoes(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            id_anomalia INTEGER NOT NULL REFERENCES Log_Anomalias(id),
-            descricao_acao CHAR(255) NOT NULL);
+            id_log_anomalia INTEGER NOT NULL REFERENCES Log_Anomalias(id),
+            descricao_acao CHAR(255) NOT NULL,
+            autor INTEGER NOT NULL REFERENCES User_Sys(user_id));
     """)
 
     conn.commit()
