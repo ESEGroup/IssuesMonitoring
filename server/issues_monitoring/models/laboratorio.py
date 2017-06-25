@@ -202,6 +202,7 @@ class Laboratorio:
             WHERE lab_id = ?;""", (id,))
 
     def obter_todos_equipamentos(id):
+        print ("obtendo equips")
         data = db.fetchall("SELECT equip_id FROM Equip WHERE lab_id=?",(id,))
 
         equipamentos = []
@@ -209,4 +210,4 @@ class Laboratorio:
             if d[0] not in equipamentos:
                 equipamentos.append(d[0])
         print ("here: ", equipamentos)
-        return data
+        return equipamentos

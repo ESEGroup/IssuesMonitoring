@@ -463,9 +463,8 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    args = [id]
-    equipamentos = controllers.obter_equipamentos(*args)
-    print("equipamentos: ", controllers.obter_equipamentos(*args))
+    equipamentos = controllers.obter_equipamentos(id)
+    print("equipamentos: ", controllers.obter_equipamentos(id))
     # json.dumps(equipamentos)
     # equipamentos = json.loads(equipamentos)     
     equipamentos = [1,2]   
@@ -495,6 +494,11 @@ def mostrar_grafico_post(id, nome):
     # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
     
     interval = int(intervalo_grafico)*60
+
+    args = [id]
+    equipamentos = controllers.obter_equipamentos(*args)  
+    print("equips: ", equipamentos) 
+    equipamentos = [1,2]       
     
     if (chart_type == "temperatura"):
         if (chart_target == "laboratorio"):
@@ -523,10 +527,7 @@ def mostrar_grafico_post(id, nome):
 
     result_means = []
 
-    if (chart_type == "temperatura"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
-    elif (chart_type == "umidade"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
+    result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
 
     print("result means: ", result_means)
     return render_template('grafico.html',
@@ -535,6 +536,7 @@ def mostrar_grafico_post(id, nome):
                             lab_id=id,
                             lab_nome=nome,
                             temp_data=result_means,
+                            equipamentos=equipamentos,
                             intervalo_grafico=intervalo_grafico)
 
 
