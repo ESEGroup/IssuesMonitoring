@@ -39,17 +39,17 @@ console.log(condicoes_ambiente)
     <table class="table-fill">
         <thead>
             <tr>
-                <th class="text-left">Nome</th>
-                <th class="text-left">Entrada</th>
-                <th class="text-left">Saída</th>
+                <th class="text-center">Nome</th>
+                <th class="text-center">Entrada</th>
+                <th class="text-center">Saída</th>
             </tr>
         </thead>
         <tbody class="table-hover">
             {% for user_log in log_presenca %}
             <tr>
-                <td class="text-left">{{user_log[0]}}</td>
-                <td class="text-left">{{user_log[1]}}</td>
-                <td class="text-left">{{user_log[2]}}</td>
+                <td class="text-center">{{user_log[0]}}</td>
+                <td class="text-center">{{user_log[1]}}</td>
+                <td class="text-center">{{user_log[2]}}</td>
             </tr>
             {% endfor %}
         </tbody>

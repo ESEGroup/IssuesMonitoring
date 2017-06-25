@@ -186,3 +186,9 @@ input:checked + .check-slide:before {
 .check-slide.round:before {
   border-radius: 50%;
 }
+
+/* Delete image */
+.delete-table-opt {
+    width: 50%;
+    text-align: center;
+}

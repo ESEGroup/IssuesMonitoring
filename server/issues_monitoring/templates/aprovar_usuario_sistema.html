@@ -16,36 +16,42 @@
 <div id="nav-bar">
     <div id="view1">
         <div class="page-title">
-            <h3>Aprovar Usuários do Sistema</h3>
-            <h4>Os usuários do sistema aguardando autorização encontram-se abaixo.</h4>
+            <h3>Gerenciar Usuários do Sistema</h3>
+            <h4>Os usuários do sistema cadastrados encontram-se abaixo.</h4>
         </div>
         
         {% if usuarios|len > 0 %}
         <table class="table-fill">
             <thead>
                 <tr>
-                    <th class="text-left">Nome</th>
-                    <th class="text-left">E-mail</th>
-                    <th class="text-left">Autorizado</th>
-                    <th class="text-left">Administrador</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">E-mail</th>
+                    <th class="text-center">Autorizado</th>
+                    <th class="text-center">Administrador</th>
+                    <th class="text-center">Excluir</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
                 {% for usuario in usuarios %}
                 <tr>
-                    <td class="text-left" title="{{usuario.login}}">{{usuario.nome}}</td>
-                    <td class="text-left">{{usuario.email}}</td>
-                    <td class="text-left">
+                    <td class="text-center" title="{{usuario.login}}">{{usuario.nome}}</td>
+                    <td class="text-center">{{usuario.email}}</td>
+                    <td class="text-center">
                         <label class="switch">
                             <input type="checkbox" data-url="{{url_for('aprovar_usuario_post', id=usuario.id)}}" class="aprovar" {% if usuario.data_aprovacao|existe %}checked="checked"{% endif %}>
                             <div class="check-slide round"></div>
                         </label>
                     </td>
-                    <td class="text-left">
+                    <td class="text-center">
                         <label class="switch">
                             <input type="checkbox" data-url="{{url_for('editar_status_administrador', id=usuario.id)}}" class="aprovar" {% if usuario.admin %}checked="checked"{% endif %}>
                             <div class="check-slide round"></div>
                         </label>
+                    </td>
+                    <td class="text-center">
+                        <input data-url="#}" 
+                               data-lab-nome="{{usuario.nome}}" type="image" src="/static/img/delete.png"
+                               alt="Submit" class="delete-table-opt">
                     </td>
                 </tr>
                 {% endfor %}
