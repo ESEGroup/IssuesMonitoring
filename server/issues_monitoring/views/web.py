@@ -475,22 +475,18 @@ def mostrar_grafico_post(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    temperatura = request.form.get("temperatura") or ''
-    umidade = request.form.get("umidade") or ''
+    chart_type = request.form.get("chart_type") or ''
     date = request.form.get("daterange") or ''
     dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
     
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
-    print(dates[0])
     end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
-    print(dates[1])
 
     # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
     
     interval = int(intervalo_grafico)*60
-    args = [temperatura, umidade, start_date_epoch, end_date_epoch, id]
-    print (args)
+    args = [chart_type, start_date_epoch, end_date_epoch, id]
     temp_data = controllers.get_data_log(*args)
     json.dumps(temp_data)
     arrayOfEpochs = json.loads(temp_data)
@@ -507,9 +503,9 @@ def mostrar_grafico_post(id, nome):
 
     result_means = []
 
-    if (temperatura == "on"):
+    if (chart_type == "temperatura"):
         result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
-    elif (umidade == "on"):
+    elif (chart_type == "umidade"):
         result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
 
     print("result means: ", result_means)

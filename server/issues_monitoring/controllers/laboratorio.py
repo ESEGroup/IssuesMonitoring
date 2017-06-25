@@ -89,8 +89,8 @@ def check_condicoes_ambiente(lab_id):
       for eq in equips:
         check_for_equipment_temperature(eq,lab_id)            
 
-def get_data_log(temperatura, umidade, start_date, end_date, lab_id):
-  json_string = json.dumps(get_data_graphic(temperatura, umidade, start_date, end_date, lab_id))
+def get_data_log(chart_type, start_date, end_date, lab_id):
+  json_string = json.dumps(get_data_graphic(chart_type, start_date, end_date, lab_id))
   return json_string
 
 

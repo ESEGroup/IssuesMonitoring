@@ -94,9 +94,10 @@ $(function() {
             <fieldset>
                 <div class="legenda-cadastro">Tipo do gráfico:</div>
                 <div class="graphic_mode">
-                    <input type="checkbox" name="temperatura" id="temperatura">Temperatura
-                    <input type="checkbox" name="umidade" id="umidade">Umidade
+                    <input type="radio" name="chart_type" value="temperatura">Temperatura
+                    <input type="radio" name="chart_type" value="umidade">Umidade
                 </div>
+                <div class="legenda-cadastro">Data de início e fim:</div>
                 <input type="text" name="daterange" value="17/06/2017 00:00:00 - 18/06/2017 12:00:03" />
                 <div class="legenda-cadastro">Intervalo do gráfico (em min):</div>
                 <input type="text" name="intervalo_grafico" id="intervalo_grafico">
