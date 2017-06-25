@@ -3,7 +3,7 @@ app = Flask(__name__)
 
 try:
     from server import Config, DB
-    from server.parser.run import work as run_parser
+    from ..parser.run import work as run_parser
 except:
     from os import getcwd
     from config import Config

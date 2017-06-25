@@ -1,19 +1,18 @@
 #!/bin/python3
 
-from . import Config
-from time     import sleep
-from .lib.log   import debug, log
-from .lib.email import fetch_new_emails, mark_as_unread, NoMessages
-from .lib.parse import parse_messages
-
-try:
-    from ..issues_monitoring.controllers import (registrar_presenca,
-                                                 registrar_log_parser)
-except:
-    from issues_monitoring.controllers import (registrar_presenca,
-                                                 registrar_log_parser)
-
 def work():
+    from . import Config
+    from time     import sleep
+    from .lib.log   import debug, log
+    from .lib.email import fetch_new_emails, mark_as_unread, NoMessages
+    from .lib.parse import parse_messages
+
+    try:
+        from server.issues_monitoring.controllers import (registrar_presenca, registrar_log_parser)
+    except:
+        from issues_monitoring.controllers import (registrar_presenca,
+                                                   registrar_log_parser)
+
     DEBUG = Config.debug
     WAIT_FOR = Config.parser_default_delay
     MAX_WAITING_PERIOD = Config.parser_max_delay
