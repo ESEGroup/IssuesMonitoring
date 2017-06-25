@@ -3,7 +3,8 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
@@ -27,18 +28,18 @@ $(function() {
     $('input[type=radio][name=chart_type]').on('change', function(){
         console.log($(this).val());
         if ($(this).val() == "temperatura"){
-            $('.equips').remove();        
+            $('.equips').remove();
             var equips = JSON.parse('{{equipamentos}}');
             var equips_div = $('<div />').addClass('equips');
-            var lab_div = $('<div />');            
+            var lab_div = $('<div />');
             var lab_radio = $('<input />')
                                         .attr('type', 'radio')
                                         .attr('name', 'equipamento')
                                         .attr('value', 'laboratorio')
             var lab_span = $('<span />').text("Laboratório");
             $(lab_div).append(lab_radio);
-            $(lab_div).append(lab_span);         
-            $(equips_div).append(lab_div);            
+            $(lab_div).append(lab_span);
+            $(equips_div).append(lab_div);
             $.each(equips, function(idx,row){
                 var equip_div = $('<div />');
                 var equip_radio = $('<input />')
@@ -60,7 +61,7 @@ $(function() {
   var mydata = JSON.parse('{{temp_data}}' || "[]");
 
   function drawChart() {
-    var data = new google.visualization.DataTable(); 
+    var data = new google.visualization.DataTable();
     data.addColumn('number', 'index');
     data.addColumn('number', 'mean');
     data.addColumn({id: 'min', type:'number', role: 'interval'});

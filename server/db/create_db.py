@@ -105,8 +105,23 @@ def work():
     cursor.execute("""
     CREATE TABLE Log_Parser(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            data INTEGER NOT NULL
-            );
+            data INTEGER NOT NULL);
+    """)
+
+    cursor.execute("""
+    CREATE TABLE Log_Anomalias(
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            data INTEGER NOT NULL,
+            descricao CHAR(255) NOT NULL,
+            resolvido BOOLEAN NOT NULL);
+    """)
+
+    cursor.execute("""
+    CREATE TABLE Log_Acoes(
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            data INTEGER NOT NULL,
+            id_anomalia INTEGER NOT NULL REFERENCES Log_Anomalias(id),
+            descricao_acao CHAR(255) NOT NULL);
     """)
 
     conn.commit()

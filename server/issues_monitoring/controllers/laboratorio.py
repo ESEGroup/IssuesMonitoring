@@ -58,7 +58,7 @@ def remover_equipamento(_id):
     Equipamento.remover(_id)
 
 def obter_equipamentos(id):
-    Laboratorio.obter_todos_equipamentos(id)
+    return Laboratorio.obter_todos_equipamentos(id)
 
 def obter_zona_de_conforto(id):
     return ZonaConforto.obter(id)
@@ -70,10 +70,10 @@ def checar_condicoes_no_intervalo():
     #since we have multiple labs, we have multiple threads
     lab_ids = obter_laboratorios_id() #gets all lab ids
     threadsCondicoes = []
-    for i in range (len(lab_ids)): 
+    for i in range (len(lab_ids)):
         threadsCondicoes.append(Thread(target=check_condicoes_ambiente, args=(lab_ids[i],)))
         threadsCondicoes[i].daemon = True
-        threadsCondicoes[i].start()     
+        threadsCondicoes[i].start()
 
 def check_condicoes_ambiente(lab_id):
   while (True):
@@ -85,12 +85,12 @@ def check_condicoes_ambiente(lab_id):
       check_for_forgotten_lights(lab_id)
       check_for_abnormal_temperature(lab_id)
       check_for_abnormal_humidity(lab_id)
-      
+
       #get equips from query
       equips = get_equip_ids(lab_id)
 
       for eq in equips:
-        check_for_equipment_temperature(eq,lab_id)            
+        check_for_equipment_temperature(eq,lab_id)
 
 def get_data_log(chart_type, start_date, end_date, lab_id):
   json_string = json.dumps(get_chart_data(chart_type, start_date, end_date, lab_id))
@@ -98,13 +98,13 @@ def get_data_log(chart_type, start_date, end_date, lab_id):
 
 def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
   json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))
-  return json_string  
+  return json_string
 
 
 # def get_log_presence_list(date, lab_id):
 #   #Date of today, start of query
 #   dateToday = date
 #   #end of today, end of query
-#   dateTomorrow = date+24*60*60. -1. 
-#   json_string = json.dumps(get_presence_data(dateToday, dateTomorrow, lab_id))   
+#   dateTomorrow = date+24*60*60. -1.
+#   json_string = json.dumps(get_presence_data(dateToday, dateTomorrow, lab_id))
 #   return json_string

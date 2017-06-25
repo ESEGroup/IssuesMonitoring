@@ -466,8 +466,8 @@ def mostrar_grafico(id, nome):
     equipamentos = controllers.obter_equipamentos(id)
     print("equipamentos: ", controllers.obter_equipamentos(id))
     # json.dumps(equipamentos)
-    # equipamentos = json.loads(equipamentos)     
-    equipamentos = [1,2]   
+    # equipamentos = json.loads(equipamentos)
+    # equipamentos = [1,2]
 
     return render_template('grafico.html',
                             lab_id=id,
@@ -487,19 +487,19 @@ def mostrar_grafico_post(id, nome):
     date = request.form.get("daterange") or ''
     dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
-    
+
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
     end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
 
     # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    
+
     interval = int(intervalo_grafico)*60
 
     args = [id]
-    equipamentos = controllers.obter_equipamentos(*args)  
-    print("equips: ", equipamentos) 
-    equipamentos = [1,2]       
-    
+    equipamentos = controllers.obter_equipamentos(*args)
+    print("equips: ", equipamentos)
+    #equipamentos = [1,2]
+
     if (chart_type == "temperatura"):
         if (chart_target == "laboratorio"):
             print("no grafico do lab")
@@ -520,6 +520,9 @@ def mostrar_grafico_post(id, nome):
         kwargs = {"error_message": "Não existem dados para o período selecionado. Por favor, selecione outro período"}
         return render_template('grafico.html',
                                lab_id=id,
+                               lab_nome=nome,
+                               autenticado=True,
+                               equipamentos=equipamentos,
                                pagina='mostrar_grafico',
                                **kwargs)
 
@@ -624,7 +627,7 @@ def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
     #if it leaves the for without even achieving the first interval, or if there is a remainder:
     #add the last value, the remainder
     meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
-      
+
     return meansArray
 
 
