@@ -421,12 +421,15 @@ def equipamentos_laboratorio(id, nome=""):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
+        
+    equipamentos = controllers.obter_equipamentos(id)
 
     return render_template('lista_equipamentos.html',
                            autenticado=autenticado(),
                            admin   = admin_autenticado(),
                            lab_id  = id,
                            lab_nome= nome,
+                           equipamentos=equipamentos,
                            pagina  = "equipamentos_laboratorio")
 
 @app.route('/status-sistema/<id>/<nome>')

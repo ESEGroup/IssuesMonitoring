@@ -78,6 +78,10 @@ body {
     text-decoration: none;
 }
 
+.div-btn-below {
+    margin-top: -42px;
+}
+
 .btn-estilizado:hover {
     background-color: #e3e3e3;
     border-color: rgba(0,0,0,0.5);
