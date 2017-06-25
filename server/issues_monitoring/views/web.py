@@ -757,8 +757,32 @@ def organizePresenceList(currentDayEpoch, presence):
 
 @app.route('/anomalias/<id>/<nome>')
 def anomalias(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalias = controllers.obter_anomalias(id)
+
     return render_template('anomalias.html',
-                            anomalias=[],
+                            anomalias=anomalias,
+                            pagina='anomalias',
                             autenticado=True,
-                            id=id,
+                            lab_id=id,
                             lab_nome=nome)
+
+@app.route('/acao/<id>/<nome>', methods=["POST"])
+def acao(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    id_anomalia = request.form.get("id_anomalia") or ''
+    user_id = session.get("id")
+    descricao_acao = request.form.get("descricao") or ""
+    args = [id_anomalia, user_id, descricao_acao]
+    if "" not in args:
+        controllers.resolver_anomalia(*args)
+
+    return redirect(url_for('anomalias',
+                            id=id,
+                            nome=nome))

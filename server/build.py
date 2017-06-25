@@ -14,13 +14,18 @@ Popen(["virtualenv",
 
 Popen([".env/bin/pip",
        "install",
-       "-r",
+       "-Ur",
        "requirements.txt"]).wait()
 
 if not isfile("config.py"):
     Popen(["cp",
            "config.py.example",
            "config.py"]).wait()
+
+if not isfile("../parser/config.py"):
+    Popen(["cp",
+           "../parser/config.py.example",
+           "../parser/config.py"]).wait()
 
 __file__ = join(".env", "bin", "activate_this.py")
 with open(join(".env", "bin", "activate_this.py"), "r") as f:
@@ -33,9 +38,13 @@ if not isfile("db/Issues.db"):
     Popen(["mv",
            "Issues.db",
            "db/Issues.db"]).wait()
+    print("Banco de dados criado")
+
+print("Deseja criar um usuário de administrador? (Y/n)")
+if input().lower().strip() == "n":
+    exit()
 
 print("")
-print("Crie um usuário administrador")
 print("Usuário:")
 usuario = input()
 print("Senha:")
@@ -67,4 +76,4 @@ conn.commit()
 conn.close()
 print("Administrador criado")
 
-print("Por favor altere as informações no arquivo `config.py`")
+print("Por favor altere as informações no arquivo `config.py` e `../parser/config.py`")

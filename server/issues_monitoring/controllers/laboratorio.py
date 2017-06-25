@@ -100,6 +100,8 @@ def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
   json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))
   return json_string
 
+def obter_anomalias(lab_id):
+    return Laboratorio.obter_anomalias(lab_id)
 
 # def get_log_presence_list(date, lab_id):
 #   #Date of today, start of query

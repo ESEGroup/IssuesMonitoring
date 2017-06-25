@@ -14,3 +14,5 @@ from .administrador_sistema import AdministradorSistema
 from .arduino import Arduino
 from .medida import Medida_Equip, Medida_Lab
 from .check_condicoes import *
+
+from .anomalia import Anomalia

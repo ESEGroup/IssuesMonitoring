@@ -65,6 +65,12 @@
                 <div class="nav-bar-suboption-text">Status do Sistema</div>
             </a>
         </li>
+        <li class="nav-bar-suboption">
+            <a class="nav-bar-li-link {% if pagina == 'anomalias' %}active{% endif %}"
+               href="{{url_for('anomalias', id=lab_id, nome=lab_nome)}}">
+                <div class="nav-bar-suboption-text">Anomalias</div>
+            </a>
+        </li>
         {% endif %}
 
         <li class="nav-bar-li dropdown">
