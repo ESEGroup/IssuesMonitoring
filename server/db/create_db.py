@@ -119,7 +119,7 @@ def work():
     CREATE TABLE Log_Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            lab_id INTEGER NOT NULL,
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             id_anomalia INTEGER NOT NULL REFERENCES Anomalias(id),
             resolvido BOOLEAN NOT NULL);
     """)
