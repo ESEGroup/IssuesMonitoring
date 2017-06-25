@@ -2,12 +2,20 @@
 {% block title %}Erro do servidor (500){% endblock %}
 
 {% block content %}
+<script>
+function goBack() {
+    window.history.back()
+}
+</script>
 <div id='nav-bar'>
     <div id='view1'>
         <div class="page-title">
             <h3>Erro 500</h3>
             <h4>Devido a um erro interno, o servidor não conseguiu processar a página web.<br>Se o problema persistir após 5 minutos, contate um administrador.</h4>
             <img src="/static/img/robot-error.gif" style="display:block; margin-left:auto; margin-right:auto; width:40% ">
+        </div>
+        <div class="div-botao-estilizado">
+            <button onClick="goBack()" style="cursor:pointer!important; margin-top:10px;" class="btn-estilizado btn-estilizado-blue">Voltar</button>
         </div>
     </div>
 </div>
