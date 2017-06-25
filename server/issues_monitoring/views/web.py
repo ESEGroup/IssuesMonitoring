@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
 import time
 from datetime import datetime, timedelta
+from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio
@@ -34,18 +35,20 @@ def login_post():
     usuario = request.form.get('login') or ''
     senha = request.form.get('senha') or ''
     if '' in [usuario, senha]:
-        return redirect(url_for('login'))
+        kwargs = {"e": "Por favor preencha todos os campos."}
+        return redirect(url_for('login', **kwargs))
 
-    (session['id'],
-     session['admin']) = controllers.autenticar(usuario, senha)
-
-    if session['id'] is not None:
+    try:
+        (session['id'],
+         session['admin']) = controllers.autenticar(usuario, senha)
         now = int(datetime.now().timestamp())
         session['expiration'] = now + Config.session_duration
         kwargs = {}
-    else:
-        session.clear()
-        kwargs = {"e": "Usuário ou senha incorretos ou usuário não autorizado."}
+    except NaoAutorizado:
+        kwargs = {"e": "Usuário não autorizado."}
+    except InformacoesIncorretas:
+        kwargs = {"e": "Usuário ou senha incorretos."}
+
     return redirect(url_for('login', **kwargs))
 
 @app.route('/selecionar-laboratorio')
