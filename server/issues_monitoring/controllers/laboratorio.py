@@ -1,6 +1,6 @@
 from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
                       ZonaConforto)
-from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids, get_chart_data, get_equip_chart_data
+from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids, get_chart_data, get_equip_chart_data, get_environment_data
 from threading import Thread
 from ..common.mail import send_email
 from time import sleep
@@ -96,6 +96,10 @@ def check_condicoes_ambiente(lab_id):
 def get_data_log(chart_type, start_date, end_date, lab_id):
     json_string = json.dumps(get_chart_data(chart_type, start_date, end_date, lab_id))
     return json_string
+
+def get_lab_log(start_date, end_date, lab_id):
+  json_string = json.dumps(get_environment_data(start_date, end_date, lab_id))
+  return json_string
 
 def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
     json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))

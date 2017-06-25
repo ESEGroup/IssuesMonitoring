@@ -44,7 +44,7 @@
         <li class="nav-bar-suboption">
             <a class="nav-bar-li-link {% if pagina == 'editar_laboratorio' %}active{% endif %}"
                href="{{url_for('editar_laboratorio', id=lab_id, nome=lab_nome)}}">
-                <div class="nav-bar-suboption-text">Alterar Configurações do Laboratório</div>
+                <div class="nav-bar-suboption-text">Alterar Dados do Laboratório</div>
             </a>
         </li>
         <li class="nav-bar-suboption">
@@ -74,7 +74,11 @@
         {% endif %}
 
         <li class="nav-bar-li dropdown">
-            <a id="cadastro-usuario" class="nav-bar-li-link" hred="#">Cadastro de Usuário</a>
+            {% if autenticado %}
+                <a id="cadastro-usuario" class="nav-bar-li-link" hred="#">Gerenciar Usuários</a>
+            {% else %}
+                <a id="cadastro-usuario" class="nav-bar-li-link" hred="#">Novos Usuários</a>
+            {% endif %}
         </li>
         <ul id="hidden-register" class="nav-bar-ul" {% if pagina not in ['cadastro', 'cadastro_usuario_lab', 'aprovar_usuario_sistema'] %}style="display:none"{% endif %}>
             <li class="nav-bar-suboption">
