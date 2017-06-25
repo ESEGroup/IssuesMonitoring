@@ -11,10 +11,9 @@ import os.path
 from . import db
 import json
 
-def get_data_graphic(chart_type, start_date, end_date, lab_id):
+def get_chart_data(chart_type, start_date, end_date, lab_id):
     data = []
     if (chart_type == "temperatura"):
-        print("Entrou Temp")
         data = db.fetchall("""
             SELECT data, temp
             FROM Log_Lab
@@ -23,7 +22,6 @@ def get_data_graphic(chart_type, start_date, end_date, lab_id):
             AND data < ?
             ORDER BY data ASC;""", (lab_id, start_date, end_date))
     elif (chart_type == "umidade"):
-        print("Entrou Umid")
         data = db.fetchall("""
             SELECT data, umid
             FROM Log_Lab
@@ -31,6 +29,19 @@ def get_data_graphic(chart_type, start_date, end_date, lab_id):
             AND data > ?
             AND data < ?
             ORDER BY data ASC;""", (lab_id, start_date, end_date))
+    # print("Data: {}".format(data))
+    return data
+
+def get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id):
+    data = []
+    if (chart_type == "temperatura"):
+        data = db.fetchall("""
+            SELECT data, temp
+            FROM Log_Equip
+            WHERE equip_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data ASC;""", (chart_target, start_date, end_date))
     # print("Data: {}".format(data))
     return data
 
