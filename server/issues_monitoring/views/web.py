@@ -87,9 +87,11 @@ def laboratorio(id, nome=""):
 def remover_laboratorio(id):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
 
     controllers.remover_laboratorio(id)
-    return 'OK'
+    kwargs = {"c" : "Laboratório removido com sucesso!"}
+    return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/editar-laboratorio/<id>/')
 @app.route('/editar-laboratorio/<id>/<nome>')
@@ -752,3 +754,11 @@ def organizePresenceList(currentDayEpoch, presence):
         presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
 
     return presenceList
+
+@app.route('/anomalias/<id>/<nome>')
+def anomalias(id, nome):
+    return render_template('anomalias.html',
+                            anomalias=[],
+                            autenticado=True,
+                            id=id,
+                            lab_nome=nome)

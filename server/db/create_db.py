@@ -109,10 +109,17 @@ def work():
     """)
 
     cursor.execute("""
+    CREATE TABLE Anomalias(
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            tipo_anomalia CHAR(255) NOT NULL,
+            descricao_anomalia CHAR(255) NOT NULL);
+    """)
+
+    cursor.execute("""
     CREATE TABLE Log_Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            descricao CHAR(255) NOT NULL,
+            id_anomalia INTEGER NOT NULL REFERENCES Anomalias(id),
             resolvido BOOLEAN NOT NULL);
     """)
 
@@ -120,8 +127,9 @@ def work():
     CREATE TABLE Log_Acoes(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            id_anomalia INTEGER NOT NULL REFERENCES Log_Anomalias(id),
-            descricao_acao CHAR(255) NOT NULL);
+            id_log_anomalia INTEGER NOT NULL REFERENCES Log_Anomalias(id),
+            descricao_acao CHAR(255) NOT NULL,
+            autor INTEGER NOT NULL REFERENCES User_Sys(user_id));
     """)
 
     conn.commit()

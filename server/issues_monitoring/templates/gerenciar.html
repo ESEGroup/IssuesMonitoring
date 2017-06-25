@@ -27,14 +27,14 @@
             <div>
                 <a href="{{url_for('zona_de_conforto', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Alterar Zona de Conforto</span></a>
 
-                <a href="{{url_for('editar_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Dados Cadastrais</span></a>
+                <a href="{{url_for('editar_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Configurações do Laboratório</span></a>
 
-                <a href="{{url_for('mostrar_grafico', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/grafico.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Mostrar Gráficos dos Eventos</span></a>            
+                <a href="{{url_for('mostrar_grafico', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/grafico.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Mostrar Gráficos dos Eventos</span></a>
             </div>
 
             <div>
-                <a href="{{url_for('mostrar_relatorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Mostrar Relatório dos Eventos</span></a>
-        
+                <a href="{{url_for('mostrar_relatorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/report.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Mostrar Relatório dos Eventos</span></a>
+
                 <a href="{{url_for('system_status', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/status.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Status das partes do Sistema</span></a>
             </div>
         </div>

@@ -44,7 +44,7 @@
         <li class="nav-bar-suboption">
             <a class="nav-bar-li-link {% if pagina == 'editar_laboratorio' %}active{% endif %}"
                href="{{url_for('editar_laboratorio', id=lab_id, nome=lab_nome)}}">
-                <div class="nav-bar-suboption-text">Alterar Dados Cadastrais</div>
+                <div class="nav-bar-suboption-text">Alterar Configurações do Laboratório</div>
             </a>
         </li>
         <li class="nav-bar-suboption">
@@ -119,7 +119,7 @@
 	    </div>
     </div>
     {% endif %}
-    
+
     {% if request.args.get('c') %}
     <div class="ui-widget success-msg hidden">
 	    <div class="ui-state-success ui-corner-all" style="padding: 0 .7em;">
