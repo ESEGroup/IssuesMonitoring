@@ -4,6 +4,7 @@ __pycache__
 
 # vim
 .*.sw*
+*.*~
 
 # virtualenv
 .env
