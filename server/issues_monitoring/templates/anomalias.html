@@ -18,24 +18,21 @@
     <table class="table-fill">
         <thead>
             <tr>
-                <th class="text-left">Id da Anomalia</th>
                 <th class="text-left">Tipo</th>
                 <th class="text-left">Data</th>
-                <th class="text-left">Resolvido</th>
                 <th class="text-left">Data da Resolução</th>
                 <th class="text-left">Ação</th>
+                <th class="text-left">Autor</th>
             </tr>
         </thead>
         <tbody class="table-hover">
             {% for anomalia in anomalias %}
             <tr>
-                <td class="text-left">{{anomalia.id}}</td>
-                <td class="text-left">{{anomalia.nome}}</td>
-                <td class="text-left">{{anomalia.data_anomalia|data_segundos}}</td>
-                <td class="text-left">{{anomalia.resolvido}}</td>
-                <td class="text-left">{{anomalia.data_resolucao|data_segundos}}</td>
-                <td class="text-left">{{anomalia.acao}}</td>
-                <td class="text-left">{{anomalia.nome_ator_resolucao}}</td>
+                <td title="{{anomalia.descricao}}">{{anomalia.tipo}}</td>
+                <td>{{anomalia.data_anomalia|data_segundos}}</td>
+                <td>{{anomalia.data_resolucao|data_segundos}}</td>
+                <td>{{anomalia.acao|vazio}}</td>
+                <td>{{anomalia.nome_autor_resolucao|vazio}}</td>
             </tr>
             {% endfor %}
         </tbody>

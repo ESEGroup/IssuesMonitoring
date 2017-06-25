@@ -1,6 +1,10 @@
 from datetime import datetime, timedelta
 from .. import app
 
+@app.template_filter('vazio')
+def vazio(texto):
+    return "-" if texto is None else texto
+
 @app.template_filter('trans_evento')
 def trans_evento(evento):
     return {"IN": "Entrada",
@@ -38,7 +42,6 @@ def dia_mes_ano(timestamp):
 @app.template_filter('existe')
 def existe(var):
     return var is not None
-
 
 @app.template_filter('user_ids')
 def user_ids(usuarios):
