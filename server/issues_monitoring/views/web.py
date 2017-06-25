@@ -463,10 +463,18 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
+    args = [id]
+    equipamentos = controllers.obter_equipamentos(*args)
+    print("equipamentos: ", controllers.obter_equipamentos(*args))
+    # json.dumps(equipamentos)
+    # equipamentos = json.loads(equipamentos)     
+    equipamentos = [1,2]   
+
     return render_template('grafico.html',
                             lab_id=id,
                             lab_nome=nome,
                             autenticado=True,
+                            equipamentos=equipamentos,
                             pagina='mostrar_grafico')
 
 @app.route('/mostrar-grafico/<id>/<nome>', methods=["POST"])
@@ -476,6 +484,7 @@ def mostrar_grafico_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     chart_type = request.form.get("chart_type") or ''
+    chart_target = request.form.get("equipamento") or 'laboratorio'
     date = request.form.get("daterange") or ''
     dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
@@ -486,8 +495,19 @@ def mostrar_grafico_post(id, nome):
     # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
     
     interval = int(intervalo_grafico)*60
-    args = [chart_type, start_date_epoch, end_date_epoch, id]
-    temp_data = controllers.get_data_log(*args)
+    
+    if (chart_type == "temperatura"):
+        if (chart_target == "laboratorio"):
+            print("no grafico do lab")
+            args = [chart_type, start_date_epoch, end_date_epoch, id]
+            temp_data = controllers.get_data_log(*args)
+        else:
+            args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
+            temp_data = controllers.get_equip_log(*args)
+    elif (chart_type == "umidade"):
+        args = [chart_type, start_date_epoch, end_date_epoch, id]
+        temp_data = controllers.get_data_log(*args)
+
     json.dumps(temp_data)
     arrayOfEpochs = json.loads(temp_data)
 

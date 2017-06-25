@@ -1,6 +1,6 @@
 from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
                       ZonaConforto)
-from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids, get_data_graphic
+from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids, get_chart_data, get_equip_chart_data
 from threading import Thread
 from time import sleep
 import json
@@ -57,6 +57,9 @@ def cadastro_equipamento(lab_id, temp_min, temp_max, MAC):
 def remover_equipamento(_id):
     Equipamento.remover(_id)
 
+def obter_equipamentos(id):
+    Laboratorio.obter_todos_equipamentos(id)
+
 def obter_zona_de_conforto(id):
     return ZonaConforto.obter(id)
 
@@ -90,8 +93,12 @@ def check_condicoes_ambiente(lab_id):
         check_for_equipment_temperature(eq,lab_id)            
 
 def get_data_log(chart_type, start_date, end_date, lab_id):
-  json_string = json.dumps(get_data_graphic(chart_type, start_date, end_date, lab_id))
+  json_string = json.dumps(get_chart_data(chart_type, start_date, end_date, lab_id))
   return json_string
+
+def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
+  json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))
+  return json_string  
 
 
 # def get_log_presence_list(date, lab_id):
