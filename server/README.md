@@ -26,8 +26,6 @@ Edit **config.py**
 
 Necessary changes (empty is not accepted):
 
-- 'token_parser' (also change at parser client)
-
 - 'email_password'
 
 In production:

@@ -1,6 +1,12 @@
-from config import DEBUG, MAIL_FROM, HOST, USERNAME, PASSWORD
-from lib.log import debug, log
+from .. import Config
+from .log import debug, log
 from imaplib import IMAP4_SSL
+
+DEBUG = Config.debug
+MAIL_FROM = Config.mydenox_email
+HOST = Config.imap_host.host
+USERNAME = Config.email
+PASSWORD = Config.email_password
 
 class NoMessages(Exception):
     pass

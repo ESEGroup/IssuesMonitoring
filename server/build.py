@@ -22,11 +22,6 @@ if not isfile("config.py"):
            "config.py.example",
            "config.py"]).wait()
 
-if not isfile("../parser/config.py"):
-    Popen(["cp",
-           "../parser/config.py.example",
-           "../parser/config.py"]).wait()
-
 __file__ = join(".env", "bin", "activate_this.py")
 with open(join(".env", "bin", "activate_this.py"), "r") as f:
     exec(f.read())
@@ -78,4 +73,4 @@ conn.commit()
 conn.close()
 print("Administrador criado")
 
-print("Por favor altere as informações no arquivo `config.py` e `../parser/config.py`")
+print("Por favor altere as informações no arquivo `config.py`")

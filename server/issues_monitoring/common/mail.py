@@ -24,7 +24,7 @@ def send_email(subject, message, emails):
     # Sending the mail  
     try:
         # print("Starting SMTP server...")
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP(smtp_host.host, smtp_host.port)
         server.ehlo()
         server.starttls()
         server.ehlo()

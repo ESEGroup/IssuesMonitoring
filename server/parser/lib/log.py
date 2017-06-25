@@ -1,6 +1,10 @@
 from sys import stderr
 from datetime import datetime
-from config import DEBUG, LOG_FILE, LOG_TIMESTAMP_FORMAT
+from .. import Config
+
+DEBUG = Config.debug
+LOG_FILE = Config.log_file
+LOG_TIMESTAMP_FORMAT = Config.log_timestamp_format
 
 def debug(*msgs, **kwargs):
     if DEBUG:
