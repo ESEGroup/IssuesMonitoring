@@ -246,6 +246,19 @@ def cadastro_post():
     kwargs = {"c": "Usuário enviado para autorização!"}
     return redirect(url_for('login', **kwargs))
 
+@app.route('/remover-usuario/<id>/', methods=["POST"])
+def remover_usuario_sistema(id):
+    if not admin_autenticado():
+        kwargs = {"e" : "Por favor, faça login como administrador."}
+        return redirect(url_for('login'))
+
+    if id == session["id"]:
+        kwargs = {"e" : "Você não pode se remover!"}
+    else:
+        controllers.remover_usuario_sistema(id)
+        kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('aprovar_usuario', **kwargs))
+
 @app.route('/aprovar-usuario-lab/<id>', methods=["POST"])
 def aprovar_usuario_lab(id):
     if not admin_autenticado():

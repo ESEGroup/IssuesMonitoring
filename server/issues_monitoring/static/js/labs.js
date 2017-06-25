@@ -54,8 +54,7 @@ $(function() {
             var lab_nome = ev.target.getAttribute("data-lab-nome"),
                 url = ev.target.getAttribute("data-url");
             if (confirm("Deseja apagar o laboratório " + lab_nome + "?")) {
-                var reload = function() { location.reload(); };
-                ajax(url, null, reload, reload);
+                ajax(url);
             }
         });
     }
