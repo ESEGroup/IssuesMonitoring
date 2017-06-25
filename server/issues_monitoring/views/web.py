@@ -434,7 +434,7 @@ def system_status(id, nome):
     if tempos_arduinos is not None:
         status_componente = "OK"
         if ((datetime.fromtimestamp(int(tempos_arduinos)) <
-            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id)))))):
+            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(id)))))):
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino",

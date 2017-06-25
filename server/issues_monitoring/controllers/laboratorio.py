@@ -2,6 +2,7 @@ from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
                       ZonaConforto)
 from ..models.check_condicoes import check_for_forgotten_lights, check_for_abnormal_humidity, check_for_abnormal_temperature, check_for_equipment_temperature, get_equip_ids, get_chart_data, get_equip_chart_data
 from threading import Thread
+from ..common.mail import send_email
 from time import sleep
 import json
 
@@ -76,32 +77,45 @@ def checar_condicoes_no_intervalo():
         threadsCondicoes[i].start()
 
 def check_condicoes_ambiente(lab_id):
-  while (True):
-      checkInterval = 1. #TODO: na vdd pegar do BD(n tem ainda, entao n sei como)
-      checkIntervalSeconds = checkInterval*60. #transform to seconds
-      sleep(checkIntervalSeconds)
+    while (True):
+        checkInterval = 1. #TODO: na vdd pegar do BD(n tem ainda, entao n sei como)
+        checkIntervalSeconds = checkInterval*60. #transform to seconds
+        sleep(checkIntervalSeconds)
 
-      #do the checks(FOR EACH LAB)
-      check_for_forgotten_lights(lab_id)
-      check_for_abnormal_temperature(lab_id)
-      check_for_abnormal_humidity(lab_id)
+        #do the checks(FOR EACH LAB)
+        check_for_forgotten_lights(lab_id)
+        check_for_abnormal_temperature(lab_id)
+        check_for_abnormal_humidity(lab_id)
 
-      #get equips from query
-      equips = get_equip_ids(lab_id)
+        #get equips from query
+        equips = get_equip_ids(lab_id)
 
-      for eq in equips:
-        check_for_equipment_temperature(eq,lab_id)
+        for eq in equips:
+            check_for_equipment_temperature(eq,lab_id)
 
 def get_data_log(chart_type, start_date, end_date, lab_id):
-  json_string = json.dumps(get_chart_data(chart_type, start_date, end_date, lab_id))
-  return json_string
+    json_string = json.dumps(get_chart_data(chart_type, start_date, end_date, lab_id))
+    return json_string
 
 def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
-  json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))
-  return json_string
+    json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))
+    return json_string
 
 def obter_anomalias(lab_id):
     return Laboratorio.obter_anomalias(lab_id)
+
+def enviar_email_acao_realizada(id_acao):
+    lab_id = 1
+    presentes = UsuarioLab.presentes(lab_id)
+    admins = AdministradorSistema.obter_administradores()
+    emails = [a.email for a in admins]
+    emails += [p.email for p in presentes]
+    print (emails)
+    print (present_users)
+    emails += present_users
+    subject = "Ação realizada no laboratório {}".format(lab_id)
+    msg_content = """A seguinte ação foi realizada no laboratório: {}\n\nEssa ação é referente à anomalia {}""".format()
+    send_email(subject, msg_content, emails)
 
 # def get_log_presence_list(date, lab_id):
 #   #Date of today, start of query
