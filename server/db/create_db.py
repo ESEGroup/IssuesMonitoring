@@ -111,9 +111,20 @@ def work():
     cursor.execute("""
     CREATE TABLE Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            slug CHAR(255) NOT NULL,
             tipo_anomalia CHAR(255) NOT NULL,
             descricao_anomalia CHAR(255) NOT NULL);
     """)
+
+
+    cursor.executemany("""
+    INSERT INTO Anomalias
+    (id, slug, tipo_anomalia, descricao_anomalia)
+    VALUES (?, ?, ?, ?);""",
+    [(1, "temp", "Temperatura", "Temperatura do laboratório fora da Zona de Conforto"),
+     (2, "umid", "Umidade", "Umidade do laboratório fora da Zona de Conforto"),
+     (3, "temp-maq", "Temperatora de Máquina", "Temperatura da máquina {} fora da Zona de Conforto"),
+     (4, "umid-maq", "Umidade de Máquina", "Umidade da máquina {} fora da Zona de Conforto")])
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(

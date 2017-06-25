@@ -34,13 +34,15 @@ with open(join(".env", "bin", "activate_this.py"), "r") as f:
 import bcrypt
 
 if not isfile("db/Issues.db"):
+    Popen(["rm",
+           "Issues.db"]).wait() 
     create_db()
     Popen(["mv",
            "Issues.db",
            "db/Issues.db"]).wait()
-    print("Banco de dados criado")
+    print("\nBanco de dados criado")
 
-print("Deseja criar um usuário de administrador? (Y/n)")
+print("\nDeseja criar um usuário de administrador? (Y/n)")
 if input().lower().strip() == "n":
     exit()
 
