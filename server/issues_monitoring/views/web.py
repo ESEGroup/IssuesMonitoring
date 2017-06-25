@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, session
+from flask import send_file, current_app as app
 from datetime import datetime
 import time
 from datetime import datetime, timedelta
@@ -7,6 +8,9 @@ from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio
 import json
+
+import pdfkit
+import webbrowser
 
 @app.route('/')
 def root():
@@ -467,10 +471,6 @@ def mostrar_grafico(id, nome):
         return redirect(url_for('login', **kwargs))
 
     equipamentos = controllers.obter_equipamentos(id)
-    print("equipamentos: ", controllers.obter_equipamentos(id))
-    # json.dumps(equipamentos)
-    # equipamentos = json.loads(equipamentos)
-    # equipamentos = [1,2]
 
     return render_template('grafico.html',
                             lab_id=id,
@@ -500,8 +500,6 @@ def mostrar_grafico_post(id, nome):
 
     args = [id]
     equipamentos = controllers.obter_equipamentos(*args)
-    print("equips: ", equipamentos)
-    #equipamentos = [1,2]
 
     if (chart_type == "temperatura"):
         if (chart_target == "laboratorio"):
@@ -544,49 +542,6 @@ def mostrar_grafico_post(id, nome):
                             temp_data=result_means,
                             equipamentos=equipamentos,
                             intervalo_grafico=intervalo_grafico)
-
-
-def getIntervalMeans2(interval, arrayOfEpochs, epochBeginning, epochEnding):
-  #exceptions handling
-  if(interval > 7200):
-    print("Error: Interval bigger than 2h")
-    return [[]]
-  elif(len(arrayOfEpochs)<1):
-    print ("Error: entry array is null")
-    return [[]]
-
-  beginningOfInterval = epochBeginning
-  endOfInterval = epochEnding
-  sum = 0.0
-
-  meansArray = []
-  currentMeansArray = []
-  intervalIndex = 0
-  intervalLimit = interval
-
-  #adds index as first element always
-  currentMeansArray+= [intervalIndex]
-  for i in range(len(arrayOfEpochs)):
-    if(arrayOfEpochs[i][0]<beginningOfInterval+intervalLimit):
-      print("Adding {} to interval {}".format(arrayOfEpochs[i][1], intervalIndex))
-      currentMeansArray+=[arrayOfEpochs[i][1]]
-    else:
-      print("Surpassed current interval limit, adding array to index {}\n".format(intervalIndex))
-      meansArray+= [currentMeansArray]
-      #update variables
-      intervalIndex+=1
-      intervalLimit+=interval
-      currentMeansArray=[]
-      currentMeansArray+=[intervalIndex]
-      currentMeansArray+=[arrayOfEpochs[i][1]]
-
-
-  #if it leaves the for without even achieving the first interval, or if there is a remainder:
-  #add the last value, the remainder
-  meansArray+=[currentMeansArray]
-
-  #print (meansArray)
-  return meansArray
 
 
 #array of epochs has format = [[epoch1, value1], [epoch2, value2],...]
@@ -633,30 +588,6 @@ def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
 
     return meansArray
 
-
-
-def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs, epochBeginning, epochEnding):
-    arrayOfTempEpochs = []
-    arrayOfHumidEpochs = []
-
-    for i in range( len(arrayOfTempAndHumidEpochs)):
-        arrayOfTempEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][1]]]
-        arrayOfHumidEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][2]]]
-
-    print ("Array Temp: {}".format(arrayOfTempEpochs))
-    print ("Array Humid: {}".format(arrayOfHumidEpochs))
-    tempMeans = getIntervalMeans(interval, arrayOfTempEpochs, epochBeginning, epochEnding)
-    HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs, epochBeginning, epochEnding)
-
-    #will have a structure of [[interval1, tempMean1, humidMean1], [interval2, tempMean2, humidMean2], ...]
-    tempAndHumidMeans = []
-    #assuming they have the same number of intervals:
-    for i in range(len(tempMeans)):
-        #gets [intervalI, tempMeanI, humidMeanI]
-        tempAndHumidMeans +=[[tempMeans[i][0], tempMeans[i][1], HumidMeans[i][1]]]
-
-    return tempAndHumidMeans
-
 @app.route('/mostrar-relatorio/<id>/<nome>')
 def mostrar_relatorio(id, nome):
     if not autenticado():
@@ -675,42 +606,70 @@ def mostrar_relatorio_post(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
-    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    # dia = 1497668400
+    # dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
 
-    dateTomorrow = dia+24*60*60. -1.
-    args = [dia, dateTomorrow, id]
-    temp_data = controllers.log_usuario(*args)
-    presenceList = []
-    if(len(temp_data)>0):
-        presenceList = organizePresenceList(dia, temp_data)
+    date = request.form.get("daterange") or ''
+    dates = date.split('-');    
 
-        for i in presenceList:
-            i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
-            i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
+    start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
+    end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
 
-    intervalo_relatorio = request.form.get("intervalo_relatorio") or 60 #em min
+    # dateTomorrow = dia+24*60*60. -1.
+    # args = [start_date_epoch, end_date_epoch, id]
+    # temp_data = controllers.log_usuario(*args)
+    # presenceList = []
+    # if(len(temp_data)>0):
+    #     presenceList = organizePresenceList(dia, temp_data)
 
-    interval = int(intervalo_relatorio)*60
-    interval = 8000
+    #     for i in presenceList:
+    #         i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
+    #         i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
 
-    args = ["on", "on", dia, id]
-    chart_data = controllers.get_data_log(*args)
-    json.dumps(chart_data)
-    arrayOfEpochs = json.loads(chart_data)
-    result_means = []
-    if (len(arrayOfEpochs)>0):
-        result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
+    
+    # tabela para log de temperatura e umidade
+    args = [start_date_epoch, end_date_epoch, id]
+    lab_table = controllers.get_lab_log(*args)
+    json.dumps(lab_table)
+    lab_temp_umid = json.loads(lab_table)
+    print("lab temp e umid: ", lab_temp_umid)
 
-    return render_template('relatorio.html',
+    # tabela de log de temperatura para equipamentos
+    equipamentos = controllers.obter_equipamentos(id)  
+    equip_dict ={}    
+    for equipamento in equipamentos: 
+        args = ["temperatura", equipamento, start_date_epoch, end_date_epoch, id]
+        equip_table = controllers.get_equip_log(*args)
+        json.dumps(equip_table)
+        equip_temp_umid = json.loads(equip_table)  
+        equip_dict[equipamento] = equip_temp_umid
+    print (equip_dict)
+    # tabela para log de presença
+    args = [start_date_epoch, end_date_epoch, id]
+    log_presenca_lista = controllers.log_usuario(*args)
+    print ("log presenca: ", log_presenca_lista)
+
+    # tabela para usuários presentes
+    presentes_list = controllers.usuarios_presentes(id)
+    print ("presentes: ", presentes_list)    
+
+    page = render_template('relatorio.html',
                             lab_id=id,
                             lab_nome=nome,
                             autenticado=True,
                             pagina='mostrar_relatorio',
-                            log_presenca=presenceList,
-                            condicoes_ambiente=result_means)
+                            usuarios_presentes=presentes_list,
+                            eventos=log_presenca_lista,
+                            condicoes_ambiente_equip=equip_dict,
+                            condicoes_ambiente_lab=lab_temp_umid)
 
+    css = './issues_monitoring/static/css/table.css'
+    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/out.pdf', css=css)
+
+    # return send_file('reports/out.pdf', as_attachment = False)
+    # webbrowser.open_new_tab('./issues_monitoring/reports/out.pdf')
+
+    return page
 
 
 #presence: comes in the form of [[name, date, event], ...], event = IN/OUT

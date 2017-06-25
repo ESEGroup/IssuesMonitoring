@@ -32,6 +32,17 @@ def get_chart_data(chart_type, start_date, end_date, lab_id):
     # print("Data: {}".format(data))
     return data
 
+def get_environment_data(start_date, end_date, lab_id):
+    data = db.fetchall("""
+            SELECT data, temp, umid
+            FROM Log_Lab
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data ASC;""", (lab_id, start_date, end_date))
+    return data
+
+
 def get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id):
     data = []
     if (chart_type == "temperatura"):
