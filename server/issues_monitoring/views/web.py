@@ -336,7 +336,7 @@ def remover_equipamento(lab_id, lab_nome, id):
         return redirect(url_for('login'))
 
     controllers.remover_equipamento(id)
-    kwargs = {"c": "Laboratório removido com sucesso!",
+    kwargs = {"c": "Equipamento removido com sucesso!",
               "id": lab_id,
               "nome": lab_nome}
     return redirect(url_for('equipamentos_laboratorio', **kwargs))
@@ -801,7 +801,7 @@ def acao(id, nome):
     id_anomalia = request.form.get("id_anomalia") or ''
     user_id = session.get("id")
     descricao_acao = request.form.get("descricao") or ""
-    args = [id_anomalia, user_id, descricao_acao]
+    args = [id_anomalia, descricao_acao, user_id]
     if "" not in args:
         controllers.resolver_anomalia(*args)
         controllers.enviar_email_acao_realizada(id,
