@@ -111,7 +111,7 @@ def work():
     cursor.execute("""
     CREATE TABLE Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            slug CHAR(255) NOT NULL,
+            slug CHAR(255) UNIQUE NOT NULL,
             tipo_anomalia CHAR(255) NOT NULL,
             descricao_anomalia CHAR(255) NOT NULL);
     """)
@@ -131,7 +131,7 @@ def work():
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
             lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
-            id_anomalia INTEGER NOT NULL REFERENCES Anomalias(id),
+            slug_anomalia CHAR(255) NOT NULL REFERENCES Anomalias(slug),
             resolvido BOOLEAN NOT NULL);
     """)
 
