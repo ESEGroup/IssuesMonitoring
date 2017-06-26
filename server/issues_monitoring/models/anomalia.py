@@ -32,6 +32,7 @@ class Anomalia:
                               WHERE log.lab_id = ?
                                     AND log.resolvido = ?;""",
                               (lab_id, False))
+        print (data)
         return [Anomalia(*d) for d in data]
 
     def registrar_anomalia(lab_id, slug_anomalia, equip_id=None):
