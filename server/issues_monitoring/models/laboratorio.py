@@ -169,7 +169,6 @@ class Laboratorio:
             SELECT data
             FROM Log_Parser
             ORDER BY data DESC;""")
-        print ("DATA PARSER: {}".format(data))
         if data is not None:
             return data[0]
         return "-10"
@@ -202,12 +201,10 @@ class Laboratorio:
             WHERE lab_id = ?;""", (id,))
 
     def obter_todos_ids_equipamentos(id):
-        print ("obtendo equips")
         data = db.fetchall("SELECT equip_id FROM Equip WHERE lab_id=?",(id,))
 
         equipamentos = []
         for d in data:
             if d[0] not in equipamentos:
                 equipamentos.append(d[0])
-        print ("here: ", equipamentos)
         return equipamentos

@@ -14,7 +14,7 @@ class Config:
     debug = True
 
     issues_monitoring = URI("0.0.0.0", 8080)
-    imap_host = "imap.gmail.com"
+    imap_host = URI("imap.gmail.com", "587", protocol="")
     smtp_host = URI("smtp.gmail.com", "587", protocol="")
     email = "cos603.issuesmonitoring@gmail.com"
     email_password = ""
