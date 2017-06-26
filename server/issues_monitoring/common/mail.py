@@ -11,7 +11,7 @@ from email.utils import COMMASPACE, formatdate
 import smtplib
 
 def send_email(subject, message, emails):
-    # Writing the message    
+    # Writing the message
     _from = "Sistema ISSUES Monitoring <{}>".format(Config.email)
 
     msg = MIMEMultipart()
@@ -21,14 +21,14 @@ def send_email(subject, message, emails):
     msg['Subject'] = subject
     msg.attach(MIMEText(message, "plain", "utf-8"))
 
-    # Sending the mail  
+    # Sending the mail
     try:
         # print("Starting SMTP server...")
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP(Config.smtp_host.host, Config.smtp_host.port)
         server.ehlo()
         server.starttls()
         server.ehlo()
-        
+
         # print("Logging in...")
         server.login(Config.email, Config.email_password)
         # print("Sending emails...")

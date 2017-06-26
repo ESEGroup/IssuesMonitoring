@@ -1,4 +1,5 @@
 import bcrypt
+from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from .usuario import Usuario
 from . import db
 
@@ -50,18 +51,20 @@ class UsuarioSistema(Usuario):
 
     def autenticar(login, senha):
         args = db.fetchone("""
-            SELECT user_id, senha, admin
+            SELECT user_id, senha, admin, data_aprov
             FROM User_Sys
-            WHERE login = ?
-                  AND data_aprov IS NOT NULL;""", (login,))
+            WHERE login = ?;""", (login,))
 
-        if args is not None and len(args) == 3:
-            (_id, _hash, _admin) = args
+        if args is None:
+            raise InformacoesIncorretas
 
-            if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
-                return _id, _admin
+        (_id, _hash, _admin, data_aprov) = args
 
-        return None, False
+        if data_aprov is None:
+            raise NaoAutorizado
+
+        if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
+            return _id, _admin
 
     def existe(login, email):
         return db.fetchone("""

@@ -1,7 +1,18 @@
 /* CSS referente ao botao de opcao de laboratorio: */
 
 .lab-btn {
-    background: url(/static/img/scientist.png) no-repeat top;
-    background-size: 110px 145px; /*Tamanho da imagem do lab*/
-    background-position: 55% 15%; /*Centraliza a imagem do lab*/
+    margin-left: -20px;
+    background: url(/static/img/scientist.png) no-repeat 55% 15%/110px 145px;
 }
+
+
+/* CSS referente ao bota de excluir laboratorio (pequeno X): */
+
+.delete-btn {
+    position: relative;
+    left: 0.2%;
+    top: -96px;
+    width: 30px;
+    height: 30px;
+}
+

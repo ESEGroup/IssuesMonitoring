@@ -1,0 +1,32 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Solucionar Anomalia de {{anomalia.tipo}}</h3>
+        <h4>{{anomalia.descricao}}</h4>
+    </div>
+
+    <div class="neat-form" id="hidden-form">
+        <form method="POST" action="{{url_for('acao', id=lab_id, nome=lab_nome)}}">
+            <input type="hidden" name="tipo_anomalia" value="{{anomalia.tipo}}">
+            <input type="hidden" name="id_anomalia" value="{{anomalia.id}}">
+            <fieldset>
+                <legend><span class="number">1</span> Informações de Acesso</legend>
+                <input type="text" name="descricao" placeholder="Descrição da ação">
+            </fieldset>
+            <input type="submit" value="Resolver anomalia" />
+        </form>
+    </div>
+
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('anomalias', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+    </div>
+</div>
+{% endblock %}

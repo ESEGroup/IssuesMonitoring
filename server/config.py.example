@@ -14,12 +14,21 @@ class Config:
     debug = True
 
     issues_monitoring = URI("0.0.0.0", 8080)
-    email_host = URI("smtp.gmail.com", "587", protocol="")
+    imap_host = URI("imap.gmail.com", "587", protocol="")
+    smtp_host = URI("smtp.gmail.com", "587", protocol="")
     email = "cos603.issuesmonitoring@gmail.com"
     email_password = ""
 
-    # Provide the same token the client is using (not empty)
-    token_parser = ""
+    mydenox_email = "noreply@mydenox.com.br"
+
+    log_timestamp_format = "%Y-%m-%d %H:%M:%S"
+
+    # Empty to assume stderr (forces stderr during DEBUG)
+    log_file = ""
+
+    # In minutes
+    parser_default_delay = 5
+    parser_max_delay = 60
 
     session_duration = 60 * 30 # in seconds
 

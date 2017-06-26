@@ -14,7 +14,7 @@ Popen(["virtualenv",
 
 Popen([".env/bin/pip",
        "install",
-       "-r",
+       "-Ur",
        "requirements.txt"]).wait()
 
 if not isfile("config.py"):
@@ -29,13 +29,19 @@ with open(join(".env", "bin", "activate_this.py"), "r") as f:
 import bcrypt
 
 if not isfile("db/Issues.db"):
+    Popen(["rm",
+           "Issues.db"]).wait() 
     create_db()
     Popen(["mv",
            "Issues.db",
            "db/Issues.db"]).wait()
+    print("\nBanco de dados criado")
+
+print("\nDeseja criar um usuário de administrador? (Y/n)")
+if input().lower().strip() == "n":
+    exit()
 
 print("")
-print("Crie um usuário administrador")
 print("Usuário:")
 usuario = input()
 print("Senha:")

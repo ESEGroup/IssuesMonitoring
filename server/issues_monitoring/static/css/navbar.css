@@ -78,6 +78,10 @@ body {
     text-decoration: none;
 }
 
+.div-btn-below {
+    margin-top: -42px;
+}
+
 .btn-estilizado:hover {
     background-color: #e3e3e3;
     border-color: rgba(0,0,0,0.5);
@@ -141,6 +145,7 @@ body {
     padding: 10px 20px;
     margin: 0 auto;
     margin-top: -12px;
+    margin-bottom: 16px;
     line-height: 120%;
 }
 
@@ -150,12 +155,22 @@ body {
     color: #085c04;
 }
 
+.ui-state-warning {
+    border: 1px solid #aeb906;
+    background-color: #fbffb6;
+    color: #727e00;
+}
+
 .ui-icon {
     color: #085c04;
 }
 
 .ui-state-success .ui-icon {
-    background-image: url("/static/img/ui-icons_085c04_256x240.png") !important;
+    background-image: url("/static/jquery-ui/images/ui-icons_085c04_256x240.png") !important;
+}
+
+.ui-state-warning .ui-icon {
+    background-image: url("/static/jquery-ui/images/ui-icons_777620_256x240.png") !important;
 }
 
 .hidden {

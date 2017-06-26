@@ -7,16 +7,18 @@ def obter_intervalo_parser():
     return Laboratorio.obter_intervalo_parser()
 
 def registrar_presenca(dict_eventos):
-    eventos = []
-    for e in dict_eventos:
-        try:
-            eventos += [Evento(e['epoch'],
-                               e['event'],
-                               e['user_id'],
-                               e.get('lab_id'))]
-        except KeyError:
-            pass
-    UsuarioLab.registrar_presenca(eventos)
+    if len(dict_eventos) > 0:
+        eventos = []
+        for e in dict_eventos:
+            try:
+                eventos += [Evento(e['epoch'],
+                                   e['event'],
+                                   e['user_id'],
+                                   e.get('lab_id'))]
+            except KeyError:
+                pass
+        UsuarioLab.registrar_presenca(eventos)
+    return obter_intervalo_parser()
 
 def enviar_email_presenca_zerada(emails):
     msg_content = """

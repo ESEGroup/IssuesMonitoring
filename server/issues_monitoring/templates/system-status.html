@@ -3,14 +3,7 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="/static/css/log_presenca.css" />
-{% endblock %}
-
-{% block js %}
-<script src="/static/jquery-ui/jquery-ui.min.js"></script>
-<script src="/static/js/switch_view.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,17 +16,17 @@
     <table class="table-fill">
         <thead>
             <tr>
-                <th class="text-left">Componente</th>
-                <th class="text-left">Data da Última Atualização</th>
-                <th class="text-left">Status do Componente</th>
+                <th class="text-center">Componente</th>
+                <th class="text-center">Data da Última Atualização</th>
+                <th class="text-center">Status do Componente</th>
             </tr>
         </thead>
         <tbody class="table-hover">
             {% for componente in componentes %}
             <tr>
-                <td class="text-left">{{componente["nome_componente"]}}</td>
-                <td class="text-left">{{componente["ultima_atualizacao"]|data_segundos}}</td>
-                <td class="text-left">{{componente["status"]}}</td>
+                <td class="text-center">{{componente["nome_componente"]}}</td>
+                <td class="text-center">{{componente["ultima_atualizacao"]|data_segundos}}</td>
+                <td class="text-center">{{componente["status"]}}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -46,6 +39,10 @@
         </div>
     </div>
     {% endif %}
+
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+    </div>
 </div>
 </div>
 {% endblock %}

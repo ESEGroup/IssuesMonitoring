@@ -1,19 +1,22 @@
 {% extends 'menu.html' %}
-{% block title %}
-Erro do servidor (500)
-{% endblock %}
-
-{% block menu %}
-    {% if autenticado %}
-    <li><a href="{{url_for('gerenciar')}}">Gerenciar</a></li>
-    <li class="right"><a href="{{url_for('logout')}}">Sair</a></li>
-    {% else %}
-    <li><a href="{{url_for('login')}}">Login</a></li>
-    {% endif %}
-    <li><a href="{{url_for('cadastro')}}">Cadastrar Usuario Sistema</a></li>
-    <li><a href="{{url_for('cadastro_usuario_lab')}}">Cadastrar Usuario Laboratório</a></li>
-{% endblock %}
+{% block title %}Erro do servidor (500){% endblock %}
 
 {% block content %}
-<h2 class="center">Erro 500</h2>
+<script>
+function goBack() {
+    window.history.back()
+}
+</script>
+<div id='nav-bar'>
+    <div id='view1'>
+        <div class="page-title">
+            <h3>Erro 500</h3>
+            <h4>Devido a um erro interno, o servidor não conseguiu processar a página web.<br>Se o problema persistir após 5 minutos, contate um administrador.</h4>
+            <img src="/static/img/robot-error.gif" style="display:block; margin-left:auto; margin-right:auto; width:40% ">
+        </div>
+        <div class="div-botao-estilizado">
+            <button onClick="goBack()" style="cursor:pointer!important; margin-top:10px;" class="btn-estilizado btn-estilizado-blue">Voltar</button>
+        </div>
+    </div>
+</div>
 {% endblock %}

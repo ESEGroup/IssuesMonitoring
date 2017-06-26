@@ -56,6 +56,7 @@ tr {
   font-size:16px;
   font-weight:normal;
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+  text-align: center;
 }
  
 tr:hover td {
@@ -98,6 +99,7 @@ td {
   font-size:18px;
   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #C1C3D1;
+  text-align: center;
 }
 
 td:last-child {
@@ -185,4 +187,10 @@ input:checked + .check-slide:before {
 
 .check-slide.round:before {
   border-radius: 50%;
+}
+
+/* Delete image */
+.delete-table-opt {
+    width: 40px;
+    text-align: center;
 }

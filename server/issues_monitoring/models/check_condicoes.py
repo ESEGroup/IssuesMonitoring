@@ -11,37 +11,49 @@ import os.path
 from . import db
 import json
 
-def get_data_graphic(temperatura, umidade, dia, prox_dia, lab_id):
+def get_chart_data(chart_type, start_date, end_date, lab_id):
     data = []
-    print (temperatura, umidade, dia, prox_dia, lab_id)
-    if (temperatura == "on" and umidade=="on"):
-        print("Entrou Temp Umid")
-        data = db.fetchall("""
-            SELECT data, temp, umid
-            FROM Log_Lab
-            WHERE lab_id = ?
-            AND data > ?
-            AND data < ?
-            ORDER BY data;""", (lab_id, dia, prox_dia))
-    elif (temperatura == "on"):
-        print("Entrou Temp")
+    if (chart_type == "temperatura"):
         data = db.fetchall("""
             SELECT data, temp
             FROM Log_Lab
             WHERE lab_id = ?
             AND data > ?
             AND data < ?
-            ORDER BY data;""", (lab_id, dia, prox_dia))
-    elif (umidade == "on"):
-        print("Entrou Umid")
+            ORDER BY data ASC;""", (lab_id, start_date, end_date))
+    elif (chart_type == "umidade"):
         data = db.fetchall("""
             SELECT data, umid
             FROM Log_Lab
             WHERE lab_id = ?
             AND data > ?
             AND data < ?
-            ORDER BY data;""", (lab_id, dia, prox_dia))
-    print("Data: {}".format(data))
+            ORDER BY data ASC;""", (lab_id, start_date, end_date))
+    # print("Data: {}".format(data))
+    return data
+
+def get_environment_data(start_date, end_date, lab_id):
+    data = db.fetchall("""
+            SELECT data, temp, umid
+            FROM Log_Lab
+            WHERE lab_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data ASC;""", (lab_id, start_date, end_date))
+    return data
+
+
+def get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id):
+    data = []
+    if (chart_type == "temperatura"):
+        data = db.fetchall("""
+            SELECT data, temp
+            FROM Log_Equip
+            WHERE equip_id = ?
+            AND data > ?
+            AND data < ?
+            ORDER BY data ASC;""", (chart_target, start_date, end_date))
+    # print("Data: {}".format(data))
     return data
 
 def get_equip_ids(lab_id):
@@ -103,7 +115,6 @@ def check_for_abnormal_temperature(lab_id):
     temp_min=data[0]
     temp_max=data[1]
 
-
     data = db.fetchone("""
         SELECT temp
         FROM Log_Lab WHERE lab_id = ? ORDER BY data DESC; """, (lab_id,))
@@ -134,6 +145,7 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        Anomalia.registrar_anomalia(lab_id, "temp")
         return len(emails)
 
     #normal temperature
@@ -183,6 +195,7 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        Anomalia.registrar_anomalia(lab_id, "umid")
         return len(emails)
 
     #normal humidity
@@ -225,6 +238,7 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        Anomalia.registrar_anomalia(lab_id, "temp-equip")
         return 1
     else:
         return -1

@@ -32,7 +32,7 @@
 #define SERVER '4'
 #define MAX_CONNECTIONS 3
 
-#define MSG_BUFFER_MAX 128
+#define MSG_BUFFER_MAX 256
 
 struct WifiMessage{
 public:

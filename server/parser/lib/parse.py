@@ -1,4 +1,4 @@
-from lib.log import debug
+from .log import debug
 from re import search
 from datetime import datetime, timedelta
 

@@ -21,37 +21,37 @@
             <h3>Membros Presentes Neste Momento</h3>
             <h4>{{lab_nome}}</h4>
         </div>
-        
+
         {% if usuarios_presentes|len > 0 %}
         <table class="table-fill">
             <thead>
                 <tr>
-                    <th class="text-left">Nome</th>
-                    <th class="text-left">E-mail</th>
-                    <th class="text-left">Hora de Entrada</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">E-mail</th>
+                    <th class="text-center">Hora de Entrada</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
                 {% for usuario in usuarios_presentes %}
                 <tr>
-                    <td class="text-left" title="{{usuario.user_id}}">{{usuario.nome}}</td>
-                    <td class="text-left">{{usuario.email}}</td>
-                    <td class="text-left">{{usuario.data_entrada|hora_min}}</td>
+                    <td class="text-center" title="{{usuario.user_id}}">{{usuario.nome}}</td>
+                    <td class="text-center">{{usuario.email}}</td>
+                    <td class="text-center">{{usuario.data_entrada|data}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
         <div class="ui-widget msg">
-            <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
                 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-                <strong>Erro: </strong>Não há membros presentes neste momento.</p>
+                Não há membros presentes neste momento.</p>
             </div>
         </div>
         {% endif %}
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#log" class="btn-estilizado btn-estilizado-blue" id="switch-view">Ver Log de Presença</a>
+            <a href="#log" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Ver Log de Presença</a>
         </div>
 
         <div class="div-botao-estilizado">
@@ -69,32 +69,32 @@
         <table class="table-fill">
             <thead>
                 <tr>
-                    <th class="text-left">Nome</th>
-                    <th class="text-left">Evento</th>
-                    <th class="text-left">Data</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Evento</th>
+                    <th class="text-center">Data</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
                 {% for evento in eventos %}
                 <tr>
-                    <td class="text-left" title="{{evento.user_id}}">{{evento.nome_de_usuario}}</td>
-                    <td class="text-left">{{evento.evento|trans_evento}}</td>
-                    <td class="text-left">{{evento.epoch|data}}</td>
+                    <td class="text-center" title="{{evento.user_id}}">{{evento.nome_de_usuario}}</td>
+                    <td class="text-center">{{evento.evento|trans_evento}}</td>
+                    <td class="text-center">{{evento.epoch|data}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
         <div class="ui-widget msg">
-            <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
                 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-                <strong>Erro: </strong>Não há eventos registrados no sistema.</p>
+                Não há eventos registrados no sistema.</p>
             </div>
         </div>
         {% endif %}
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Ver Membros Presentes</a>
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back-reload">Ver Membros Presentes</a>
         </div>
 
         <div class="div-botao-estilizado">

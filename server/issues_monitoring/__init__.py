@@ -1,14 +1,18 @@
 from flask import Flask
 app = Flask(__name__)
 
+try:
+    from server import Config, DB
+    from ..parser.run import work as run_parser
+except:
+    from os import getcwd
+    from config import Config
+    from db import DB
+    from parser.run import work as run_parser
+
 from threading import Thread
 from os import getenv
 from time import sleep
-try:
-    from server import Config, DB
-except:
-    from config import Config
-    from db import DB
 from .controllers import reset_presencas_meia_noite, checar_condicoes_no_intervalo
 
 class NoTokenParser(KeyboardInterrupt):
@@ -20,22 +24,19 @@ class NoEmailPassword(KeyboardInterrupt):
 class NoSecretKey(KeyboardInterrupt):
     pass
 
-if Config.token_parser == "":
-    print("Please change the 'token_parser' at `config.py` (remember to update at the parser client too)")
-    raise NoTokenParser
-elif Config.email_password == "":
-    print("Please change the 'email_password' at `config.py`")
-    raise NoEmailPassword
+if Config.email_password == "":
+    raise NoEmailPassword("Please change the 'email_password' at `config.py`")
 elif not Config.debug and getenv('SECRET_KEY') is None:
-    print("Please set the 'SECRET_KEY' environment "
-          "variable while in production")
-    print("The secret key signs the cookies allowing user "
-          "authentication, leaving it empty means anyone can get "
-          "authenticated as a user or admin")
-    print('    export SECRET_KEY="[secret_key]";')
-    raise NoSecretKey
+    raise NoSecretKey(
+            "\n\nPlease set the 'SECRET_KEY' environment "
+            "variable while in production\n"
+            "The secret key signs the cookies allowing user "
+            "authentication, leaving it empty means anyone can get "
+            "authenticated as a user or admin\n"
+            "Run this command before running the script again, "
+            "filling with the a proper randomly generated key:\n"
+            "    export SECRET_KEY=\"[secret_key]\";\n\n")
 
-from .common.utils import random_string
 if Config.debug:
     app.config['SECRET_KEY'] = 'cmsodna oskawa j0iwjdeoj20n'
 else:
@@ -53,8 +54,20 @@ def no_cache_dynamic(response):
         response.headers['Pragma'] = 'no-cache'
     return response
 
-# Reset presenças as 00
-thread = Thread(target=reset_presencas_meia_noite)
-thread.daemon = True
-thread.start()
+def run_threads():
+    # Reset presenças as 00
+    thread = Thread(target=reset_presencas_meia_noite)
+    thread.daemon = True
+    thread.start()
 
+    # Thread do parser
+    thread_parser = Thread(target=run_parser)
+    thread_parser.daemon = True
+    thread_parser.start()
+
+if Config.debug:
+    @app.before_first_request
+    def run():
+        run_threads()
+else:
+    run_threads()

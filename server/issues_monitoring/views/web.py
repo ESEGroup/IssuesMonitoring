@@ -1,11 +1,14 @@
 from flask import render_template, request, redirect, url_for, session
+from flask import send_file, current_app as app
 from datetime import datetime
 import time
 from datetime import datetime, timedelta
+from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
-from ..models import Laboratorio
+from ..models import Laboratorio, Equipamento
 import json
+import pdfkit
 
 @app.route('/')
 def root():
@@ -34,18 +37,20 @@ def login_post():
     usuario = request.form.get('login') or ''
     senha = request.form.get('senha') or ''
     if '' in [usuario, senha]:
-        return redirect(url_for('login'))
+        kwargs = {"e": "Por favor preencha todos os campos."}
+        return redirect(url_for('login', **kwargs))
 
-    (session['id'],
-     session['admin']) = controllers.autenticar(usuario, senha)
-
-    if session['id'] is not None:
+    try:
+        (session['id'],
+         session['admin']) = controllers.autenticar(usuario, senha)
         now = int(datetime.now().timestamp())
         session['expiration'] = now + Config.session_duration
         kwargs = {}
-    else:
-        session.clear()
-        kwargs = {"e": "Usuário ou senha incorretos ou usuário não autorizado."}
+    except NaoAutorizado:
+        kwargs = {"e": "Usuário não autorizado."}
+    except InformacoesIncorretas:
+        kwargs = {"e": "Usuário ou senha incorretos."}
+
     return redirect(url_for('login', **kwargs))
 
 @app.route('/selecionar-laboratorio')
@@ -83,6 +88,16 @@ def laboratorio(id, nome=""):
                            admin=admin_autenticado(),
                            pagina='gerenciar')
 
+@app.route('/remover-laboratorio/<id>/', methods=["POST"])
+def remover_laboratorio(id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
+
+    controllers.remover_laboratorio(id)
+    kwargs = {"c" : "Laboratório removido com sucesso!"}
+    return redirect(url_for('laboratorios', **kwargs))
+
 @app.route('/editar-laboratorio/<id>/')
 @app.route('/editar-laboratorio/<id>/<nome>')
 def editar_laboratorio(id, nome=""):
@@ -117,7 +132,7 @@ def editar_laboratorio_post(id, nome=""):
         if (endereco is ' '):
             args[2] = ''
         controllers.atualizar_informacoes_lab(*args)
-        kwargs = {"c" : "Informações cadastrais atualizadas com sucesso."}
+        kwargs = {"c" : "Dados do laboratório atualizados com sucesso."}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
         kwargs = {"e" : "Por favor, preencha todos os campos."}
@@ -231,6 +246,31 @@ def cadastro_post():
     kwargs = {"c": "Usuário enviado para autorização!"}
     return redirect(url_for('login', **kwargs))
 
+@app.route('/remover-usuario/<id>/', methods=["POST"])
+def remover_usuario_sistema(id):
+    if not admin_autenticado():
+        kwargs = {"e" : "Por favor, faça login como administrador."}
+        return redirect(url_for('login'))
+
+    if id == session["id"]:
+        kwargs = {"e" : "Você não pode se remover!"}
+    else:
+        controllers.remover_usuario_sistema(id)
+        kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('aprovar_usuario', **kwargs))
+
+@app.route('/remover-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
+def remover_usuario_lab(lab_id, lab_nome, id):
+    if not admin_autenticado():
+        kwargs = {"e" : "Por favor, faça login como administrador."}
+        return redirect(url_for('login'))
+
+    controllers.remover_usuario_lab(lab_id, id)
+    kwargs = {"c" : "Usuário removido com sucesso!",
+              "id": lab_id,
+              "nome": lab_nome}
+    return redirect(url_for('usuarios_laboratorio', **kwargs))
+
 @app.route('/aprovar-usuario-lab/<id>', methods=["POST"])
 def aprovar_usuario_lab(id):
     if not admin_autenticado():
@@ -251,7 +291,7 @@ def adicionar_usuario_lab(id, nome):
     user_id = request.form.get('id-user') or ''
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
-        kwargs = {'c': "Usuário adicionado ao laboratório com sucesso."}
+        kwargs = {'c': "Usuário associado ao laboratório com sucesso."}
     else:
         kwargs = {'e': "Por favor, escolha um usuário."}
 
@@ -285,33 +325,51 @@ def cadastro_usuario_lab_post():
     if not success:
         kwargs = {"e": "Id de usuário já existente."}
     else:
-        kwargs = {"c" : "Usuário cadastrado com sucesso."}
+        kwargs = {"c": "Usuário cadastrado com sucesso."}
 
-    if autenticado():
-        url = 'laboratorio'
-        kwargs['id'] = lab_id
-    else:
-        url = 'cadastro_usuario_lab'
-    return redirect(url_for(url, **kwargs))
+    return redirect(url_for('cadastro_usuario_lab', **kwargs))
 
-@app.route('/cadastro-equipamento', methods=["POST"])
-def cadastro_equipamento():
+@app.route('/remover-equipamento/<lab_id>/<lab_nome>/<id>/', methods=["POST"])
+def remover_equipamento(lab_id, lab_nome, id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
+
+    controllers.remover_equipamento(id)
+    kwargs = {"c": "Equipamento removido com sucesso!",
+              "id": lab_id,
+              "nome": lab_nome}
+    return redirect(url_for('equipamentos_laboratorio', **kwargs))
+
+@app.route('/cadastro-equipamento/<id>/<nome>', methods=["POST"])
+def cadastro_equipamento(id, nome):
     if not admin_autenticado():
         return redirect(url_for('laboratorios'))
 
-    lab_id = request.form.get('id-lab')
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
-    args = [lab_id, temp_min, temp_max, MAC]
+
+    args = [id, temp_min, temp_max, MAC]
     if "" not in args:
         controllers.cadastro_equipamento(*args)
-
-    kwargs = {"c" : "Equipamento cadastrado com sucesso."}
-    return redirect(url_for('laboratorios', **kwargs))
+        kwargs = {"c" : "Equipamento cadastrado com sucesso."}
+        kwargs['id']   = id
+        kwargs['nome'] = Laboratorio.obter(id).nome
+        return redirect(url_for('equipamentos_laboratorio', **kwargs))
+    else:
+        kwargs = {"e": "Por favor preencha todos os campos",
+                  "id": id,
+                  "nome": nome,
+                  "_anchor": "cadastrar"}
+        return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
 def log_eventos_hoje(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
     _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     return redirect(url_for('log_eventos',
                             id=id,
@@ -351,7 +409,7 @@ def aprovar_usuario():
     usuarios = controllers.obter_usuarios_sistema()
     return render_template('aprovar_usuario_sistema.html',
                            pagina='aprovar_usuario',
-                           autenticado=autenticado(),
+                           autenticado=True,
                            admin=True,
                            usuarios=usuarios)
 
@@ -388,22 +446,31 @@ def equipamentos_laboratorio(id, nome=""):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
+    ids_equipamentos = controllers.obter_id_equipamentos(id)
+
+    equipamentos = []
+
+    for equip_id in ids_equipamentos:
+        equipamentos += [Equipamento.obter(equip_id)]
+
     return render_template('lista_equipamentos.html',
                            autenticado=autenticado(),
                            admin   = admin_autenticado(),
                            lab_id  = id,
                            lab_nome= nome,
+                           equipamentos=equipamentos,
                            pagina  = "equipamentos_laboratorio")
 
-@app.route('/system-status')
-def system_status():
+@app.route('/status-sistema/<id>/<nome>')
+def system_status(id, nome):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
     # pegar as infos do banco
+    lab_id = id
     timestamp_parser = int(controllers.ultima_atualizacao_parser())
-    tempos_arduinos  = controllers.ultima_atualizacao_arduino()
+    tempos_arduinos  = controllers.ultima_atualizacao_arduino(lab_id)
     agora = datetime.today()
     status_componente = "OK"
     dados = []
@@ -417,20 +484,22 @@ def system_status():
                "ultima_atualizacao" : timestamp_parser,
                "status"             : status_componente}]
 
-    for lab_id in tempos_arduinos:
+    if tempos_arduinos is not None:
         status_componente = "OK"
-        if ((datetime.fromtimestamp(int(tempos_arduinos[lab_id]))) <
-            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id))))):
+        if ((datetime.fromtimestamp(int(tempos_arduinos)) <
+            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(id)))))):
             status_componente = "Fora do Ar"
 
-        dados += [{"nome_componente"    : "Arduino - Lab " + str(lab_id),
-                   "ultima_atualizacao" : int(tempos_arduinos[lab_id]),
+        dados += [{"nome_componente"    : "Arduino",
+                   "ultima_atualizacao" : int(tempos_arduinos),
                    "status"             : status_componente}]
 
     return render_template('system-status.html',
-                            componentes = dados,
-                            pagina = 'system-status',
-                            autenticado=autenticado())
+                           lab_id = lab_id,
+                           lab_nome = nome,
+                           componentes = dados,
+                           pagina = 'system-status',
+                           autenticado=autenticado())
 
 @app.route('/robots.txt')
 def robots_txt():
@@ -443,27 +512,55 @@ def robots_txt():
 #                             lab_id=id,
 #                             pagina='grafico')
 
-@app.route('/mostrar-grafico/<id>/')
-def mostrar_grafico(id):
+@app.route('/mostrar-grafico/<id>/<nome>')
+def mostrar_grafico(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    equipamentos = controllers.obter_id_equipamentos(id)
+
     return render_template('grafico.html',
                             lab_id=id,
+                            lab_nome=nome,
+                            autenticado=True,
+                            equipamentos=equipamentos,
                             pagina='mostrar_grafico')
 
-@app.route('/mostrar-grafico/<id>/', methods=["POST"])
-def mostrar_grafico_post(id):
-    temperatura = request.form.get("temperatura") or ''
-    umidade = request.form.get("umidade") or ''
+@app.route('/mostrar-grafico/<id>/<nome>', methods=["POST"])
+def mostrar_grafico_post(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    chart_type = request.form.get("chart_type") or ''
+    chart_target = request.form.get("equipamento") or 'laboratorio'
+    date = request.form.get("daterange") or ''
+    dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
-    dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
-    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    # dia = 1497668400
-    cols = [0, 0]
+
+    start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
+    end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
+
+    # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
 
     interval = int(intervalo_grafico)*60
-    # interval = 8000
-    args = [temperatura, umidade, dia, id]
-    print (args)
-    temp_data = controllers.get_data_log(*args)
+
+    args = [id]
+    equipamentos = controllers.obter_id_equipamentos(*args)
+
+    if (chart_type == "temperatura"):
+        if (chart_target == "laboratorio"):
+            print("no grafico do lab")
+            args = [chart_type, start_date_epoch, end_date_epoch, id]
+            temp_data = controllers.get_data_log(*args)
+        else:
+            args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
+            temp_data = controllers.get_equip_log(*args)
+    elif (chart_type == "umidade"):
+        args = [chart_type, start_date_epoch, end_date_epoch, id]
+        temp_data = controllers.get_data_log(*args)
+
     json.dumps(temp_data)
     arrayOfEpochs = json.loads(temp_data)
 
@@ -472,166 +569,155 @@ def mostrar_grafico_post(id):
         kwargs = {"error_message": "Não existem dados para o período selecionado. Por favor, selecione outro período"}
         return render_template('grafico.html',
                                lab_id=id,
+                               lab_nome=nome,
+                               autenticado=True,
+                               equipamentos=equipamentos,
                                pagina='mostrar_grafico',
                                **kwargs)
 
     print("Array of Epochs: {}".format(arrayOfEpochs))
-    if (temperatura == "on"):
-        cols[0] = 1
-
-    if (umidade == "on"):
-        cols[1] = 1
 
     result_means = []
 
-    if (temperatura == "on" and umidade == "on"):
-        result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
-    elif (temperatura == "on"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs)
-    elif (umidade == "on"):
-        result_means = getIntervalMeans(interval, arrayOfEpochs)
+    result_means = getIntervalMeans(interval, arrayOfEpochs, start_date_epoch, end_date_epoch)
 
+    print("result means: ", result_means)
     return render_template('grafico.html',
-                            lab_id=id,
                             pagina='mostrar_grafico',
+                            autenticado=True,
+                            lab_id=id,
+                            lab_nome=nome,
                             temp_data=result_means,
-                            cols=cols,
+                            equipamentos=equipamentos,
                             intervalo_grafico=intervalo_grafico)
 
 
-def getIntervalMeans(interval, arrayOfEpochs):
-    temp = arrayOfEpochs[0][0]
-    for i in range(len(arrayOfEpochs)):
-        arrayOfEpochs[i][0] -= temp
+#array of epochs has format = [[epoch1, value1], [epoch2, value2],...]
+def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
+    #exceptions handling
+    if(interval > 7200):
+      print("Error: Interval bigger than 2h")
+      return [[]]
+    elif(len(arrayOfEpochs)<1):
+      print ("Error: entry array is null")
+      return [[]]
 
-    if(len(arrayOfEpochs)<1):
-        return #invalid entry
+    beginningOfInterval = epochBeginning
+    endOfInterval = epochEnding
+    sum = 0.0
 
-    numberOfIntervals = int((86400)/interval)
-    print("Number of intervals is: %i" %numberOfIntervals)
+    meansArray = []
+    numberOfValuesInInterval = 0
     intervalIndex = 0
-    #will save the interval means like [[interval1, mean1], [interval2, mean2],...]
-    intervalMeans = []
-
-    #do the first exception(00:00), gets means from 00:00 till interval/2
-    mean = 0.0
-    counter = 0
-    numberOfSamples = 0
-    currentEpoch = 0
-    while(currentEpoch < interval/2):
-        currentEpoch = float(arrayOfEpochs[counter][0])
-        print ("Current epoch = %f" %currentEpoch)
-        if(currentEpoch<interval/2):
-            print("Added to first mean")
-            #Then save this value on the current mean calculation
-            mean+= arrayOfEpochs[counter][1]
-            counter = counter + 1
-            numberOfSamples +=1
-        #repeats until currentEpoch gets an epoch that surpasses interval/2
-    if (numberOfSamples>0):
-        mean = mean/numberOfSamples
-        intervalMeans += [[intervalIndex, mean]]
+    intervalLimit = interval
+    minimumValue = arrayOfEpochs[0][1]
+    maximumValue = arrayOfEpochs[0][1]
+    for i in range(len(arrayOfEpochs)):
+      if(arrayOfEpochs[i][0]<beginningOfInterval+intervalLimit):
+        print("Adding %f to current sum", arrayOfEpochs[i][1])
+        sum+=arrayOfEpochs[i][1]
+        minimumValue = min(minimumValue, arrayOfEpochs[i][1])
+        maximumValue = max(maximumValue, arrayOfEpochs[i][1])
+        numberOfValuesInInterval+=1
+      else:
+        #surpassed last interval limit, move onward to next limit
+        mean = sum/numberOfValuesInInterval
+        print("Surpassed current interval limit, adding %f to index %i\n", mean, intervalIndex)
+        meansArray+=[[intervalIndex, mean, minimumValue, maximumValue]]
+        sum=arrayOfEpochs[i][1]
+        minimumValue = arrayOfEpochs[i][1]
+        maximumValue = arrayOfEpochs[i][1]
+        numberOfValuesInInterval=1
         intervalIndex+=1
-    #now for the rest of the intervals(except the last one)
-    for i in range (intervalIndex, numberOfIntervals):
-        mean = 0.0
-        numberOfSamples = 0.
-        while(currentEpoch < i*interval + interval/2 and counter < len(arrayOfEpochs)):
-            print ("Current epoch = %f" %currentEpoch)
-            currentEpoch = float(arrayOfEpochs[counter][0])
-            if(currentEpoch<i*interval + interval/2):
-                print ("Added to mean %i" %i)
-                #Then save this value on the current mean calculation
-                mean+= arrayOfEpochs[counter][1]
-                counter = counter + 1
-                numberOfSamples +=1.
-        if (numberOfSamples>0):
-            mean = mean/numberOfSamples
-            intervalMeans += [[intervalIndex, mean]]
-            intervalIndex+=1
+        intervalLimit+=interval
+    #if it leaves the for without even achieving the first interval, or if there is a remainder:
+    #add the last value, the remainder
+    meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
 
-    i+=1
-    mean = 0.0
-    numberOfSamples = 0
-    #now for the final one, the right extreme
-    #while it doesn't overflow to the following day...
-    while(currentEpoch < interval*numberOfIntervals and counter < len(arrayOfEpochs)):
-        currentEpoch = float(arrayOfEpochs[counter][0])
-        print ("Current epoch = %f" %currentEpoch)
-        if(currentEpoch < 86400):
-            print ("Added to mean %i" %i)
-            mean+= arrayOfEpochs[counter][1]
-            counter = counter + 1
-            numberOfSamples +=1
-        #repeats until currentEpoch gets an epoch that surpasses the day's seconds limit
-    if (numberOfSamples>0):
-        mean = mean/numberOfSamples
-        intervalMeans += [[intervalIndex, mean]]
-    return intervalMeans
+    return meansArray
 
-def getTemperatureAndHumidityMeans(interval, arrayOfTempAndHumidEpochs):
-    arrayOfTempEpochs = []
-    arrayOfHumidEpochs = []
-
-    for i in range( len(arrayOfTempAndHumidEpochs)):
-        arrayOfTempEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][1]]]
-        arrayOfHumidEpochs+= [[arrayOfTempAndHumidEpochs[i][0],arrayOfTempAndHumidEpochs[i][2]]]
-
-    print ("Array Temp: {}".format(arrayOfTempEpochs))
-    print ("Array Humid: {}".format(arrayOfHumidEpochs))
-    tempMeans = getIntervalMeans(interval, arrayOfTempEpochs)
-    HumidMeans = getIntervalMeans(interval, arrayOfHumidEpochs)
-
-    #will have a structure of [[interval1, tempMean1, humidMean1], [interval2, tempMean2, humidMean2], ...]
-    tempAndHumidMeans = []
-    #assuming they have the same number of intervals:
-    for i in range(len(tempMeans)):
-        #gets [intervalI, tempMeanI, humidMeanI]
-        tempAndHumidMeans +=[[tempMeans[i][0], tempMeans[i][1], HumidMeans[i][1]]]
-
-    return tempAndHumidMeans
-
-@app.route('/mostrar-relatorio/<id>/')
-def mostrar_relatorio(id):
-    return render_template('relatorio.html',
-                            lab_id=id)
-
-@app.route('/mostrar-relatorio/<id>/', methods=["POST"])
-def mostrar_relatorio_post(id):
-    dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
-    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-    # dia = 1497668400
-
-    dateTomorrow = dia+24*60*60. -1.
-    args = [dia, dateTomorrow, id]
-    temp_data = controllers.log_usuario(*args)
-    presenceList = []
-    if(len(temp_data)>0):
-        presenceList = organizePresenceList(dia, temp_data)
-
-        for i in presenceList:
-            i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
-            i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
-
-    intervalo_relatorio = request.form.get("intervalo_relatorio") or 60 #em min
-
-    interval = int(intervalo_relatorio)*60
-    interval = 8000
-
-    args = ["on", "on", dia, id]
-    chart_data = controllers.get_data_log(*args)
-    json.dumps(chart_data)
-    arrayOfEpochs = json.loads(chart_data)
-    result_means = []
-    if (len(arrayOfEpochs)>0):
-        result_means = getTemperatureAndHumidityMeans(interval, arrayOfEpochs)
+@app.route('/mostrar-relatorio/<id>/<nome>')
+def mostrar_relatorio(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
 
     return render_template('relatorio.html',
+                            pagina="mostrar_relatorio",
+                            autenticado=True,
                             lab_id=id,
-                            pagina='mostrar_relatorio',
-                            log_presenca=presenceList,
-                            condicoes_ambiente=result_means)
+                            lab_nome=nome)
 
+@app.route('/mostrar-relatorio/<id>/<nome>', methods=["POST"])
+def mostrar_relatorio_post(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    # dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
+
+    date = request.form.get("daterange") or ''
+    dates = date.split('-');
+
+    start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
+    end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
+
+    # dateTomorrow = dia+24*60*60. -1.
+    # args = [start_date_epoch, end_date_epoch, id]
+    # temp_data = controllers.log_usuario(*args)
+    # presenceList = []
+    # if(len(temp_data)>0):
+    #     presenceList = organizePresenceList(dia, temp_data)
+
+    #     for i in presenceList:
+    #         i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
+    #         i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
+
+
+    # tabela para log de temperatura e umidade
+    args = [start_date_epoch, end_date_epoch, id]
+    lab_table = controllers.get_lab_log(*args)
+    json.dumps(lab_table)
+    lab_temp_umid = json.loads(lab_table)
+    print("lab temp e umid: ", lab_temp_umid)
+
+    # tabela de log de temperatura para equipamentos
+    equipamentos = controllers.obter_id_equipamentos(id)
+    equip_dict ={}
+    for equipamento in equipamentos:
+        args = ["temperatura", equipamento, start_date_epoch, end_date_epoch, id]
+        equip_table = controllers.get_equip_log(*args)
+        json.dumps(equip_table)
+        equip_temp_umid = json.loads(equip_table)
+        equip_dict[equipamento] = equip_temp_umid
+    print (equip_dict)
+    # tabela para log de presença
+    args = [start_date_epoch, end_date_epoch, id]
+    log_presenca_lista = controllers.log_usuario(*args)
+    print ("log presenca: ", log_presenca_lista)
+
+    # tabela para usuários presentes
+    presentes_list = controllers.usuarios_presentes(id)
+    print ("presentes: ", presentes_list)
+
+    page = render_template('relatorio.html',
+                            lab_id=id,
+                            lab_nome=nome,
+                            autenticado=True,
+                            pagina='mostrar_relatorio',
+                            usuarios_presentes=presentes_list,
+                            eventos=log_presenca_lista,
+                            condicoes_ambiente_equip=equip_dict,
+                            condicoes_ambiente_lab=lab_temp_umid)
+
+    css = './issues_monitoring/static/css/table.css'
+    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/out.pdf', css=css)
+
+    # return send_file('reports/out.pdf', as_attachment = False)
+    # webbrowser.open_new_tab('./issues_monitoring/reports/out.pdf')
+
+    return page
 
 
 #presence: comes in the form of [[name, date, event], ...], event = IN/OUT
@@ -676,3 +762,53 @@ def organizePresenceList(currentDayEpoch, presence):
         presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
 
     return presenceList
+
+@app.route('/anomalias/<id>/<nome>')
+def anomalias(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalias = controllers.obter_anomalias(id)
+
+    return render_template('anomalias.html',
+                            anomalias=anomalias,
+                            pagina='anomalias',
+                            autenticado=True,
+                            lab_id=id,
+                            lab_nome=nome)
+
+@app.route('/solucionar-anomalia/<lab_id>/<lab_nome>/<id>')
+def solucionar_anomalia(lab_id, lab_nome, id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalia = controllers.obter_anomalia(id)
+    return render_template('solucionar_anomalia.html',
+                           lab_id=lab_id,
+                           lab_nome=lab_nome,
+                           autenticado=True,
+                           anomalia=anomalia)
+
+@app.route('/acao/<id>/<nome>', methods=["POST"])
+def acao(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    tipo_anomalia = request.form.get("tipo_anomalia") or ''
+    id_anomalia = request.form.get("id_anomalia") or ''
+    user_id = session.get("id")
+    descricao_acao = request.form.get("descricao") or ""
+    args = [id_anomalia, descricao_acao, user_id]
+    if "" not in args:
+        controllers.resolver_anomalia(*args)
+        controllers.enviar_email_acao_realizada(id,
+                                                descricao_acao,
+                                                tipo_anomalia,
+                                                user_id)
+
+    return redirect(url_for('anomalias',
+                            id=id,
+                            nome=nome))

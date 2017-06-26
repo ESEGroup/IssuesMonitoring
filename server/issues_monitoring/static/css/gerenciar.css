@@ -7,7 +7,11 @@
 	text-align: center;
 }
 
-.lab-btn { 
+.lab-container > div {
+    padding-bottom: 20px;
+}
+
+.lab-btn {
 	display: inline-block;
 	color: #666;
 	background-color: #eee;
@@ -20,9 +24,9 @@
 	-webkit-border-radius: 5px;
 	border: 1px solid rgba(0,0,0,0.3);
 	border-bottom-width: 4px;
-    width: 130px;
-    text-decoration: none; 
-    margin: 0 10px; 
+    width: 140px;
+    text-decoration: none;
+    margin: 0 10px;
 }
 
 .lab-btn:hover {
@@ -36,7 +40,7 @@
 }
 
 .lab-txt {
-    position: relative; 
+    position: relative;
     bottom: -80px;
     word-wrap: break-word;
 }
@@ -48,6 +52,7 @@
 	border-color: rgba(0,0,0,0.3);
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	color: #FFF;
+    height: 70px;
 }
 
 .btn-blue:hover {
@@ -67,6 +72,6 @@
     text-align : center;
     margin-top : 30px;
     letter-spacing: 1px;
-	font-size: 40px;
+	font-size: 38px;
     text-shadow: 0 0 0.05em #87F, 0 0 0.03em #87F, 0 0 0.03em #87F;
 }

@@ -12,6 +12,7 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
+<script src="/static/js/ajax.js"></script>
 <script src="/static/js/labs.js"></script>
 {% endblock %}
 
@@ -24,7 +25,14 @@
         </div>
         <div class="lab-container">
             {% for i, lab in laboratorios|enumerate %}
-            <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}"><span class="lab-txt">{{lab.nome}}</span></a>
+            {% if admin %}
+            <input data-url="{{url_for('remover_laboratorio', id=lab.id)}}" 
+                   data-lab-nome="{{lab.nome}}" type="image" src="/static/img/delete.png"
+                   alt="Submit" class="delete-btn">
+            {% endif %}
+            <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}">
+                <span class="lab-txt">{{lab.nome}}</span>
+            </a>
             {% if (i+1) % 3 == 0 %}<p></p>{% endif %}
             {% endfor %}
         </div>
@@ -32,49 +40,58 @@
             <a href="#cadastrar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Cadastrar Novo Laboratório</a>
         </div>
     </div>
+    
+    <div id="view2" style="display:none">
+    
+        <div class="page-title">
+            <h3>Cadastrar Laboratório</h3>
+        </div>
 
-    <div class="neat-form" anchor="cadastrar" id="view2" style="display:none">
-        <form method="POST" action="{{url_for('cadastro_lab')}}">
-            <fieldset>
-                <legend><span class="number">1</span> Informações do Laboratório</legend>
-                <input type="text" name="nome" placeholder="Nome do Laboratório">
-                <textarea type="email" name="endereco" placeholder="Endereço (opcional)"></textarea>     
-            </fieldset>
-            <fieldset>
-                <legend><span class="number">2</span> Intervalos de Coleta</legend>
-                <div class="legenda-cadastro">Presença no Laboratório (em minutos):</div>
-                <div class="range-slider">
-                    <input class="range-slider__range" name="intervalo-parser" type="range" value="3" min="0.5" max="20" step="0.5">
-                    <span class="range-slider__value">0</span>
-                </div>
-                <div class="legenda-cadastro">Condições dos Equipamentos (em minutos):</div>
-                <div class="range-slider">
-                    <input class="range-slider__range" name="intervalo-arduino" type="range" value="3" min="0.5" max="20" step="0.5">
-                    <span class="range-slider__value">0</span>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend><span class="number">3</span> Zona de Conforto</legend>
-                <div class="legenda-cadastro">Temperatura do Laboratório:</div>
-                <div class="div-double-slider">
-                    <div id="slider-temp" class="double-slider"></div>
-                    <input type="hidden" name="temp-min" id="temp-min" value="0">
-                    <input type="hidden" name="temp-max" id="temp-max" value="0">
-                    <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
-                </div>
-                <div class="legenda-cadastro">Umidade do Laboratório:</div>
-                <div class="div-double-slider">
-                    <div id="slider-umidade" class="double-slider"></div>
-                    <input type="hidden" name="umid-min" id="umid-min" value="0">
-                    <input type="hidden" name="umid-max" id="umid-max" value="0">
-                    <span class="double-slider-value"><input type="url" id="umidade-lab" class="slider-bounds-lab" readonly></span>
-                </div>
-            </fieldset>
-            <input type="submit" value="Cadastrar Laboratório" />
-        </form>
+        <div class="neat-form" anchor="cadastrar">
+            <form method="POST" action="{{url_for('cadastro_lab')}}">
+                <fieldset>
+                    <legend><span class="number">1</span> Informações do Laboratório</legend>
+                    <input type="text" name="nome" placeholder="Nome do Laboratório">
+                    <textarea type="email" name="endereco" placeholder="Endereço (opcional)"></textarea>     
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">2</span> Intervalos de Coleta</legend>
+                    <div class="legenda-cadastro">Presença no Laboratório (em minutos):</div>
+                    <div class="range-slider">
+                        <input class="range-slider__range" name="intervalo-parser" type="range" value="3" min="0.5" max="20" step="0.5">
+                        <span class="range-slider__value">0</span>
+                    </div>
+                    <div class="legenda-cadastro">Condições dos Equipamentos (em minutos):</div>
+                    <div class="range-slider">
+                        <input class="range-slider__range" name="intervalo-arduino" type="range" value="3" min="0.5" max="20" step="0.5">
+                        <span class="range-slider__value">0</span>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">3</span> Zona de Conforto</legend>
+                    <div class="legenda-cadastro">Temperatura do Laboratório:</div>
+                    <div class="div-double-slider">
+                        <div id="slider-temp" class="double-slider"></div>
+                        <input type="hidden" name="temp-min" id="temp-min" value="0">
+                        <input type="hidden" name="temp-max" id="temp-max" value="0">
+                        <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                    </div>
+                    <div class="legenda-cadastro">Umidade do Laboratório:</div>
+                    <div class="div-double-slider">
+                        <div id="slider-umidade" class="double-slider"></div>
+                        <input type="hidden" name="umid-min" id="umid-min" value="0">
+                        <input type="hidden" name="umid-max" id="umid-max" value="0">
+                        <span class="double-slider-value"><input type="url" id="umidade-lab" class="slider-bounds-lab" readonly></span>
+                    </div>
+                </fieldset>
+                <input type="submit" value="Cadastrar Laboratório" />
+            </form>
+        </div>
+        
         <div class="div-botao-estilizado">
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
         </div>
+    
     </div>
 
 </div>

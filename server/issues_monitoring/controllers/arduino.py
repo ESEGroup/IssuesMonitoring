@@ -1,6 +1,4 @@
 from ..models import Laboratorio, Evento, UsuarioLab, Arduino, Medida_Lab, Medida_Equip
-import sqlite3
-import json
 
 def registrar_medidas(j):
     dict_medidas = {}
@@ -46,5 +44,5 @@ def listar_todos_mac_arduino():
         mac_arduinos += [a[len(a)-1]]
     return str(mac_arduinos)
 
-def ultima_atualizacao_arduino():
-    return Laboratorio.ultima_atualizacao_arduino()
+def ultima_atualizacao_arduino(id):
+    return Laboratorio.ultima_atualizacao_arduino(id)
