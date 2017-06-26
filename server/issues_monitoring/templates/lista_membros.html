@@ -12,6 +12,8 @@
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
 <script src="/static/js/aprovar.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script src="/static/js/lista_membros.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -29,6 +31,7 @@
                     <th class="text-center">Nome</th>
                     <th class="text-center">E-mail</th>
                     <th class="text-center">Autorizado</th>
+                    <th class="text-center">Excluir</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
@@ -41,6 +44,12 @@
                             <input type="checkbox" data-url="{{url_for('aprovar_usuario_lab', id=usuario.user_id)}}" class="aprovar" {% if usuario.data_aprovacao %}checked="checked"{% endif %}>
                             <div class="check-slide round"></div>
                         </label>
+                    </td>
+                    <td class="text-center">
+                        <input data-url="{{url_for('remover_usuario_lab', lab_id=lab_id, lab_nome=lab_nome, id=usuario.user_id)}}"
+                               data-nome="{{usuario.nome}}"
+                               type="image" src="/static/img/delete.png"
+                               alt="Apagar" class="delete-table-opt delete-btn">
                     </td>
                 </tr>
                 {% endfor %}
