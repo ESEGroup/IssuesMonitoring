@@ -510,7 +510,7 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    equipamentos = controllers.obter_equipamentos(id)
+    equipamentos = controllers.obter_id_equipamentos(id)
 
     return render_template('grafico.html',
                             lab_id=id,

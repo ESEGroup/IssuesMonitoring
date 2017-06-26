@@ -123,8 +123,7 @@ def work():
     VALUES (?, ?, ?, ?);""",
     [(1, "temp", "Temperatura", "Temperatura do laboratório fora da Zona de Conforto"),
      (2, "umid", "Umidade", "Umidade do laboratório fora da Zona de Conforto"),
-     (3, "temp-maq", "Temperatora de Máquina", "Temperatura da máquina {} fora da Zona de Conforto"),
-     (4, "umid-maq", "Umidade de Máquina", "Umidade da máquina {} fora da Zona de Conforto")])
+     (3, "temp-equip", "Temperatura de Equipamento", "Temperatura do Equipamento {} fora da Zona de Conforto")])
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(

@@ -14,7 +14,7 @@ class Anomalia:
         self.nome_autor_resolucao = nome_autor_resolucao
 
     def obter_do_lab(lab_id):
-        data = db.fetchall("""SELECT a.tipo_anomalia, a.descricao_anomalia,
+        data = db.fetchall("""SELECT a.tipo_anomalia, log.lab_id, a.descricao_anomalia,
                                      log.data, log.resolvido, log.id,
                                      r.data, r.descricao_acao, u.nome
                               FROM Log_Anomalias log
@@ -27,6 +27,7 @@ class Anomalia:
                               WHERE log.lab_id = ?
                                     AND log.resolvido = ?;""",
                               (lab_id, False))
+        print (data)
         return [Anomalia(*d) for d in data]
 
     def registrar_anomalia(lab_id, slug_anomalia):

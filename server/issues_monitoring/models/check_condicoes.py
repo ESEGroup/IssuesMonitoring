@@ -145,6 +145,7 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        Anomalia.registrar_anomalia(lab_id, "temp")
         return len(emails)
 
     #normal temperature
@@ -194,6 +195,7 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        Anomalia.registrar_anomalia(lab_id, "umid")
         return len(emails)
 
     #normal humidity
@@ -236,6 +238,7 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        Anomalia.registrar_anomalia(lab_id, "temp-equip")
         return 1
     else:
         return -1
