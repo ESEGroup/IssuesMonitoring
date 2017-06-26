@@ -11,7 +11,7 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
-<script src="/static/js/labs.js"></script>
+<script src="/static/js/lista_equipamentos.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -29,6 +29,7 @@
                     <th class="text-center">Endereço MAC</th>
                     <th class="text-center">Temperatura Min</th>
                     <th class="text-center">Temperatura Max</th>
+                    <th class="text-center">Excluir</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
@@ -37,6 +38,12 @@
                     <td class="text-center" title="Id: {{equipamento.id}}">{{equipamento.MAC}}</td>
                     <td class="text-center">{{equipamento.temp_min}}</td>
                     <td class="text-center">{{equipamento.temp_max}}</td>
+                    <td class="text-center">
+                        <input data-url=""
+                               data-mac="{{equipamento.MAC}}"
+                               type="image" src="/static/img/delete.png"
+                               alt="Apagar" class="delete-table-opt delete-btn">
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

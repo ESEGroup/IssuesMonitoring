@@ -134,7 +134,7 @@ def editar_laboratorio_post(id, nome=""):
         if (endereco is ' '):
             args[2] = ''
         controllers.atualizar_informacoes_lab(*args)
-        kwargs = {"c" : "Informações cadastrais atualizadas com sucesso."}
+        kwargs = {"c" : "Dados do laboratório atualizados com sucesso."}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
         kwargs = {"e" : "Por favor, preencha todos os campos."}
@@ -281,7 +281,7 @@ def adicionar_usuario_lab(id, nome):
     user_id = request.form.get('id-user') or ''
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
-        kwargs = {'c': "Usuário adicionado ao laboratório com sucesso."}
+        kwargs = {'c': "Usuário associado ao laboratório com sucesso."}
     else:
         kwargs = {'e': "Por favor, escolha um usuário."}
 
