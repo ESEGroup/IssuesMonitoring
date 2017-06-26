@@ -115,7 +115,6 @@ def check_for_abnormal_temperature(lab_id):
     temp_min=data[0]
     temp_max=data[1]
 
-
     data = db.fetchone("""
         SELECT temp
         FROM Log_Lab WHERE lab_id = ? ORDER BY data DESC; """, (lab_id,))
