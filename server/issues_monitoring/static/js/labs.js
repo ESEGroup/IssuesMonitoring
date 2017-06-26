@@ -33,6 +33,8 @@ $(function() {
             $("#temp-max").val(ui.values[1]);
         }
     });
+    $("#temp-min").val(20);
+    $("#temp-max").val(30);
     $("#temp-lab").val($("#slider-temp").slider("values", 0) + "ºC a " + $("#slider-temp").slider("values", 1) + "ºC");
 
     $("#slider-umidade").slider({
@@ -46,6 +48,8 @@ $(function() {
             $("#umid-max").val(ui.values[1]);
         }
     });
+    $("#umid-min").val(10);
+    $("#umid-max").val(60);
     $("#umidade-lab").val($("#slider-umidade").slider("values", 0) + "% a " + $("#slider-umidade").slider("values", 1) + "%");
 
     var del = document.getElementsByClassName("delete-btn");
