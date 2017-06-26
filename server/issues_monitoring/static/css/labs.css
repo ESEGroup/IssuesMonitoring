@@ -9,9 +9,9 @@
 /* CSS referente ao bota de excluir laboratorio (pequeno X): */
 
 .delete-btn {
-    position: relative;
-    left: 0.2%;
-    top: -96px;
+    position: absolute;
+    left: -30px;
+    top: -10px;
     width: 30px;
     height: 30px;
 }
