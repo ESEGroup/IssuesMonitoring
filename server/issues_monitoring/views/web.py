@@ -339,8 +339,9 @@ def cadastro_equipamento():
         controllers.cadastro_equipamento(*args)
 
     kwargs = {"c" : "Equipamento cadastrado com sucesso."}
-    kwargs['id'] = lab_id
-    
+    kwargs['id']   = lab_id
+    kwargs['nome'] = Laboratorio.obter(lab_id).nome
+
     return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
@@ -424,7 +425,7 @@ def equipamentos_laboratorio(id, nome=""):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
-        
+
     equipamentos = controllers.obter_equipamentos(id)
 
     return render_template('lista_equipamentos.html',
@@ -631,7 +632,7 @@ def mostrar_relatorio_post(id, nome):
     # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
 
     date = request.form.get("daterange") or ''
-    dates = date.split('-');    
+    dates = date.split('-');
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
     end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
@@ -647,7 +648,7 @@ def mostrar_relatorio_post(id, nome):
     #         i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
     #         i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
 
-    
+
     # tabela para log de temperatura e umidade
     args = [start_date_epoch, end_date_epoch, id]
     lab_table = controllers.get_lab_log(*args)
@@ -656,13 +657,13 @@ def mostrar_relatorio_post(id, nome):
     print("lab temp e umid: ", lab_temp_umid)
 
     # tabela de log de temperatura para equipamentos
-    equipamentos = controllers.obter_equipamentos(id)  
-    equip_dict ={}    
-    for equipamento in equipamentos: 
+    equipamentos = controllers.obter_equipamentos(id)
+    equip_dict ={}
+    for equipamento in equipamentos:
         args = ["temperatura", equipamento, start_date_epoch, end_date_epoch, id]
         equip_table = controllers.get_equip_log(*args)
         json.dumps(equip_table)
-        equip_temp_umid = json.loads(equip_table)  
+        equip_temp_umid = json.loads(equip_table)
         equip_dict[equipamento] = equip_temp_umid
     print (equip_dict)
     # tabela para log de presença
@@ -672,7 +673,7 @@ def mostrar_relatorio_post(id, nome):
 
     # tabela para usuários presentes
     presentes_list = controllers.usuarios_presentes(id)
-    print ("presentes: ", presentes_list)    
+    print ("presentes: ", presentes_list)
 
     page = render_template('relatorio.html',
                             lab_id=id,
