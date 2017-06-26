@@ -54,13 +54,18 @@ void sendHTTP(String content) {
   httpHeader += "User-Agent: Arduino/1.0\r\n"; 
 //  httpHeader += "Content-Type: text/html; charset=UTF-8\r\n";
 
-//  httpHeader += "Content-Type: application/json\r\n";
+  //httpHeader += "Content-Type: application/json\r\n";
+  httpHeader += "Content-Type: application/x-www-form-urlencoded\r\n";
   httpHeader += "Content-Length: ";
   httpHeader += content.length();
   httpHeader += "\r\n";
   httpHeader +="Connection: close\r\n\r\n";
   
-  httpRequest = httpHeader + content + " ";
+
+  
+  httpRequest = httpHeader + content;
+
+  Serial.println(httpRequest);
 
   wifi.send(SERVER,httpRequest);
   
@@ -68,7 +73,7 @@ void sendHTTP(String content) {
 
 void loop() {
 
-  String content = "{\"teste\":\"5\"}";
+  String content = "{\"teste\": \"5\", \"teste2\": \"9\"}";
 
   sendHTTP(content);
 
