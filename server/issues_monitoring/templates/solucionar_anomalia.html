@@ -18,7 +18,7 @@
             <input type="hidden" name="tipo_anomalia" value="{{anomalia.tipo}}">
             <input type="hidden" name="id_anomalia" value="{{anomalia.id}}">
             <fieldset>
-                <legend><span class="number">1</span> Informações de Acesso</legend>
+                <legend><span class="number">1</span> Descrição da Ação de Resolução</legend>
                 <input type="text" name="descricao" placeholder="Descrição da ação">
             </fieldset>
             <input type="submit" value="Resolver anomalia" />
@@ -26,7 +26,7 @@
     </div>
 
     <div class="div-botao-estilizado">
-        <a href="{{url_for('anomalias', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+        <a href="{{url_for('anomalias', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar</a>
     </div>
 </div>
 {% endblock %}
