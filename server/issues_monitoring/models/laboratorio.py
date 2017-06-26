@@ -201,7 +201,7 @@ class Laboratorio:
             DELETE FROM Lab
             WHERE lab_id = ?;""", (id,))
 
-    def obter_todos_equipamentos(id):
+    def obter_todos_ids_equipamentos(id):
         print ("obtendo equips")
         data = db.fetchall("SELECT equip_id FROM Equip WHERE lab_id=?",(id,))
 

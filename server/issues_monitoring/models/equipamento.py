@@ -32,3 +32,11 @@ class Equipamento:
         db.execute("""
             DELETE FROM Equip
             WHERE equip_id = ?;""", (_id,))
+
+    def obter(id):
+        data = db.fetchone("""SELECT lab_id, temp_min, temp_max, end_mac, equip_id
+                              FROM Equip
+                              WHERE equip_id = ?;""", (id,))
+        if data is not None:
+            return Equipamento(*data[:-1],
+                               id=data[-1])

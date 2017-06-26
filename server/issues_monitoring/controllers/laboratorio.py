@@ -58,8 +58,8 @@ def cadastro_equipamento(lab_id, temp_min, temp_max, MAC):
 def remover_equipamento(_id):
     Equipamento.remover(_id)
 
-def obter_equipamentos(id):
-    return Laboratorio.obter_todos_equipamentos(id)
+def obter_id_equipamentos(id):
+    return Laboratorio.obter_todos_ids_equipamentos(id)
 
 def obter_zona_de_conforto(id):
     return ZonaConforto.obter(id)
