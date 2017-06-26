@@ -7,48 +7,87 @@
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 {% endblock %}
 
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/switch_view.js"></script>
+{% endblock %}
+
 {% block content %}
 <div id="nav-bar">
-<div id="view1">
-    <div class="page-title">
-        <h3>Anomalias</h3>
-        <h4>{{lab_nome}}</h4>
+    <div id="view1">
+        <div class="page-title">
+            <h3>Anomalias</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
+        {% if anomalias|len > 0 %}
+        <table class="table-fill">
+            <thead>
+                <tr>
+                    <th class="text-center">Tipo</th>
+                    <th class="text-center">Data</th>
+                    <th class="text-center">Data da Resolução</th>
+                    <th class="text-center">Ação</th>
+                    <th class="text-center">Autor</th>
+                </tr>
+            </thead>
+            <tbody class="table-hover">
+                {% for anomalia in anomalias %}
+                <tr>
+                    <td class="text-center" title="{{anomalia.descricao}}">{{anomalia.tipo}}</td>
+                    <td class="text-center">{{anomalia.data_anomalia|data_segundos}}</td>
+                    <td class="text-center">{{anomalia.data_resolucao|data_segundos}}</td>
+                    <td class="text-center">{{anomalia.acao|vazio}}</td>
+                    <td class="text-center">{{anomalia.nome_autor_resolucao|vazio}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="ui-widget msg">
+            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                Não há anomalias a serem resolvidas.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Resolver uma Anomalia</a>
+        </div>
+        
+        <div class="div-botao-estilizado div-btn-below">
+            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+        </div>
+        
     </div>
-    {% if anomalias|len > 0 %}
-    <table class="table-fill">
-        <thead>
-            <tr>
-                <th class="text-left">Tipo</th>
-                <th class="text-left">Data</th>
-                <th class="text-left">Data da Resolução</th>
-                <th class="text-left">Ação</th>
-                <th class="text-left">Autor</th>
-            </tr>
-        </thead>
-        <tbody class="table-hover">
-            {% for anomalia in anomalias %}
-            <tr>
-                <td title="{{anomalia.descricao}}">{{anomalia.tipo}}</td>
-                <td>{{anomalia.data_anomalia|data_segundos}}</td>
-                <td>{{anomalia.data_resolucao|data_segundos}}</td>
-                <td>{{anomalia.acao|vazio}}</td>
-                <td>{{anomalia.nome_autor_resolucao|vazio}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <div class="ui-widget msg">
-        <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
-            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-            Não há anomalias a serem resolvidas.</p>
+        
+        
+    <div id="view2" style="display:none">
+
+        <div class="page-title">
+            <h3>Preencher Relato de Anomalia</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
+
+        <div class="neat-form" anchor="cadastrar" id="view2">
+            <form method="POST" action="#">
+                <fieldset>
+                    <legend><span class="number">1</span> Identificação da Anomalia</legend>
+                    <input type="text" name="id-anomalia" id="id-anomalia" placeholder="Id da Anomalia">    
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">2</span> Ação Tomada</legend>
+                    <textarea type="email" name="acao" placeholder="Breve relato sobre a ação tomada para resolver a anmoalia."></textarea>   
+                </fieldset>
+                <input type="submit" value="Salvar" />
+            </form>
+        </div>
+        
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
         </div>
     </div>
-    {% endif %}
-
-    <div class="div-botao-estilizado">
-        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+        
     </div>
-</div>
 </div>
 {% endblock %}

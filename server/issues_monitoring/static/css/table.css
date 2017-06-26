@@ -191,6 +191,6 @@ input:checked + .check-slide:before {
 
 /* Delete image */
 .delete-table-opt {
-    width: 50%;
+    width: 40px;
     text-align: center;
 }

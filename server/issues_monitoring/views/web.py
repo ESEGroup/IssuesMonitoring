@@ -470,8 +470,9 @@ def system_status(id, nome):
         return redirect(url_for('login', **kwargs))
 
     # pegar as infos do banco
+    lab_id = id
     timestamp_parser = int(controllers.ultima_atualizacao_parser())
-    tempos_arduinos  = controllers.ultima_atualizacao_arduino(id)
+    tempos_arduinos  = controllers.ultima_atualizacao_arduino(lab_id)
     agora = datetime.today()
     status_componente = "OK"
     dados = []
@@ -496,7 +497,7 @@ def system_status(id, nome):
                    "status"             : status_componente}]
 
     return render_template('system-status.html',
-                           lab_id = id,
+                           lab_id = lab_id,
                            lab_nome = nome,
                            componentes = dados,
                            pagina = 'system-status',
