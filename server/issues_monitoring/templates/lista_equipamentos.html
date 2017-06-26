@@ -68,9 +68,10 @@
 
         <div class="neat-form" anchor="cadastrar" id="view2">
             <form method="POST" action="{{url_for('cadastro_equipamento', id=lab_id, nome=lab_nome)}}">
+                <input type="hidden" name="id-lab" id="id-lab" value="{{lab_id}}">
                 <fieldset>
                     <legend><span class="number">1</span> Identificação do Equipamento</legend>
-                    <input type="text" id="endereco-mac" placeholder="Endereço MAC">    
+                    <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC">    
                 </fieldset>
                 <fieldset>
                     <legend><span class="number">2</span> Zona de Conforto</legend>

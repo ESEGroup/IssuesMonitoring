@@ -333,12 +333,15 @@ def cadastro_equipamento():
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
+
     args = [lab_id, temp_min, temp_max, MAC]
     if "" not in args:
         controllers.cadastro_equipamento(*args)
 
     kwargs = {"c" : "Equipamento cadastrado com sucesso."}
-    return redirect(url_for('laboratorios', **kwargs))
+    kwargs['id'] = lab_id
+    
+    return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
 def log_eventos_hoje(id, nome):
