@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
-<link rel="stylesheet" type="text/css" href="/static/css/lista_membros.css" />
 {% endblock %}
 
 {% block js %}
@@ -57,10 +56,10 @@
         {% endif %}
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Associar Usuário de Laboratório Existente</a>
+            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Associar Usuário de Laboratório Existente</a>
         </div>
         
-        <div class="div-botao-estilizado">
+        <div class="div-botao-estilizado div-btn-below">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
     </div>
@@ -70,10 +69,6 @@
         <div class="page-title">
             <h3>Associar Usuário de Laboratório</h3>
             <h4>{{lab_nome}}</h4>
-        </div>
-
-        <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Ver Usuários do Laboratório Associados</a>
         </div>
 
         {% if usuarios|len > 0 %}
@@ -101,8 +96,12 @@
             </div>
         </div>
         {% endif %}
+        
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back-reload">Ver Usuários do Laboratório Associados</a>
+        </div>
 
-        <div class="div-botao-estilizado">
+        <div class="div-botao-estilizado div-btn-below">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
     </div>

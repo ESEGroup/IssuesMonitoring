@@ -1,11 +1,16 @@
 from flask import render_template, request, redirect, url_for, session
+from flask import send_file, current_app as app
 from datetime import datetime
 import time
 from datetime import datetime, timedelta
+from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio
 import json
+
+import pdfkit
+import webbrowser
 
 @app.route('/')
 def root():
@@ -34,18 +39,20 @@ def login_post():
     usuario = request.form.get('login') or ''
     senha = request.form.get('senha') or ''
     if '' in [usuario, senha]:
-        return redirect(url_for('login'))
+        kwargs = {"e": "Por favor preencha todos os campos."}
+        return redirect(url_for('login', **kwargs))
 
-    (session['id'],
-     session['admin']) = controllers.autenticar(usuario, senha)
-
-    if session['id'] is not None:
+    try:
+        (session['id'],
+         session['admin']) = controllers.autenticar(usuario, senha)
         now = int(datetime.now().timestamp())
         session['expiration'] = now + Config.session_duration
         kwargs = {}
-    else:
-        session.clear()
-        kwargs = {"e": "Usuário ou senha incorretos ou usuário não autorizado."}
+    except NaoAutorizado:
+        kwargs = {"e": "Usuário não autorizado."}
+    except InformacoesIncorretas:
+        kwargs = {"e": "Usuário ou senha incorretos."}
+
     return redirect(url_for('login', **kwargs))
 
 @app.route('/selecionar-laboratorio')
@@ -87,9 +94,11 @@ def laboratorio(id, nome=""):
 def remover_laboratorio(id):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
 
     controllers.remover_laboratorio(id)
-    return 'OK'
+    kwargs = {"c" : "Laboratório removido com sucesso!"}
+    return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/editar-laboratorio/<id>/')
 @app.route('/editar-laboratorio/<id>/<nome>')
@@ -125,7 +134,7 @@ def editar_laboratorio_post(id, nome=""):
         if (endereco is ' '):
             args[2] = ''
         controllers.atualizar_informacoes_lab(*args)
-        kwargs = {"c" : "Informações cadastrais atualizadas com sucesso."}
+        kwargs = {"c" : "Dados do laboratório atualizados com sucesso."}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
         kwargs = {"e" : "Por favor, preencha todos os campos."}
@@ -239,6 +248,19 @@ def cadastro_post():
     kwargs = {"c": "Usuário enviado para autorização!"}
     return redirect(url_for('login', **kwargs))
 
+@app.route('/remover-usuario/<id>/', methods=["POST"])
+def remover_usuario_sistema(id):
+    if not admin_autenticado():
+        kwargs = {"e" : "Por favor, faça login como administrador."}
+        return redirect(url_for('login'))
+
+    if id == session["id"]:
+        kwargs = {"e" : "Você não pode se remover!"}
+    else:
+        controllers.remover_usuario_sistema(id)
+        kwargs = {"c" : "Usuário removido com sucesso!"}
+    return redirect(url_for('aprovar_usuario', **kwargs))
+
 @app.route('/aprovar-usuario-lab/<id>', methods=["POST"])
 def aprovar_usuario_lab(id):
     if not admin_autenticado():
@@ -259,7 +281,7 @@ def adicionar_usuario_lab(id, nome):
     user_id = request.form.get('id-user') or ''
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
-        kwargs = {'c': "Usuário adicionado ao laboratório com sucesso."}
+        kwargs = {'c': "Usuário associado ao laboratório com sucesso."}
     else:
         kwargs = {'e': "Por favor, escolha um usuário."}
 
@@ -311,12 +333,16 @@ def cadastro_equipamento():
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
+
     args = [lab_id, temp_min, temp_max, MAC]
     if "" not in args:
         controllers.cadastro_equipamento(*args)
 
     kwargs = {"c" : "Equipamento cadastrado com sucesso."}
-    return redirect(url_for('laboratorios', **kwargs))
+    kwargs['id']   = lab_id
+    kwargs['nome'] = Laboratorio.obter(lab_id).nome
+
+    return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
 def log_eventos_hoje(id, nome):
@@ -400,11 +426,14 @@ def equipamentos_laboratorio(id, nome=""):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
+    equipamentos = controllers.obter_equipamentos(id)
+
     return render_template('lista_equipamentos.html',
                            autenticado=autenticado(),
                            admin   = admin_autenticado(),
                            lab_id  = id,
                            lab_nome= nome,
+                           equipamentos=equipamentos,
                            pagina  = "equipamentos_laboratorio")
 
 @app.route('/status-sistema/<id>/<nome>')
@@ -432,7 +461,7 @@ def system_status(id, nome):
     if tempos_arduinos is not None:
         status_componente = "OK"
         if ((datetime.fromtimestamp(int(tempos_arduinos)) <
-            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(lab_id)))))):
+            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(id)))))):
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino",
@@ -603,7 +632,7 @@ def mostrar_relatorio_post(id, nome):
     # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
 
     date = request.form.get("daterange") or ''
-    dates = date.split('-');    
+    dates = date.split('-');
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
     end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
@@ -619,7 +648,7 @@ def mostrar_relatorio_post(id, nome):
     #         i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
     #         i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
 
-    
+
     # tabela para log de temperatura e umidade
     args = [start_date_epoch, end_date_epoch, id]
     lab_table = controllers.get_lab_log(*args)
@@ -628,13 +657,13 @@ def mostrar_relatorio_post(id, nome):
     print("lab temp e umid: ", lab_temp_umid)
 
     # tabela de log de temperatura para equipamentos
-    equipamentos = controllers.obter_equipamentos(id)  
-    equip_dict ={}    
-    for equipamento in equipamentos: 
+    equipamentos = controllers.obter_equipamentos(id)
+    equip_dict ={}
+    for equipamento in equipamentos:
         args = ["temperatura", equipamento, start_date_epoch, end_date_epoch, id]
         equip_table = controllers.get_equip_log(*args)
         json.dumps(equip_table)
-        equip_temp_umid = json.loads(equip_table)  
+        equip_temp_umid = json.loads(equip_table)
         equip_dict[equipamento] = equip_temp_umid
     print (equip_dict)
     # tabela para log de presença
@@ -644,9 +673,9 @@ def mostrar_relatorio_post(id, nome):
 
     # tabela para usuários presentes
     presentes_list = controllers.usuarios_presentes(id)
-    print ("presentes: ", presentes_list)    
+    print ("presentes: ", presentes_list)
 
-    return render_template('relatorio.html',
+    page = render_template('relatorio.html',
                             lab_id=id,
                             lab_nome=nome,
                             autenticado=True,
@@ -656,6 +685,13 @@ def mostrar_relatorio_post(id, nome):
                             condicoes_ambiente_equip=equip_dict,
                             condicoes_ambiente_lab=lab_temp_umid)
 
+    css = './issues_monitoring/static/css/table.css'
+    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/out.pdf', css=css)
+
+    # return send_file('reports/out.pdf', as_attachment = False)
+    # webbrowser.open_new_tab('./issues_monitoring/reports/out.pdf')
+
+    return page
 
 
 #presence: comes in the form of [[name, date, event], ...], event = IN/OUT
@@ -700,3 +736,35 @@ def organizePresenceList(currentDayEpoch, presence):
         presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
 
     return presenceList
+
+@app.route('/anomalias/<id>/<nome>')
+def anomalias(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalias = controllers.obter_anomalias(id)
+
+    return render_template('anomalias.html',
+                            anomalias=anomalias,
+                            pagina='anomalias',
+                            autenticado=True,
+                            lab_id=id,
+                            lab_nome=nome)
+
+@app.route('/acao/<id>/<nome>', methods=["POST"])
+def acao(id, nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    id_anomalia = request.form.get("id_anomalia") or ''
+    user_id = session.get("id")
+    descricao_acao = request.form.get("descricao") or ""
+    args = [id_anomalia, user_id, descricao_acao]
+    if "" not in args:
+        controllers.resolver_anomalia(*args)
+
+    return redirect(url_for('anomalias',
+                            id=id,
+                            nome=nome))

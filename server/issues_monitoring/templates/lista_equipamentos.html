@@ -4,26 +4,101 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/switch_view.js"></script>
+<script src="/static/js/lista_equipamentos.js"></script>
 {% endblock %}
 
 {% block content %}
 <div id="nav-bar">
-    <div class="page-title">
-        <h3>Lista de Equipamentos</h3>
-        <h4>{{lab_nome}}</h4>
-    </div>
+    <div id="view1">
+        <div class="page-title">
+            <h3>Lista de Equipamentos</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
 
-    <div class="ui-widget msg">
-        <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
-            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-            Esta funcionalidade estará disponível na próxima versão do sistema.</p>
+        {% if equipamentos|len > 0 %}
+        <table class="table-fill">
+            <thead>
+                <tr>
+                    <th class="text-center">Endereço MAC</th>
+                    <th class="text-center">Temperatura Min</th>
+                    <th class="text-center">Temperatura Max</th>
+                    <th class="text-center">Excluir</th>
+                </tr>
+            </thead>
+            <tbody class="table-hover">
+                {% for equipamento in equipamentos %}
+                <tr>
+                    <td class="text-center" title="Id: {{equipamento.id}}">{{equipamento.MAC}}</td>
+                    <td class="text-center">{{equipamento.temp_min}}</td>
+                    <td class="text-center">{{equipamento.temp_max}}</td>
+                    <td class="text-center">
+                        <input data-url=""
+                               data-mac="{{equipamento.MAC}}"
+                               type="image" src="/static/img/delete.png"
+                               alt="Apagar" class="delete-table-opt delete-btn">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="ui-widget msg">
+            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                Não há equipamentos cadastrados no laboratório.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Cadastrar Novo Equipamento</a>
+        </div>
+        
+        <div class="div-botao-estilizado div-btn-below">
+            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
     </div>
 
-    <div class="div-botao-estilizado">
-        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+    <div anchor="associar" id="view2" style="display:none">
+
+        <div class="page-title">
+            <h3>Cadastrar Equipamento</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
+
+        <div class="neat-form" anchor="cadastrar" id="view2">
+            <form method="POST" action="{{url_for('cadastro_equipamento', id=lab_id, nome=lab_nome)}}">
+                <input type="hidden" name="id-lab" id="id-lab" value="{{lab_id}}">
+                <fieldset>
+                    <legend><span class="number">1</span> Identificação do Equipamento</legend>
+                    <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC">    
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">2</span> Zona de Conforto</legend>
+                    <div class="legenda-cadastro">Temperatura do Equipamento:</div>
+                    <div class="div-double-slider">
+                        <div id="slider-temp" class="double-slider"></div>
+                        <input type="hidden" name="temp-min" id="temp-min" value="0">
+                        <input type="hidden" name="temp-max" id="temp-max" value="0">
+                        <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                    </div>
+                </fieldset>
+                <input type="submit" value="Cadastrar Equipamento" />
+            </form>
+        </div>
+        
+        <div class="div-botao-estilizado trocar-view-btn ">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
+        </div>
     </div>
+
 
 </div>
 {% endblock %}
