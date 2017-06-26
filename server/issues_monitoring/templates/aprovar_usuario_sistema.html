@@ -10,6 +10,8 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/aprovar.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script src="/static/js/gerenciar_usuarios.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -36,23 +38,30 @@
                 <tr>
                     <td class="text-center" title="{{usuario.login}}">{{usuario.nome}}</td>
                     <td class="text-center">{{usuario.email}}</td>
-                    <td class="text-center">
-                        <label class="switch">
-                            <input type="checkbox" data-url="{{url_for('aprovar_usuario_post', id=usuario.id)}}" class="aprovar" {% if usuario.data_aprovacao|existe %}checked="checked"{% endif %}>
-                            <div class="check-slide round"></div>
-                        </label>
-                    </td>
-                    <td class="text-center">
-                        <label class="switch">
-                            <input type="checkbox" data-url="{{url_for('editar_status_administrador', id=usuario.id)}}" class="aprovar" {% if usuario.admin %}checked="checked"{% endif %}>
-                            <div class="check-slide round"></div>
-                        </label>
-                    </td>
-                    <td class="text-center">
-                        <input data-url="#}" 
-                               data-lab-nome="{{usuario.nome}}" type="image" src="/static/img/delete.png"
-                               alt="Submit" class="delete-table-opt">
-                    </td>
+                    {% if usuario.id != session["id"] %}
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" data-url="{{url_for('aprovar_usuario_post', id=usuario.id)}}" class="aprovar" {% if usuario.data_aprovacao|existe %}checked="checked"{% endif %}>
+                                <div class="check-slide round"></div>
+                            </label>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" data-url="{{url_for('editar_status_administrador', id=usuario.id)}}" class="aprovar" {% if usuario.admin %}checked="checked"{% endif %}>
+                                <div class="check-slide round"></div>
+                            </label>
+                        </td>
+                        <td class="text-center">
+                            <input data-url="{{url_for('remover_usuario_sistema', id=usuario.id)}}"
+                                   data-nome="{{usuario.nome}}"
+                                   type="image" src="/static/img/delete.png"
+                                   alt="Apagar" class="delete-table-opt delete-btn">
+                        </td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -66,9 +75,6 @@
         </div>
         {% endif %}
 
-        <div class="div-botao-estilizado">
-            <a href="{{url_for('laboratorios')}}" class="btn-estilizado btn-estilizado-blue">Selecionar Laboratório</a>
-        </div>
     </div>
 
 

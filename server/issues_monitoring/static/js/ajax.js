@@ -14,7 +14,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function ajax(url, obj, callback, err_callback) {
+function ajax(url) {
     var xml_http = new XMLHttpRequest();
 
     xml_http.onreadystatechange = function() {
@@ -22,26 +22,13 @@ function ajax(url, obj, callback, err_callback) {
             OK = 200;
         
         if (this.readyState === READY && this.status === OK) {
-            var data = this.responseText;
-            console.log(data, data !== "OK")
-            if (data !== "OK")
-                callback(data);
-            else
-                callback();
+            window.history.pushState('', '', this.responseURL);
+            location.reload();
         } else if (this.status >= 500) {
-            if (typeof(err_callback) == typeof(ajax))
-                err_callback();
+            location.reload();
         }
     };
 
     xml_http.open("POST", url, true);
-    xml_http.onerror = err_callback;
-        
-    if (typeof(obj) !== 'undefined' && obj !== null) {
-        obj = JSON.stringify(obj);
-        xml_http.setRequestHeader('Content-Type',
-                                  'application/json;charset=UTF-8');
-    }
-    
-    xml_http.send(obj);
+    xml_http.send();
 }

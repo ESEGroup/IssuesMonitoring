@@ -46,7 +46,7 @@ $(function() {
                                             .attr('type', 'radio')
                                             .attr('name', 'equipamento')
                                             .attr('value', row)
-                var equip_span = $('<span />').text(row);
+                var equip_span = $('<span />').text('Equipamento ' + row);
                 $(equip_div).append(equip_radio);
                 $(equip_div).append(equip_span);
                 $(equips_div).append(equip_div);
@@ -68,13 +68,6 @@ $(function() {
     data.addColumn({id: 'max', type:'number', role: 'interval'});
 
     data.addRows(mydata);
-
-
-    /*var options = {
-      title: 'Gráfico de Temperatura e Umidade',
-      curveType: 'function',
-      legend: { position: 'bottom' }
-    };*/
 
     var options = {
         title:'Grafico',
