@@ -3,7 +3,6 @@ from .log import debug, log
 from imaplib import IMAP4_SSL
 
 DEBUG = Config.debug
-MAIL_FROM = Config.mydenox_email
 HOST = Config.imap_host.host
 USERNAME = Config.email
 PASSWORD = Config.email_password
@@ -25,8 +24,7 @@ def fetch_new_emails(host=HOST, username=USERNAME, password=PASSWORD):
     # (and mark as unread if it fails to send events to the Server)
     _type, data = email.search(None,
                                'ALL',
-                               '(UNSEEN)',
-                               '(FROM "{}")'.format(MAIL_FROM))
+                               '(UNSEEN)')
     ids = data[0].split()
 
     if len(ids) == 0:
@@ -37,6 +35,7 @@ def fetch_new_emails(host=HOST, username=USERNAME, password=PASSWORD):
     debug("Fetching {} new e-mails.".format(len(ids)))
     for num in ids:
         _type, data = email.fetch(num, '(RFC822)')
+        print(data)
         messages += [data[0][1].decode('utf-8')]
     email.close()
     email.logout()

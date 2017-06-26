@@ -1,6 +1,9 @@
+from .. import Config
 from .log import debug
 from re import search
 from datetime import datetime, timedelta
+
+MAIL_FROM = Config.mydenox_email
 
 TIME_REGEXP = r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}"
 EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?(-[^\W_]+)?\]"
@@ -8,9 +11,25 @@ EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?(-[^\W_]+)?\]"
 def parse_messages(messages):
     debug("Parsing messages.")
     data = []
+    mydenox_error = []
+
     for message in messages:
+        # Test for MyDenox failure messages
+        try:
+            search(r"Subject: AVISO: Falta de energia elétrica, utilizando bateria interna", message).group()
+            raise FaltaEnergia
+        except AttributeError:
+            pass
+
+        try:
+            search(r"Subject: ATENÇÃO: A central perdeu completamente a conexão com a Internet.", message).group()
+            raise SemInternet
+        except AttributeError:
+            pass
+
         # Ignore message if needed information is missing
         try:
+            search(r"From: {}".format(MAIL_FROM), message).group()
             time = search(TIME_REGEXP, message).group()
             event = search(EVENT_REGEXP, message).group()
         except AttributeError:

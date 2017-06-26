@@ -5,7 +5,7 @@ def work():
     from time     import sleep
     from .lib.log   import debug, log
     from .lib.email import fetch_new_emails, mark_as_unread, NoMessages
-    from .lib.parse import parse_messages
+    from .lib.parse import parse_messages, SemInternet, FaltaEnergia
 
     try:
         from server.issues_monitoring.controllers import (registrar_presenca, registrar_log_parser)
@@ -44,6 +44,10 @@ def work():
             data = parse_messages(messages)
             received_wait_for = registrar_presenca(data)
             debug("{} events registered.".format(len(data)))
+        except FaltaEnergia:
+            pass
+        except SemInternet:
+            pass
         except:
             log("Unexpected Error.")
             mark_as_unread(ids)
