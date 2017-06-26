@@ -785,10 +785,10 @@ def acao(id, nome):
         return redirect(url_for('login', **kwargs))
 
     tipo_anomalia = request.form.get("tipo_anomalia") or ''
-    id_anomalia = request.form.get("id_anomadlia") or ''
+    id_anomalia = request.form.get("id_anomalia") or ''
     user_id = session.get("id")
     descricao_acao = request.form.get("descricao") or ""
-    args = [id_anomalia, user_id, descricao_acao]
+    args = [id_anomalia, descricao_acao, user_id]
     if "" not in args:
         controllers.resolver_anomalia(*args)
         controllers.enviar_email_acao_realizada(id,

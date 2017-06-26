@@ -1,4 +1,6 @@
 from . import db
+from datetime import datetime
+from .usuario_lab import UsuarioLab
 
 class Anomalia:
     def __init__(self, tipo, lab_id, descricao, data, resolvido, id,
@@ -32,7 +34,6 @@ class Anomalia:
                               WHERE log.lab_id = ?
                                     AND log.resolvido = ?;""",
                               (lab_id, False))
-        print (data)
         return [Anomalia(*d) for d in data]
 
     def registrar_anomalia(lab_id, slug_anomalia, equip_id=None):
@@ -50,7 +51,7 @@ class Anomalia:
         db.execute("""
             INSERT INTO Log_Acoes
             (data, id_log_anomalia, descricao_acao, autor)
-            VALUES (?, ?, ?, ?);""", (id_log, descricao_acao, id_autor))
+            VALUES (?, ?, ?, ?);""", (int(datetime.today().timestamp()),id_log, descricao_acao, id_autor))
         db.execute("""
             UPDATE Log_Anomalias
             SET resolvido = ?
