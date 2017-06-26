@@ -21,7 +21,7 @@
             <h3>Membros Presentes Neste Momento</h3>
             <h4>{{lab_nome}}</h4>
         </div>
-        
+
         {% if usuarios_presentes|len > 0 %}
         <table class="table-fill">
             <thead>
@@ -36,7 +36,7 @@
                 <tr>
                     <td class="text-center" title="{{usuario.user_id}}">{{usuario.nome}}</td>
                     <td class="text-center">{{usuario.email}}</td>
-                    <td class="text-center">{{usuario.data_entrada|hora_min}}</td>
+                    <td class="text-center">{{usuario.data_entrada|data}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
