@@ -327,34 +327,44 @@ def cadastro_usuario_lab_post():
     if not success:
         kwargs = {"e": "Id de usuário já existente."}
     else:
-        kwargs = {"c" : "Usuário cadastrado com sucesso."}
+        kwargs = {"c": "Usuário cadastrado com sucesso."}
 
-    if autenticado():
-        url = 'laboratorio'
-        kwargs['id'] = lab_id
-    else:
-        url = 'cadastro_usuario_lab'
-    return redirect(url_for(url, **kwargs))
+    return redirect(url_for('cadastro_usuario_lab', **kwargs))
 
-@app.route('/cadastro-equipamento', methods=["POST"])
-def cadastro_equipamento():
+@app.route('/remover-equipamento/<lab_id>/<lab_nome>/<id>/', methods=["POST"])
+def remover_equipamento(lab_id, lab_nome, id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
+
+    controllers.remover_equipamento(id)
+    kwargs = {"c": "Laboratório removido com sucesso!",
+              "id": lab_id,
+              "nome": lab_nome}
+    return redirect(url_for('equipamentos_laboratorio', **kwargs))
+
+@app.route('/cadastro-equipamento/<id>/<nome>', methods=["POST"])
+def cadastro_equipamento(id, nome):
     if not admin_autenticado():
         return redirect(url_for('laboratorios'))
 
-    lab_id = request.form.get('id-lab')
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
 
-    args = [lab_id, temp_min, temp_max, MAC]
+    args = [id, temp_min, temp_max, MAC]
     if "" not in args:
         controllers.cadastro_equipamento(*args)
-
-    kwargs = {"c" : "Equipamento cadastrado com sucesso."}
-    kwargs['id']   = lab_id
-    kwargs['nome'] = Laboratorio.obter(lab_id).nome
-
-    return redirect(url_for('equipamentos_laboratorio', **kwargs))
+        kwargs = {"c" : "Equipamento cadastrado com sucesso."}
+        kwargs['id']   = id
+        kwargs['nome'] = Laboratorio.obter(id).nome
+        return redirect(url_for('equipamentos_laboratorio', **kwargs))
+    else:
+        kwargs = {"e": "Por favor preencha todos os campos",
+                  "id": id,
+                  "nome": nome,
+                  "_anchor": "cadastrar"}
+        return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
 def log_eventos_hoje(id, nome):

@@ -11,6 +11,7 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
+<script src="/static/js/ajax.js"></script>
 <script src="/static/js/lista_equipamentos.js"></script>
 {% endblock %}
 
@@ -39,7 +40,7 @@
                     <td class="text-center">{{equipamento.temp_min}}</td>
                     <td class="text-center">{{equipamento.temp_max}}</td>
                     <td class="text-center">
-                        <input data-url=""
+                        <input data-url="{{url_for('remover_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=equipamento.id)}}"
                                data-mac="{{equipamento.MAC}}"
                                type="image" src="/static/img/delete.png"
                                alt="Apagar" class="delete-table-opt delete-btn">
@@ -58,7 +59,7 @@
         {% endif %}
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Cadastrar Novo Equipamento</a>
+            <a href="#cadastrar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Cadastrar Novo Equipamento</a>
         </div>
         
         <div class="div-botao-estilizado div-btn-below">
@@ -66,8 +67,7 @@
         </div>
     </div>
 
-    <div anchor="associar" id="view2" style="display:none">
-
+    <div anchor="cadastrar" id="view2" style="display:none">
         <div class="page-title">
             <h3>Cadastrar Equipamento</h3>
             <h4>{{lab_nome}}</h4>
@@ -75,7 +75,6 @@
 
         <div class="neat-form" anchor="cadastrar" id="view2">
             <form method="POST" action="{{url_for('cadastro_equipamento', id=lab_id, nome=lab_nome)}}">
-                <input type="hidden" name="id-lab" id="id-lab" value="{{lab_id}}">
                 <fieldset>
                     <legend><span class="number">1</span> Identificação do Equipamento</legend>
                     <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC">    
