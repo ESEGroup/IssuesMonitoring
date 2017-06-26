@@ -778,6 +778,19 @@ def anomalias(id, nome):
                             lab_id=id,
                             lab_nome=nome)
 
+@app.route('/solucionar-anomalia/<lab_id>/<lab_nome>/<id>')
+def solucionar_anomalia(lab_id, lab_nome, id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalia = controllers.obter_anomalia(id)
+    return render_template('solucionar_anomalia.html',
+                           lab_id=lab_id,
+                           lab_nome=lab_nome,
+                           autenticado=True,
+                           anomalia=anomalia)
+
 @app.route('/acao/<id>/<nome>', methods=["POST"])
 def acao(id, nome):
     if not autenticado():
@@ -785,7 +798,7 @@ def acao(id, nome):
         return redirect(url_for('login', **kwargs))
 
     tipo_anomalia = request.form.get("tipo_anomalia") or ''
-    id_anomalia = request.form.get("id_anomadlia") or ''
+    id_anomalia = request.form.get("id_anomalia") or ''
     user_id = session.get("id")
     descricao_acao = request.form.get("descricao") or ""
     args = [id_anomalia, user_id, descricao_acao]

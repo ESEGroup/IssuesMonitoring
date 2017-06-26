@@ -1,5 +1,8 @@
 from ..models import Anomalia
 
+def obter_anomalia(id):
+    return Anomalia.obter(id)
+
 def obter_anomalias(lab_id):
     return Anomalia.obter_do_lab(lab_id)
 

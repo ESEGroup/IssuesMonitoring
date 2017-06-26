@@ -35,7 +35,7 @@
             <div>
                 <a href="{{url_for('mostrar_relatorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/report.png) no-repeat top; background-size: 120px 140px; background-position: 52% 17%;"><span class="lab-txt">Mostrar Relatório dos Eventos</span></a>
 
-                <a href="{{url_for('system_status', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/status.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Status das partes do Sistema</span></a>
+                <a href="{{url_for('system_status', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/status.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt"><br>Status do Sistema</span></a>
 
                 <a href="{{url_for('anomalias', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/anomalia.png) no-repeat top; background-size: 130px 130px; background-position: 51% 17%;"><span class="lab-txt">Anomalias Registradas no Sistema</span></a>
             </div>

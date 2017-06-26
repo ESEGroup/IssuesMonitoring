@@ -28,6 +28,7 @@
                     <th class="text-center">Data da Resolução</th>
                     <th class="text-center">Ação</th>
                     <th class="text-center">Autor</th>
+                    <th class="text-center">Resolver</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
@@ -38,6 +39,11 @@
                     <td class="text-center">{{anomalia.data_resolucao|data_segundos}}</td>
                     <td class="text-center">{{anomalia.acao|vazio}}</td>
                     <td class="text-center">{{anomalia.nome_autor_resolucao|vazio}}</td>
+                    <td class="text-center">
+                        <a href="{{url_for('solucionar_anomalia', lab_id=lab_id, lab_nome=lab_nome, id=anomalia.id)}}">
+                            <input type="image" src="/static/img/tools.png" alt="Solucionar" class="delete-table-opt">
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -50,44 +56,10 @@
             </div>
         </div>
         {% endif %}
-
-        <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view">Resolver uma Anomalia</a>
-        </div>
         
-        <div class="div-botao-estilizado div-btn-below">
+        <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
-        
-    </div>
-        
-        
-    <div id="view2" style="display:none">
-
-        <div class="page-title">
-            <h3>Preencher Relato de Anomalia</h3>
-            <h4>{{lab_nome}}</h4>
-        </div>
-
-        <div class="neat-form" anchor="cadastrar" id="view2">
-            <form method="POST" action="#">
-                <fieldset>
-                    <legend><span class="number">1</span> Identificação da Anomalia</legend>
-                    <input type="text" name="id-anomalia" id="id-anomalia" placeholder="Id da Anomalia">    
-                </fieldset>
-                <fieldset>
-                    <legend><span class="number">2</span> Ação Tomada</legend>
-                    <textarea type="email" name="acao" placeholder="Breve relato sobre a ação tomada para resolver a anmoalia."></textarea>   
-                </fieldset>
-                <input type="submit" value="Salvar" />
-            </form>
-        </div>
-        
-        <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
-        </div>
-    </div>
-        
     </div>
 </div>
 {% endblock %}
