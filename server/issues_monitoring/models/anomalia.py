@@ -2,9 +2,13 @@ from . import db
 
 class Anomalia:
     def __init__(self, tipo, lab_id, descricao, data, resolvido, id,
-                 data_resolucao, acao, nome_autor_resolucao):
+                 data_resolucao, acao, nome_autor_resolucao, equip_id):
         self.tipo = tipo
-        self.descricao = descricao
+        if equip_id is None:
+            args = []
+        else:
+            args = [equip_id]
+        self.descricao = descricao.format(*args)
         self.data_anomalia = data
         self.lab_id = lab_id
         self.resolvido = resolvido
@@ -12,11 +16,12 @@ class Anomalia:
         self.data_resolucao = data_resolucao
         self.acao = acao
         self.nome_autor_resolucao = nome_autor_resolucao
+        self.equip_id = equip_id
 
     def obter_do_lab(lab_id):
-        data = db.fetchall("""SELECT a.tipo_anomalia, a.descricao_anomalia,
+        data = db.fetchall("""SELECT a.tipo_anomalia, log.lab_id, a.descricao_anomalia,
                                      log.data, log.resolvido, log.id,
-                                     r.data, r.descricao_acao, u.nome
+                                     r.data, r.descricao_acao, u.nome, log.equip_id
                               FROM Log_Anomalias log
                               INNER JOIN Anomalias a
                                 ON a.slug = log.slug_anomalia
@@ -29,15 +34,16 @@ class Anomalia:
                               (lab_id, False))
         return [Anomalia(*d) for d in data]
 
-    def registrar_anomalia(lab_id, slug_anomalia):
+    def registrar_anomalia(lab_id, slug_anomalia, equip_id=None):
         db.execute("""
             INSERT INTO Log_Anomalias
-            (data, lab_id, slug_anomalia, resolvido)
-            VALUES (?, ?, ?, ?)""",
+            (data, lab_id, slug_anomalia, resolvido, equip_id)
+            VALUES (?, ?, ?, ?, ?)""",
             (int(datetime.now().timestamp()),
              lab_id,
              slug_anomalia,
-             0))
+             0,
+             equip_id))
 
     def registrar_resolucao(id_log, descricao_acao, id_autor):
         db.execute("""

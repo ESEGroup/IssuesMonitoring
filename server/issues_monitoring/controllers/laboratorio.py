@@ -108,19 +108,6 @@ def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
 def obter_anomalias(lab_id):
     return Laboratorio.obter_anomalias(lab_id)
 
-def enviar_email_acao_realizada(id_acao):
-    lab_id = 1
-    presentes = UsuarioLab.presentes(lab_id)
-    admins = AdministradorSistema.obter_administradores()
-    emails = [a.email for a in admins]
-    emails += [p.email for p in presentes]
-    print (emails)
-    print (present_users)
-    emails += present_users
-    subject = "Ação realizada no laboratório {}".format(lab_id)
-    msg_content = """A seguinte ação foi realizada no laboratório: {}\n\nEssa ação é referente à anomalia {}""".format()
-    send_email(subject, msg_content, emails)
-
 # def get_log_presence_list(date, lab_id):
 #   #Date of today, start of query
 #   dateToday = date

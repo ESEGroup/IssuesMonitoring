@@ -8,9 +8,7 @@ from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio, Equipamento
 import json
-
 import pdfkit
-import webbrowser
 
 @app.route('/')
 def root():
@@ -786,12 +784,17 @@ def acao(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    id_anomalia = request.form.get("id_anomalia") or ''
+    tipo_anomalia = request.form.get("tipo_anomalia") or ''
+    id_anomalia = request.form.get("id_anomadlia") or ''
     user_id = session.get("id")
     descricao_acao = request.form.get("descricao") or ""
     args = [id_anomalia, user_id, descricao_acao]
     if "" not in args:
         controllers.resolver_anomalia(*args)
+        controllers.enviar_email_acao_realizada(id,
+                                                descricao_acao,
+                                                tipo_anomalia,
+                                                user_id)
 
     return redirect(url_for('anomalias',
                             id=id,

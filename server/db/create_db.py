@@ -131,6 +131,7 @@ def work():
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
             lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
+            equip_id INTEGER,
             slug_anomalia CHAR(255) NOT NULL REFERENCES Anomalias(slug),
             resolvido BOOLEAN NOT NULL);
     """)
