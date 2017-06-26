@@ -12,6 +12,8 @@ $(function() {
             $("#temp-max").val(ui.values[1]);
         }
     });
+    $("#temp-min").val(20);
+    $("#temp-max").val(40);
     $("#temp-lab").val($("#slider-temp").slider("values", 0) + "ºC a " + $("#slider-temp").slider("values", 1) + "ºC");
     
     var del = document.getElementsByClassName("delete-btn");
