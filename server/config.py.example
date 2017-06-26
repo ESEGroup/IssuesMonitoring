@@ -19,7 +19,7 @@ class Config:
     email = "cos603.issuesmonitoring@gmail.com"
     email_password = ""
 
-    mydenox_email = "noreply@mydenox.com.br"
+    mydenox_email = "noreply@denox.com.br"
 
     log_timestamp_format = "%Y-%m-%d %H:%M:%S"
 
