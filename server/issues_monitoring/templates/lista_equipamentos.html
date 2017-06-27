@@ -28,6 +28,7 @@
             <thead>
                 <tr>
                     <th class="text-center">Endereço MAC</th>
+                    <th class="text-center">Nome</th>
                     <th class="text-center">Temperatura Min</th>
                     <th class="text-center">Temperatura Max</th>
                     <th class="text-center">Excluir</th>
@@ -37,8 +38,9 @@
                 {% for equipamento in equipamentos %}
                 <tr>
                     <td class="text-center" title="Id: {{equipamento.id}}">{{equipamento.MAC}}</td>
-                    <td class="text-center">{{equipamento.temp_min}}</td>
-                    <td class="text-center">{{equipamento.temp_max}}</td>
+                    <td class="text-center" title="{{equipamento.descricao}}">{{equipamento.nome}}</td>
+                    <td class="text-center">{{equipamento.temp_min}}ºC</td>
+                    <td class="text-center">{{equipamento.temp_max}}ºC</td>
                     <td class="text-center">
                         <input data-url="{{url_for('remover_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=equipamento.id)}}"
                                data-mac="{{equipamento.MAC}}"
@@ -80,7 +82,15 @@
                     <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC">    
                 </fieldset>
                 <fieldset>
-                    <legend><span class="number">2</span> Zona de Conforto</legend>
+                    <legend><span class="number">2</span> Nome do Equipamento</legend>
+                    <input type="text" name="nome" id="nome" placeholder="Nome">    
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">3</span> Descrição do Equipamento</legend>
+                    <input type="text" name="descricao" id="descricao" placeholder="Descrição">    
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">4</span> Zona de Conforto</legend>
                     <div class="legenda-cadastro">Temperatura do Equipamento:</div>
                     <div class="div-double-slider">
                         <div id="slider-temp" class="double-slider"></div>
@@ -97,7 +107,5 @@
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
         </div>
     </div>
-
-
 </div>
 {% endblock %}
