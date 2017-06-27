@@ -12,6 +12,11 @@ Popen(["virtualenv",
        ".env"],
        stderr=DEVNULL).wait()
 
+__file__ = join(".env", "bin", "activate_this.py")
+with open(join(".env", "bin", "activate_this.py"), "r") as f:
+    exec(f.read())
+
+
 Popen([".env/bin/pip",
        "install",
        "-Ur",
@@ -21,10 +26,6 @@ if not isfile("config.py"):
     Popen(["cp",
            "config.py.example",
            "config.py"]).wait()
-
-__file__ = join(".env", "bin", "activate_this.py")
-with open(join(".env", "bin", "activate_this.py"), "r") as f:
-    exec(f.read())
 
 import bcrypt
 

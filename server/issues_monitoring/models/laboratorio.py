@@ -153,7 +153,7 @@ class Laboratorio:
             FROM Lab;""")
         if data is not None:
             return data[0]
-        return "-10"
+        return -1
 
     def obter_intervalo_arduino(lab_id):
         data = db.fetchone("""

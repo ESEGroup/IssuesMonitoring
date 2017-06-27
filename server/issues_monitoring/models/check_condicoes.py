@@ -145,7 +145,8 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
-        Anomalia.registrar_anomalia(lab_id, "temp")
+        tipo = "temp-min" if current_temp < temp_min else "temp-max"
+        Anomalia.registrar_anomalia(lab_id, tipo)
         return len(emails)
 
     #normal temperature
@@ -194,8 +195,8 @@ Pedimos que procure uma solução quanto a isso.
             for d in data:
                 emails += [d[0]]
 
-        send_email(subject, msg_content, emails)
-        Anomalia.registrar_anomalia(lab_id, "umid")
+        tipo = "umid-min" if current_umid < umid_min else "umid-max"
+        Anomalia.registrar_anomalia(lab_id, tipo)
         return len(emails)
 
     #normal humidity
@@ -238,7 +239,8 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
-        Anomalia.registrar_anomalia(lab_id, "temp-equip")
+        tipo = "temp-equip-min" if data[1] < data[0] else "temp-equip-max"
+        Anomalia.registrar_anomalia(lab_id, tipo)
         return 1
     else:
         return -1
