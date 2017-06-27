@@ -43,6 +43,8 @@ def work():
     cursor.execute("""
     CREATE TABLE Equip(
             equip_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            nome CHAR(255) NOT NULL,
+            descricao CHAR(255) NOT NULL,
             lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             temp_min FLOAT NOT NULL,
             temp_max FLOAT NOT NULL,
