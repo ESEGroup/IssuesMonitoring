@@ -43,6 +43,8 @@ def work():
     cursor.execute("""
     CREATE TABLE Equip(
             equip_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            nome CHAR(255) NOT NULL,
+            descricao CHAR(255) NOT NULL,
             lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             temp_min FLOAT NOT NULL,
             temp_max FLOAT NOT NULL,
@@ -121,9 +123,12 @@ def work():
     INSERT INTO Anomalias
     (id, slug, tipo_anomalia, descricao_anomalia)
     VALUES (?, ?, ?, ?);""",
-    [(1, "temp", "Temperatura", "Temperatura do laboratório fora da Zona de Conforto"),
-     (2, "umid", "Umidade", "Umidade do laboratório fora da Zona de Conforto"),
-     (3, "temp-equip", "Temperatura de Equipamento", "Temperatura do Equipamento {} fora da Zona de Conforto")])
+    [(1, "temp-min", "Temperatura Abaixo", "Temperatura do laboratório abaixo do mínimo da Zona de Conforto"),
+     (2, "temp-max", "Temperatura Acima", "Temperatura do laboratório acima do máximo da Zona de Conforto"),
+     (3, "umid-min", "Umidade Abaixo", "Umidade do laboratório abaixo do mínimo da Zona de Conforto"),
+     (4, "umid-max", "Umidade Acima", "Umidade do laboratório acima do máximo da Zona de Conforto"),
+     (5, "temp-equip-min", "Temperatura de Equipamento Abaixo", "Temperatura do Equipamento {} abaixo do mínimo da Zona de Conforto"),
+     (6, "temp-equip-max", "Temperatura de Equipamento Acima", "Temperatura do Equipamento {} acima do máximo da Zona de Conforto")])
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(

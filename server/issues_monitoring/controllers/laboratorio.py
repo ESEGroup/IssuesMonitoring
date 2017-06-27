@@ -51,8 +51,8 @@ def obter_laboratorios():
 def obter_laboratorio(id):
     return Laboratorio.obter(id)
 
-def cadastro_equipamento(lab_id, temp_min, temp_max, MAC):
-    equipamento = Equipamento(lab_id, temp_min, temp_max, MAC)
+def cadastro_equipamento(lab_id, nome, descricao, temp_min, temp_max, MAC):
+    equipamento = Equipamento(nome, descricao, lab_id, temp_min, temp_max, MAC)
     equipamento.cadastrar()
 
 def remover_equipamento(_id):
