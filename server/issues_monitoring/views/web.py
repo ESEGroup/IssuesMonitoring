@@ -548,9 +548,10 @@ def mostrar_grafico_post(id, nome):
     args = [id]
     equipamentos = controllers.obter_id_equipamentos(*args)
 
+    temp_data = []
+
     if (chart_type == "temperatura"):
         if (chart_target == "laboratorio"):
-            print("no grafico do lab")
             args = [chart_type, start_date_epoch, end_date_epoch, id]
             temp_data = controllers.get_data_log(*args)
         else:
@@ -560,11 +561,21 @@ def mostrar_grafico_post(id, nome):
         args = [chart_type, start_date_epoch, end_date_epoch, id]
         temp_data = controllers.get_data_log(*args)
 
+    if temp_data == []:
+        kwargs = {"error_message": "Selecione tipo do gráfico!"}
+        return render_template('grafico.html',
+                               lab_id=id,
+                               lab_nome=nome,
+                               autenticado=True,
+                               equipamentos=equipamentos,
+                               pagina='mostrar_grafico',
+                               **kwargs)
+
     json.dumps(temp_data)
     arrayOfEpochs = json.loads(temp_data)
+    print ("Array of Epochs: ", arrayOfEpochs)
 
     if (arrayOfEpochs == []):
-        print ("Deu ruim!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         kwargs = {"error_message": "Não existem dados para o período selecionado. Por favor, selecione outro período"}
         return render_template('grafico.html',
                                lab_id=id,
@@ -611,28 +622,33 @@ def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
     intervalLimit = interval
     minimumValue = arrayOfEpochs[0][1]
     maximumValue = arrayOfEpochs[0][1]
+    #varrer o array calculando a média de cada intervalo
     for i in range(len(arrayOfEpochs)):
-      if(arrayOfEpochs[i][0]<beginningOfInterval+intervalLimit):
-        print("Adding %f to current sum", arrayOfEpochs[i][1])
-        sum+=arrayOfEpochs[i][1]
-        minimumValue = min(minimumValue, arrayOfEpochs[i][1])
-        maximumValue = max(maximumValue, arrayOfEpochs[i][1])
-        numberOfValuesInInterval+=1
-      else:
-        #surpassed last interval limit, move onward to next limit
-        mean = sum/numberOfValuesInInterval
-        print("Surpassed current interval limit, adding %f to index %i\n", mean, intervalIndex)
-        meansArray+=[[intervalIndex, mean, minimumValue, maximumValue]]
-        sum=arrayOfEpochs[i][1]
-        minimumValue = arrayOfEpochs[i][1]
-        maximumValue = arrayOfEpochs[i][1]
-        numberOfValuesInInterval=1
-        intervalIndex+=1
-        intervalLimit+=interval
+        print(arrayOfEpochs[i][0])
+        if(arrayOfEpochs[i][0] < beginningOfInterval+intervalLimit):
+            print("Adding {} to current sum".format(arrayOfEpochs[i][1]))
+            sum+=arrayOfEpochs[i][1]
+            minimumValue = min(minimumValue, arrayOfEpochs[i][1])
+            maximumValue = max(maximumValue, arrayOfEpochs[i][1])
+            numberOfValuesInInterval+=1
+        else:
+            #surpassed last interval limit, move onward to next limit
+            if numberOfValuesInInterval != 0:
+                mean = sum/numberOfValuesInInterval
+                print("Surpassed current interval limit, adding {} to index {}\n".format(mean, intervalIndex))
+                meansArray+=[[intervalIndex, mean, minimumValue, maximumValue]]
+                sum=arrayOfEpochs[i][1]
+                minimumValue = arrayOfEpochs[i][1]
+                maximumValue = arrayOfEpochs[i][1]
+                numberOfValuesInInterval=1
+                intervalIndex+=1
+                intervalLimit+=interval
     #if it leaves the for without even achieving the first interval, or if there is a remainder:
     #add the last value, the remainder
-    meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
+    if numberOfValuesInInterval != 0:
+        meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
 
+    print (meansArray)
     return meansArray
 
 @app.route('/mostrar-relatorio/<id>/<nome>')
