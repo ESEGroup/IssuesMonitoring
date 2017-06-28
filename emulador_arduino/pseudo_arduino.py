@@ -21,38 +21,47 @@ equipamento2 = {'id': 2, 'temperatura': 0.0}
 
 if(len(sys.argv) != 3):
     print("Uso: python3 pseudo_arduino.py [ip-do-servidor/rota] [periodo de envio em segundos]")
-    
+
 while(True):
+    #Calculando os valores das medidas
 
-	#Calculando os valores das medidas
+    #luz
 
-	#luz
-	
-	#acesa
-	luz = 1
+    #acesa
+    luz = 1
 
-	#alguem da uma "luz" de como fazer. qual distribuicao?
-	
-	#umidade
+    #alguem da uma "luz" de como fazer. qual distribuicao?
 
-	#minimo de 40% e maximo de 75%
+    #umidade
 
-	umidade = random.gauss(57.5, 12.5)
+    #minimo de 40% e maximo de 75%
 
-	#sensacao termica
+    umidade = random.gauss(57.5, 12.5)
 
-	#minimo de 20 e maximo de 26
-	sensacao_termica = random.gauss(23, 3)
-	
-	#equipamento 1
-	#pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
-	equipamento1['temperatura'] = random.gauss(40, 20)
-	
+    #sensacao termica
+
+    #minimo de 20 e maximo de 26
+    sensacao_termica = random.gauss(23, 3)
+
+    #equipamento 1
+    #pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
+    equipamento1['temperatura'] = random.gauss(40, 20)
+    equipamento1['id'] = 1
+
     #equipamento 2
-	#pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
-	equipamento2['temperatura'] = random.gauss(40, 20)	
-	
-	r = requests.post("http://" + sys.argv[1], json={"MAC":"AB:BB:CC:DD:EE","lab_id":1,"dados":{"luz":luz,"umidade":umidade,"sensacao_termica":sensacao_termica,"equipamentos":[equipamento1,equipamento2]}})
+    #pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
+    equipamento2['temperatura'] = random.gauss(40, 20)
+    equipamento2['id'] = 2
 
-	#mensagens de 2 em 2 minutos
-	time.sleep(float(sys.argv[2]))
+    r = requests.post("http://" + sys.argv[1], json={"MAC":"AB:BB:CC:DD:EE","lab_id":1,"dados":[{"luz":luz,"umidade":umidade,"sensacao_termica":sensacao_termica,"equipamentos":[equipamento1,equipamento2]}]})
+
+    print(r.text)
+
+    try:
+        wait_for = float(r.text)
+        print("Sleep for {} minutes".format(wait_for))
+        time.sleep(wait_for * 60)
+    except:
+        #mensagens de 2 em 2 minutos
+        print("Couldn't parse response. Sleep for {} seconds".format(sys.argv[2]))
+        time.sleep(float(sys.argv[2]))

@@ -1,8 +1,8 @@
 #!/bin/python3
 
 def work():
-    from . import Config
-    from time     import sleep
+    from .          import Config
+    from time       import sleep
     from .lib.log   import debug, log
     from .lib.email import fetch_new_emails, mark_as_unread, NoMessages
     from .lib.parse import parse_messages
@@ -13,12 +13,12 @@ def work():
         from issues_monitoring.controllers import (registrar_presenca,
                                                    registrar_log_parser)
 
-    DEBUG = Config.debug
-    WAIT_FOR = Config.parser_default_delay
+    DEBUG              = Config.debug
+    WAIT_FOR           = Config.parser_default_delay
     MAX_WAITING_PERIOD = Config.parser_max_delay
-    USERNAME = Config.email
-    PASSWORD = Config.email_password
-    wait_for = WAIT_FOR
+    USERNAME           = Config.email
+    PASSWORD           = Config.email_password
+    wait_for           = WAIT_FOR
 
     if "" in [USERNAME, PASSWORD]:
         log("Please provide the correct username and password to access the e-mail.")
