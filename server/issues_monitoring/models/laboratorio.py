@@ -18,6 +18,20 @@ class Laboratorio:
         self.equipamentos      = equipamentos
         self.membros           = membros
 
+    def obter_ultima_medida(lab_id, data_inicio, data_final):
+        data = db.fetchone("""
+            SELECT temp, umid, lum
+            FROM Log_Lab
+            WHERE lab_id = ?
+                  AND data > ?
+                  AND data <= ?
+            ORDER BY data DESC; """, (lab_id,
+                                      data_inicio,
+                                      data_final))
+        if data is not None:
+            return data
+        return [None, None, None]
+
     def registrar_medidas(medida):
         epoch = int(datetime.today().timestamp())
         #insert lab info
@@ -208,3 +222,34 @@ class Laboratorio:
             if d[0] not in equipamentos:
                 equipamentos.append(d[0])
         return equipamentos
+
+    def nome(lab_id):
+        data = db.fetchone("""SELECT nome FROM Lab WHERE lab_id = ?;""", (lab_id,))
+        if data is not None:
+            return data[0]
+
+    def presentes(lab_id):
+        data = db.fetchall("""
+            SELECT u.email
+            FROM Presenca p
+            INNER JOIN User_Lab u
+              ON p.user_id = u.user_id
+            WHERE presente = 1 AND lab_id = ?; """, (lab_id,))
+
+        emails = []
+        if len(data) != 0:
+            for d in data:
+                emails += [d[0]]
+        return emails
+
+    def email_ultimo_a_sair(lab_id):
+        data = db.fetchone("""SELECT u.email
+                              FROM Log_Presenca l, User_Lab u
+                              WHERE l.lab_id=?
+                                    AND l.evento='OUT'
+                                    AND l.user_id = u.user_id
+                              ORDER BY l.data DESC;""", (lab_id,))
+
+        if data is not None:
+            return [data[0]]
+        return []

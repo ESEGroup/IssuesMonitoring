@@ -5,7 +5,6 @@ try:
     from server import Config, DB
     from ..parser.run import work as run_parser
 except:
-    from os import getcwd
     from config import Config
     from db import DB
     from parser.run import work as run_parser
@@ -13,7 +12,7 @@ except:
 from threading import Thread
 from os import getenv
 from time import sleep
-from .controllers import reset_presencas_meia_noite, checar_condicoes_no_intervalo
+from .controllers import reset_presencas_meia_noite, checar_condicoes_ambiente
 
 class NoTokenParser(KeyboardInterrupt):
     pass
@@ -64,6 +63,16 @@ def run_threads():
     thread_parser = Thread(target=run_parser)
     thread_parser.daemon = True
     thread_parser.start()
+
+    # Testa por anomalias em cada laboratório
+    lab_ids = controllers.obter_laboratorios_id() 
+    threads_condicoes = []
+    for i in range (len(lab_ids)):
+        threads_condicoes.append(
+            Thread(target=checar_condicoes_ambiente,
+                   args=(lab_ids[i],)))
+        threads_condicoes[i].daemon = True
+        threads_condicoes[i].start()
 
 if Config.debug:
     @app.before_first_request
