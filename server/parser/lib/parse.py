@@ -1,6 +1,6 @@
 from .log import debug
 from re import search
-from datetime import datetime, timedelta
+from datetime import datetime
 
 TIME_REGEXP = r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}"
 EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?(-[^\W_]+)?\]"

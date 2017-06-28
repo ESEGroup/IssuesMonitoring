@@ -1,7 +1,5 @@
 from flask import render_template, request, redirect, url_for, session
 from flask import send_file, current_app as app
-from datetime import datetime
-import time
 from datetime import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
@@ -445,7 +443,7 @@ def equipamentos_laboratorio(id, nome=""):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    ids_equipamentos = controllers.obter_id_equipamentos(id)
+    ids_equipamentos = controllers.obter_ids_equipamentos(id)
 
     equipamentos = []
 
@@ -517,7 +515,7 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    equipamentos = controllers.obter_id_equipamentos(id)
+    equipamentos = controllers.obter_ids_equipamentos(id)
 
     return render_template('grafico.html',
                             lab_id=id,
@@ -546,7 +544,7 @@ def mostrar_grafico_post(id, nome):
     interval = int(intervalo_grafico)*60
 
     args = [id]
-    equipamentos = controllers.obter_id_equipamentos(*args)
+    equipamentos = controllers.obter_ids_equipamentos(*args)
 
     temp_data = []
 
@@ -698,7 +696,7 @@ def mostrar_relatorio_post(id, nome):
     print("lab temp e umid: ", lab_temp_umid)
 
     # tabela de log de temperatura para equipamentos
-    equipamentos = controllers.obter_id_equipamentos(id)
+    equipamentos = controllers.obter_ids_equipamentos(id)
     equip_dict ={}
     for equipamento in equipamentos:
         args = ["temperatura", equipamento, start_date_epoch, end_date_epoch, id]

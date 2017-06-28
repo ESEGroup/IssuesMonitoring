@@ -2,7 +2,6 @@ from . import db
 from datetime import datetime
 from .usuario_lab import UsuarioLab
 from .equipamento import Equipamento
-from ..common.erros import SemAnomalia
 
 class Anomalia:
     def __init__(self, tipo, lab_id, descricao, data, resolvido, id,

@@ -5,11 +5,7 @@ Created on Wed May 17 00:20:42 2017
 @author: Brian Confessor e Débora Pina
 """
 
-from ..common.mail import send_email
-from ..models import  AdministradorSistema
-import os.path
 from . import db
-import json
 
 def get_chart_data(chart_type, start_date, end_date, lab_id):
     data = []

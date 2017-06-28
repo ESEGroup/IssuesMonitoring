@@ -4,7 +4,6 @@ from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
 from threading import Thread
 from datetime import datetime
 from ..common.mail import send_email
-from ..common.erros import SemAnomalia
 from time import sleep
 import json
 

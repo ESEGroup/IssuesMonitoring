@@ -14,9 +14,6 @@ from os import getenv
 from time import sleep
 from .controllers import reset_presencas_meia_noite, checar_condicoes_ambiente
 
-class NoTokenParser(KeyboardInterrupt):
-    pass
-
 class NoEmailPassword(KeyboardInterrupt):
     pass
 
