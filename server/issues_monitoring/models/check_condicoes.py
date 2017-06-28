@@ -206,7 +206,7 @@ Pedimos que procure uma solução quanto a isso.
 
 def check_for_equipment_temperature(equipment_id, lab_id):
     data = db.fetchone("""
-    SELECT temp_min, temp, temp_max
+    SELECT temp_min, temp, temp_max, Equip.equip_id
     FROM Log_Equip
     INNER JOIN Equip ON Log_Equip.equip_id = Equip.equip_id
     WHERE Equip.equip_id = ?
@@ -240,7 +240,7 @@ Pedimos que procure uma solução quanto a isso.
 
         send_email(subject, msg_content, emails)
         tipo = "temp-equip-min" if data[1] < data[0] else "temp-equip-max"
-        Anomalia.registrar_anomalia(lab_id, tipo)
+        Anomalia.registrar_anomalia(lab_id, tipo, data[3])
         return 1
     else:
         return -1

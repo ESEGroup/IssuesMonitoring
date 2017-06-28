@@ -41,10 +41,9 @@
             </fieldset>
             <input type="submit" value="Salvar Informações" />
         </form>
-        <div class="div-botao-estilizado">
-            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
-        </div>
     </div>
-
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
+    </div>
 </div>
 {% endblock %}
