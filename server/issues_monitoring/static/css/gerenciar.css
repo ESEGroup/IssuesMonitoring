@@ -15,9 +15,9 @@
 .lab-item {
     position: relative;
     flex-shrink: 0;
-    margin-left: 1em;
+    margin-left: -17px;
     margin-right: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1.3em;
 }
 
 .lab-container > div {
