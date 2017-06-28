@@ -130,6 +130,9 @@ td.text-right {
   text-align: right;
 }
 
+td.one-word-per-line {
+    word-spacing: 100px;
+}
 
 /* CSS referente ao switch toggle: */
 
