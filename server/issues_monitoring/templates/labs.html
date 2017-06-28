@@ -26,14 +26,15 @@
         <div class="lab-container">
             {% for i, lab in laboratorios|enumerate %}
             {% if admin %}
-            <input data-url="{{url_for('remover_laboratorio', id=lab.id)}}" 
-                   data-lab-nome="{{lab.nome}}" type="image" src="/static/img/delete.png"
-                   alt="Submit" class="delete-btn">
-            {% endif %}
-            <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}">
-                <span class="lab-txt">{{lab.nome}}</span>
-            </a>
-            {% if (i+1) % 3 == 0 %}<p></p>{% endif %}
+            <span class="lab-item">
+                <input data-url="{{url_for('remover_laboratorio', id=lab.id)}}" 
+                       data-lab-nome="{{lab.nome}}" type="image" src="/static/img/delete.png"
+                       alt="Submit" class="delete-btn">
+                {% endif %}
+                <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}">
+                    <span class="lab-txt">{{lab.nome}}</span>
+                </a>
+            </span>
             {% endfor %}
         </div>
         <div class="div-botao-estilizado">
