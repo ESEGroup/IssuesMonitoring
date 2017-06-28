@@ -135,19 +135,17 @@ void send()
   // printTemp(1, machine1_temperature_signal.getAverage());
   // printTemp(2, machine2_temperature_signal.getAverage());
 
-json={"MAC":"AB:BB:CC:DD:EE","lab_id":1,"dados":{"luz":luz,"umidade":umidade,"sensacao_termica":sensacao_termica,"equipamentos":[equipamento1,equipamento2]}}
-
   String content;
-  content += "{\"MAC\":\"11:22:33:44:55\",\"lab_id\":1,\"dados\":{\"luz\":"
+  content += "{\"MAC\":\"AB:BB:CC:DD:EE\",\"lab_id\":1,\"dados\":{\"luz\":";
   content += ldr_signal.getAverage();
   content += ",\"umidade\":";
   content += humidity_signal.getAverage();
   content += ",\"sensacao_termica\":";
   content += temperature_signal.getAverage();
   content += ",\"equipamentos\":[";
-  content += machine1_temperature_signal;
+  content += machine1_temperature_signal.getAverage();
   content += ",";
-  content += machine2_temperature_signal;
+  content += machine2_temperature_signal.getAverage();
   content += "]}}";
 
   Serial.println(content);
@@ -173,8 +171,8 @@ void sendHTTP(String content) {
   String httpHeader;
   String httpRequest;
 
-  httpHeader = "POST / HTTP/1.1\r\n";
-  httpHeader += "Host: 192.168.0.103\r\n";
+  httpHeader = "POST /arduino HTTP/1.1\r\n";
+  httpHeader += "Host: 52.67.192.182\r\n";
   httpHeader += "User-Agent: Arduino/1.0\r\n";
   httpHeader += "Content-Type: application/json\r\n";
   httpHeader += "Content-Length: ";
@@ -201,7 +199,7 @@ void setup()
   wifi.endSendWithNewline(true);
   wifi.begin();
   wifi.connectToAP("LENS-ESE", "LensESE*789");
-  wifi.connectToServer("192.168.0.103", "8080");
+  wifi.connectToServer("52.67.192.182", "8080");
 
   // LDR setup
   pinMode(LDR_PIN, INPUT);
