@@ -214,3 +214,9 @@ def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
 
 def obter_anomalias(lab_id):
     return Laboratorio.obter_anomalias(lab_id)
+
+def obter_intervalo_arduino(lab_id):
+    return Laboratorio.obter_intervalo_arduino(lab_id)
+
+def obter_equipamentos(lab_id):
+    return Equipamento.obter_equipamentos_laboratorio(lab_id)

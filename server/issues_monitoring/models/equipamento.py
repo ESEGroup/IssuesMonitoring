@@ -1,7 +1,8 @@
 from . import db
 
 class Equipamento:
-    def __init__(self, lab_id, nome, descricao, temp_min, temp_max, MAC, parent_id, id = None):
+    def __init__(self, lab_id, nome, descricao, temp_min, temp_max, MAC,
+                 parent_id, id = None, nome_arduino = None, MAC_arduino = None):
         self.id        = id
         self.nome      = nome
         self.descricao = descricao
@@ -10,6 +11,8 @@ class Equipamento:
         self.temp_max  = temp_max
         self.MAC       = MAC
         self.parent_id = parent_id
+        self.nome_arduino = nome_arduino
+        self.MAC_arduino = MAC_arduino or ""
 
     def cadastrar(self):
         db.execute("""
@@ -67,3 +70,31 @@ class Equipamento:
             FROM Equip
             WHERE parent_id = 0;""")
         return data
+
+    def listar_arduinos_laboratorio(lab_id):
+        data = db.fetchall("""
+            SELECT lab_id, nome, descricao, temp_min, temp_max, end_mac, parent_id, equip_id
+            FROM Equip
+            WHERE parent_id = 0
+                  AND lab_id = ?;""", (lab_id,))
+        return data
+
+    def obter_arduinos_do_lab(lab_id):
+        data = db.fetchall("""
+            SELECT e.lab_id, e.nome, e.descricao, e.temp_min, e.temp_max, e.end_mac, e.parent_id, e.equip_id
+            FROM Equip as e
+            WHERE e.lab_id = ?
+                  AND e.parent_id = 0;""", (lab_id,))
+        
+        return [Equipamento(*d) for d in data]
+
+    def obter_equipamentos_laboratorio(lab_id):
+        data = db.fetchall("""
+            SELECT e.lab_id, e.nome, e.descricao, e.temp_min, e.temp_max, e.end_mac, e.parent_id, e.equip_id,
+                   a.nome, a.end_mac
+            FROM Equip as e
+            INNER JOIN Equip a
+              ON a.equip_id = e.parent_id
+            WHERE e.lab_id = ?;""", (lab_id,))
+        
+        return [Equipamento(*d) for d in data]

@@ -30,6 +30,7 @@
                     <th class="text-center">Endereço MAC</th>
                     <th class="text-center">Nome</th>
                     <th class="text-center">Zona de Conforto</th>
+                    <th class="text-center">Arduino Associado</th>
                     <th class="text-center">Excluir</th>
                 </tr>
             </thead>
@@ -39,6 +40,7 @@
                     <td class="text-center" title="Id: {{equipamento.id}}">{{equipamento.MAC}}</td>
                     <td class="text-center" title="{{equipamento.descricao}}">{{equipamento.nome}}</td>
                     <td class="text-center">{{'%d'| format(equipamento.temp_min|float)}}ºC até {{'%d'| format(equipamento.temp_max|float)}}ºC</td>
+                    <td class="text-center" title="{{equipamento.MAC_arduino}}">{{equipamento.nome_arduino|vazio}}</td>
                     <td class="text-center">
                         <input data-url="{{url_for('remover_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=equipamento.id)}}"
                                data-mac="{{equipamento.MAC}}"

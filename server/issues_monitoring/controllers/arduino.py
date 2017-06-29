@@ -51,5 +51,8 @@ def listar_todos_arduinos():
         arduinos += [Equipamento(*a)]
     return arduinos
 
+def listar_arduinos_laboratorio(lab_id):
+    return Equipamento.obter_arduinos_do_lab(lab_id)
+
 def ultima_atualizacao_arduino(id):
     return Laboratorio.ultima_atualizacao_arduino(id)

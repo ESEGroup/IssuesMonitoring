@@ -4,7 +4,6 @@ from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from ..             import app, Config, controllers
-from ..models       import Laboratorio, Equipamento
 import json
 import pdfkit
 
@@ -352,7 +351,6 @@ def cadastro_equipamento(id, nome):
     parent_id = request.form.get('parent_id')
 
     args = [id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id]
-    print(args)
     kwargs = {"id": id,
               "nome": nome}
     if "" not in args:
@@ -445,21 +443,15 @@ def equipamentos_laboratorio(id, nome=""):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    ids_equipamentos = controllers.obter_ids_equipamentos(id)
-
-    equipamentos = []
-
-    for equip_id in ids_equipamentos:
-        equipamentos += [Equipamento.obter(equip_id)]
-
-    lista_arduinos = controllers.listar_todos_arduinos()
+    equipamentos = controllers.obter_equipamentos(id)
+    lista_arduinos = controllers.listar_arduinos_laboratorio(id)
 
     return render_template('lista_equipamentos.html',
                            autenticado=autenticado(),
                            admin   = admin_autenticado(),
                            lab_id  = id,
                            lab_nome= nome,
-                           equipamentos=equipamentos,
+                           equipamentos=equipamentos+lista_arduinos,
                            lista_arduinos=lista_arduinos,
                            pagina  = "equipamentos_laboratorio")
 
@@ -501,7 +493,7 @@ def system_status(id, nome):
     if tempos_arduinos is not None:
         status_componente = "OK"
         if ((datetime.fromtimestamp(int(tempos_arduinos)) <
-            (agora - timedelta(minutes=(2*Laboratorio.obter_intervalo_arduino(id)))))):
+            (agora - timedelta(minutes=(2*controllers.obter_intervalo_arduino(id)))))):
             status_componente = "Fora do Ar"
 
         dados += [{"nome_componente"    : "Arduino",
