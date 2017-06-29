@@ -79,7 +79,7 @@ Pedimos que procure uma solução quanto a isso.
 
         tipo = "temp-min" if temperatura < zona_conforto.temp_min else "temp-max"
         temp_limite = zona_conforto.temp_min if temperatura < zona_conforto.temp_min else zona_conforto.temp_max
-        Anomalia.registrar_anomalia(lab_id, tipo, temperatura, temp_limite)
+        Anomalia.registrar_anomalia(lab_id, tipo, int(temperatura), temp_limite)
         send_email(subject, msg_content, emails)
 
 def checar_umidade(lab_id, lab_nome, umidade, zona_conforto, emails):
@@ -93,7 +93,7 @@ Pedimos que procure uma solução quanto a isso.
 
         tipo = "umid-min" if umidade < zona_conforto.umidade_min else "umid-max"
         umid_limite = zona_conforto.umidade_min if umidade < zona_conforto.umidade_min else zona_conforto.umidade_max
-        Anomalia.registrar_anomalia(lab_id, tipo, umidade, umid_limite)
+        Anomalia.registrar_anomalia(lab_id, tipo, int(umidade), umid_limite)
         send_email(subject, msg_content, emails)
 
 def checar_luz_acesa_vazio(lab_id, lab_nome, luminosidade, emails):
@@ -124,7 +124,7 @@ Pedimos que procure uma solução quanto a isso.
         temp_limite = temp_min if temperatura < temp_min else temp_max
         Anomalia.registrar_anomalia(lab_id,
                                     tipo,
-                                    temperatura,
+                                    int(temperatura),
                                     temp_limite,
                                     equip_id)
 
