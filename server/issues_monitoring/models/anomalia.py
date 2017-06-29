@@ -85,3 +85,17 @@ class Anomalia:
             UPDATE Log_Anomalias
             SET resolvido = ?
             WHERE id = ?""", (1, id_log))
+
+    def nao_resolvida(slug, anti_slug=None):
+        if anti_slug is None:
+            anti_slug = slug
+        data = db.fetchone("""
+            SELECT slug_anomalia
+            FROM Log_Anomalias
+            WHERE resolvido = ?
+                  AND (slug_anomalia = ?
+                       OR slug_anomalia = ?)
+            ORDER BY data DESC;""",
+            (0, slug, anti_slug))
+        return data is not None and data[0] == slug
+

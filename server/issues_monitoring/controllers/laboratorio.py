@@ -77,10 +77,17 @@ Você está recebendo essa mensagem pois a temperatura do laboratorio """ + lab_
 Pedimos que procure uma solução quanto a isso.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
-        tipo = "temp-min" if temperatura < zona_conforto.temp_min else "temp-max"
-        temp_limite = zona_conforto.temp_min if temperatura < zona_conforto.temp_min else zona_conforto.temp_max
-        Anomalia.registrar_anomalia(lab_id, tipo, int(temperatura), temp_limite)
-        send_email(subject, msg_content, emails)
+        if temperatura < zona_conforto.temp_min:
+            slug = "temp-min"
+            anti_slug = "temp-max"
+            temp_limite = zona_conforto.temp_min
+        else:
+            slug = "temp-max"
+            anti_slug = "temp-min"
+            temp_limite = zona_conforto.temp_max
+        if not Anomalia.nao_resolvida(slug, anti_slug):
+            Anomalia.registrar_anomalia(lab_id, slug, int(temperatura), temp_limite)
+            send_email(subject, msg_content, emails)
 
 def checar_umidade(lab_id, lab_nome, umidade, zona_conforto, emails):
     if umidade < zona_conforto.umidade_min or umidade > zona_conforto.umidade_max:
@@ -91,10 +98,17 @@ Você está recebendo essa mensagem pois a umidade do laboratorio """ + lab_nome
 Pedimos que procure uma solução quanto a isso.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
-        tipo = "umid-min" if umidade < zona_conforto.umidade_min else "umid-max"
-        umid_limite = zona_conforto.umidade_min if umidade < zona_conforto.umidade_min else zona_conforto.umidade_max
-        Anomalia.registrar_anomalia(lab_id, tipo, int(umidade), umid_limite)
-        send_email(subject, msg_content, emails)
+        if umidade < zona_conforto.umidade_min:
+            slug = "umid-min"
+            anti_slug = "umid-max"
+            umid_limite = zona_conforto.umidade_min
+        else:
+            slug = "umid-max"
+            anti_slug = "umid-min"
+            umid_limite = zona_conforto.umidade_max
+        if not Anomalia.nao_resolvida(slug, anti_slug):
+            Anomalia.registrar_anomalia(lab_id, slug, int(umidade), umid_limite)
+            send_email(subject, msg_content, emails)
 
 def checar_luz_acesa_vazio(lab_id, lab_nome, luminosidade, emails):
     if luminosidade == 1:
@@ -105,9 +119,11 @@ Você está recebendo essa mensagem pois a luz do laboratorio """ + lab_nome + "
 Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessário de energia.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
-        emails += Laboratorio.email_ultimo_a_sair(lab_id)
-        Anomalia.registrar_anomalia(lab_id, "luz")
-        send_email(subject, msg_content, emails)
+        slug = "luz"
+        if not Anomalia.nao_resolvida(slug):
+            emails += Laboratorio.email_ultimo_a_sair(lab_id)
+            Anomalia.registrar_anomalia(lab_id, slug)
+            send_email(subject, msg_content, emails)
 
 def checar_temperatura_equipamento(lab_id, lab_nome, equip_id, emails, data_inicio, data_final):
     temp_min, temperatura, temp_max, equip_nome = Equipamento.obter_medida(equip_id, data_inicio, data_final)
@@ -120,15 +136,22 @@ Você está recebendo essa mensagem pois a temperatura do equipamento """ + equi
 Pedimos que procure uma solução quanto a isso.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
-        tipo = "temp-equip-min" if temperatura < temp_min else "temp-equip-max"
-        temp_limite = temp_min if temperatura < temp_min else temp_max
-        Anomalia.registrar_anomalia(lab_id,
-                                    tipo,
-                                    int(temperatura),
-                                    temp_limite,
-                                    equip_id)
+        if temperatura < temp_min:
+            slug = "temp-equip-min"
+            anti_slug = "temp-equip-max"
+            temp_limite = temp_min
+        else:
+            slug = "temp-equip-max"
+            anti_slug = "temp-equip-min"
+            temp_limite = temp_max
+        if not Anomalia.nao_resolvida(slug, anti_slug):
+            Anomalia.registrar_anomalia(lab_id,
+                                        slug,
+                                        int(temperatura),
+                                        temp_limite,
+                                        equip_id)
 
-        send_email(subject, msg_content, emails)
+            send_email(subject, msg_content, emails)
 
 def checar_condicoes_ambiente(lab_id):
     data_inicio = Sistema.obter_data_inicio()
