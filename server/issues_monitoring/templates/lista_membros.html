@@ -13,7 +13,7 @@
 <script src="/static/js/switch_view.js"></script>
 <script src="/static/js/aprovar.js"></script>
 <script src="/static/js/ajax.js"></script>
-<script src="/static/js/lista_membros.js"></script>
+<script src="/static/js/gerenciar_usuarios.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -55,6 +55,10 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <div class="div-botao-estilizado div-btn-below">
+            <a id="salvar" href="#" class="btn-estilizado btn-estilizado-blue">Salvar</a>
+        </div>
         {% else %}
         <div class="ui-widget msg">
             <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
