@@ -1,10 +1,10 @@
-from flask import render_template, request, redirect, url_for, session
-from flask import send_file, current_app as app
-from datetime import datetime, timedelta
+from flask          import render_template, request, redirect, url_for, session
+from flask          import send_file, current_app as app
+from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
-from .. import app, Config, controllers
-from ..models import Laboratorio, Equipamento
+from ..             import app, Config, controllers
+from ..models       import Laboratorio, Equipamento
 import json
 import pdfkit
 
