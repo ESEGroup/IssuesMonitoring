@@ -10,7 +10,7 @@ app.jinja_env.filters["trans_evento"] = lambda evento: {"IN": "Entrada", "OUT": 
 
 @app.template_filter("max_len20")
 def max_len20(text):
-    return text[:20] + "..."
+    return text[:20] + ("..." if len(text) > 20 else "")
 
 @app.template_filter('format_dia_url')
 def format_dia_url(dia):

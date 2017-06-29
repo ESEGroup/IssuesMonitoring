@@ -113,7 +113,7 @@ def work():
     cursor.execute("""
     CREATE TABLE Log_MyDenox(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            data INTEGER NOT NULL
+            epoch INTEGER NOT NULL,
             evento CHAR(255));
     """)
 

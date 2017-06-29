@@ -478,6 +478,11 @@ def system_status(id, nome):
         dados += [{"nome_componente":    "MyDenox",
                    "ultima_atualizacao": mydenox.ultima_atualizacao,
                    "status":             mydenox.status}]
+    else:
+        dados += [{"nome_componente":    "MyDenox",
+                   "ultima_atualizacao": None, 
+                   "status":             "Nenhuma mensagem recebida"}]
+        
 
     # parsear as infos e preencher o dicionario com os dados
     if ((datetime.fromtimestamp(timestamp_parser)) <
