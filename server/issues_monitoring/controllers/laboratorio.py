@@ -86,8 +86,9 @@ Pedimos que procure uma solução quanto a isso.
             anti_slug = "temp-min"
             temp_limite = zona_conforto.temp_max
 
-        id, nao_resolvida = Anomalia.nao_resolvida(slug, anti_slug)
-        if nao_resolvida:
+        id, nao_repetida = Anomalia.nao_repetida(slug, anti_slug)
+        print(id, nao_repetida)
+        if nao_repetida:
             Anomalia.registrar_anomalia(lab_id, slug, int(temperatura), temp_limite)
             send_email(subject, msg_content, emails)
         else:
@@ -111,8 +112,8 @@ Pedimos que procure uma solução quanto a isso.
             anti_slug = "umid-min"
             umid_limite = zona_conforto.umidade_max
 
-        id, nao_resolvida = Anomalia.nao_resolvida(slug, anti_slug)
-        if nao_resolvida:
+        id, nao_repetida = Anomalia.nao_repetida(slug, anti_slug)
+        if nao_repetida:
             Anomalia.registrar_anomalia(lab_id, slug, int(umidade), umid_limite)
             send_email(subject, msg_content, emails)
         else:
@@ -128,7 +129,7 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
         slug = "luz"
-        if not Anomalia.nao_resolvida(slug):
+        if not Anomalia.nao_repetida(slug):
             emails += Laboratorio.email_ultimo_a_sair(lab_id)
             Anomalia.registrar_anomalia(lab_id, slug)
             send_email(subject, msg_content, emails)
@@ -156,8 +157,8 @@ Pedimos que procure uma solução quanto a isso.
             anti_slug = "temp-equip-min"
             temp_limite = temp_max
 
-        id, nao_resolvida = Anomalia.nao_resolvida(slug, anti_slug)
-        if nao_resolvida:
+        id, nao_repetida = Anomalia.nao_repetida(slug, anti_slug)
+        if nao_repetida:
             Anomalia.registrar_anomalia(lab_id,
                                         slug,
                                         int(temperatura),

@@ -86,7 +86,7 @@ class Anomalia:
             SET resolvido = ?
             WHERE id = ?""", (1, id_log))
 
-    def nao_resolvida(slug, anti_slug=None):
+    def nao_repetida(slug, anti_slug=None):
         if anti_slug is None:
             anti_slug = slug
         data = db.fetchone("""
@@ -97,11 +97,13 @@ class Anomalia:
                        OR slug_anomalia = ?)
             ORDER BY data DESC;""",
             (0, slug, anti_slug))
-        return data[1], data is not None and data[0] == slug
+        if data is not None:
+            return data[1], data[0] != slug
+        return [None, True]
 
     def atualizar_valor(id, valor, data):
         db.execute("""
-            UPDATE Log_Anomalia
+            UPDATE Log_Anomalias
             SET valor = ?,
                 data = ? 
-            WHERE id = ?;""", (valor, id, data))
+            WHERE id = ?;""", (valor, data, id))
