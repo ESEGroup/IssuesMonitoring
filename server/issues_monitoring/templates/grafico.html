@@ -6,11 +6,13 @@
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/radio_input.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/wickedpicker.css" /> <!-- Selecionador de hora -->
 <link rel="stylesheet" type="text/css" href="/static/css/grafico.css" />
 {% endblock %}
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/wickedpicker.js"></script>
 <script src="/static/js/grafico.js"></script>
 {% endblock %}
 
@@ -48,6 +50,7 @@
                 <div class="datepicker-class" id="datepicker-end"></div>
                 <input type="text" id="start-date">
                 <input type="text" id="end-date">
+                <input type="text" name="timepicker" class="timepicker"/>
             </fieldset>
             
             <fieldset>

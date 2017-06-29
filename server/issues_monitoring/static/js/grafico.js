@@ -25,6 +25,9 @@ $(function() {
     //Ativa o slider de handle unico:
     rangeSlider();
     
+    //Ativa o timepicker:
+    $('.timepicker').wickedpicker();
+    
     
     $("#datepicker-start").datepicker({
         onSelect: function() { 
@@ -41,6 +44,7 @@ $(function() {
     //Ativa o datepicker:
     $("#datepicker-start").datepicker();
     $("#datepicker-end").datepicker();
+
     
 /*
     //JS referente ao grafico:
