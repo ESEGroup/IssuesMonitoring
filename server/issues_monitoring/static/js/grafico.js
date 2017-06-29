@@ -1,6 +1,35 @@
-$(function() {
-    $( "#datepicker" ).datepicker();
+//JS para o slider de handle unico:
 
+var rangeSlider = function(){
+  var slider = $('.range-slider'),
+      range = $('.range-slider__range'),
+      value = $('.range-slider__value');
+    
+  slider.each(function(){
+
+    value.each(function(){
+      var value = $(this).prev().attr('value');
+      $(this).html(value);
+    });
+
+    range.on('input', function(){
+      $(this).next(value).html(this.value);
+    });
+  });
+};
+
+//JS pro restante da pagina:
+
+$(function() {
+    
+    //Ativa o slider de handle unico:
+    rangeSlider();
+
+    //Ativa o datepicker:
+    $( "#datepicker-start" ).datepicker();
+    $( "#datepicker-end" ).datepicker();
+/*
+    //JS referente ao grafico:
     $('input[type=radio][name=chart_type]').on('change', function(){
         console.log($(this).val());
         if ($(this).val() == "temperatura"){
@@ -54,7 +83,7 @@ $(function() {
         legend: 'none',
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+    var chart = new google.visualization.LineChart(document.getElementById('curve-chart'));
 
     chart.draw(data, options);
   }
@@ -63,9 +92,9 @@ $(function() {
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
   } else {
-      document.getElementById('curve_chart').remove();
+      document.getElementById('curve-chart').remove();
       document.getElementById('warning-chart').style = "";
   }
-
+*/
 });
 

@@ -1,0 +1,12 @@
+#curve-chart {
+    width: 900px; 
+    height: 500px;
+}
+
+.datepicker-class {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 12px;
+    margin-right: 12px;
+    display: inline-block !important;
+}

@@ -5,6 +5,8 @@
 {% block header %}
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/radio_input.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/grafico.css" />
 {% endblock %}
 
 {% block js %}
@@ -20,25 +22,47 @@
         <h4>{{lab_nome}}</h4>
     </div>
                 
-    <div class="neat-form">
+    <div class="neat-form" style="max-width: 640px !important;">
         <form method="POST">
+        
             <fieldset>
-                <div class="legenda-cadastro">Tipo do gráfico:</div>
-                <div class="graphic_mode">
-                    <input type="radio" name="chart_type" value="temperatura">Temperatura
-                    <input type="radio" name="chart_type" value="umidade">Umidade
-                </div>
-                <div class="legenda-cadastro">Data de início e fim:</div>
-                <p>Date: <input type="text" id="datepicker"></p>
+                <legend><span class="number">1</span> Tipo do Gráfico</legend>
+                <div class="container">
                 
-                <div class="legenda-cadastro">Intervalo do gráfico (em min):</div>
-                <input type="text" name="intervalo_grafico" id="intervalo_grafico">
+                    <div class="radio">
+                        <input id="radio-1" name="radio" type="radio" checked>
+                        <label for="radio-1" class="radio-label">Temperatura</label>
+                    </div>
+
+                    <div class="radio">
+                        <input id="radio-2" name="radio" type="radio">
+                        <label  for="radio-2" class="radio-label">Umidade</label>
+                    </div>
+                    
+                </div>
             </fieldset>
+            
+            <fieldset>
+                <legend><span class="number">2</span> Datas de início e fim</legend>
+                <div class="datepicker-class" id="datepicker-start"></div>
+                <div class="datepicker-class" id="datepicker-end"></div>
+            </fieldset>
+            
+            <fieldset>
+                <legend><span class="number">3</span> Intervalo do gráfico (minutos)</legend>
+                <div class="range-slider">
+                    <input class="range-slider__range" name="intervalo_grafico" id="intervalo_grafico" type="range" value="20" min="1" max="120" step="1">
+                    <span class="range-slider__value">0</span>
+                </div>
+            </fieldset>
+            
             <input type="submit" id="graphic" value="Gerar gráfico" />
+            
         </form>
     </div>
 
-    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+    <div id="curve-chart"></div>
+    
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
         <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
             <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
