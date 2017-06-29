@@ -28,6 +28,7 @@ def arduino_get():
     if json_str is not None:
         j = json.loads(json_str)
         try:
+            print("Passou por aqui")
             if (controllers.registrar_medidas(j)):
                 lab_id = j["lab_id"]
                 return str(Laboratorio.obter_intervalo_arduino(lab_id))

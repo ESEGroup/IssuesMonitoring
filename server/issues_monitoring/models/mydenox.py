@@ -8,13 +8,13 @@ class MyDenox:
     def log(epoch, status):
         db.execute("""
             INSERT INTO Log_MyDenox
-            (epoch, evento)
+            (data, evento)
             VALUES (?, ?);""", (epoch, status))
 
     def ultima_atualizacao():
         data = db.fetchone("""
-            SELECT epoch, evento
+            SELECT data, evento
             FROM Log_MyDenox
-            ORDER by epoch DESC;""")
+            ORDER by data DESC;""")
         if data is not None:
             return MyDenox(*data)

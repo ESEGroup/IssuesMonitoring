@@ -15,7 +15,7 @@ $(function() {
     $("#temp-min").val(20);
     $("#temp-max").val(40);
     $("#temp-lab").val($("#slider-temp").slider("values", 0) + "ºC a " + $("#slider-temp").slider("values", 1) + "ºC");
-    
+
     var del = document.getElementsByClassName("delete-btn");
     for (var i = 0; i < del.length; ++i) {
         del[i].addEventListener("click", function(ev) {
@@ -26,4 +26,23 @@ $(function() {
             }
         });
     }
+
+    // JS para os radiobutton
+    var comp_radio         = document.getElementById("comp_radio");
+    var ardu_radio         = document.getElementById("ardu_radio");
+    var div_select_arduino = document.getElementById("div_select_arduino");
+    var select_arduino     = document.getElementById("select_arduino");
+    var parent_id          = document.getElementById("parent_id");
+    ardu_radio.addEventListener("click", function(ev) {
+        div_select_arduino.className += " hidden";
+        parent_id.value = 0;
+    });
+
+    comp_radio.addEventListener("click", function(ev) {
+        div_select_arduino.className = div_select_arduino.className.replace(" hidden", "");
+    });
+
+    select_arduino.addEventListener("change", function(ev) {
+        parent_id.value = ev.target.value;
+    });
 });
