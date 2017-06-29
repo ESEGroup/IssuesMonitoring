@@ -1,4 +1,0 @@
-flask
-bcrypt
-gunicorn
-pdfkit
