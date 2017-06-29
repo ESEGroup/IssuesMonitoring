@@ -183,7 +183,7 @@ def checar_condicoes_ambiente(lab_id):
         data_final = int(datetime.now().timestamp())
 
         data, temperatura, umidade, lum = Laboratorio.obter_ultima_medida(lab_id, data_inicio, data_final)
-        if zona_de_conforto is not None:
+        if zona_de_conforto is not None and data is not None:
             if len(presentes) == 0:
                 checar_luz_acesa_vazio(lab_id, nome, lum, emails, data)
 

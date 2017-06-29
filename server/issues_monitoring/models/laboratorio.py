@@ -20,7 +20,7 @@ class Laboratorio:
 
     def obter_ultima_medida(lab_id, data_inicio, data_final):
         data = db.fetchone("""
-            SELECT temp, umid, lum
+            SELECT data, temp, umid, lum
             FROM Log_Lab
             WHERE lab_id = ?
                   AND data > ?
@@ -30,7 +30,7 @@ class Laboratorio:
                                       data_final))
         if data is not None:
             return data
-        return [None, None, None]
+        return [None, None, None, None]
 
     def registrar_medidas(medida):
         epoch = int(datetime.today().timestamp())
