@@ -497,6 +497,7 @@ def system_status(id, nome):
                            lab_id = lab_id,
                            lab_nome = nome,
                            componentes = dados,
+                           admin = admin_autenticado(),
                            pagina = 'system-status',
                            autenticado=autenticado())
 
@@ -523,6 +524,7 @@ def mostrar_grafico(id, nome):
                             lab_id=id,
                             lab_nome=nome,
                             autenticado=True,
+                            admin = admin_autenticado(),
                             equipamentos=equipamentos,
                             pagina='mostrar_grafico')
 
@@ -566,6 +568,7 @@ def mostrar_grafico_post(id, nome):
         return render_template('grafico.html',
                                lab_id=id,
                                lab_nome=nome,
+                               admin = admin_autenticado(),
                                autenticado=True,
                                equipamentos=equipamentos,
                                pagina='mostrar_grafico',
@@ -580,6 +583,7 @@ def mostrar_grafico_post(id, nome):
         return render_template('grafico.html',
                                lab_id=id,
                                lab_nome=nome,
+                               admin = admin_autenticado(),
                                autenticado=True,
                                equipamentos=equipamentos,
                                pagina='mostrar_grafico',
@@ -599,6 +603,7 @@ def mostrar_grafico_post(id, nome):
                             lab_nome=nome,
                             temp_data=result_means,
                             equipamentos=equipamentos,
+                            admin = admin_autenticado(),
                             intervalo_grafico=intervalo_grafico)
 
 
@@ -660,6 +665,7 @@ def mostrar_relatorio(id, nome):
     return render_template('relatorio.html',
                             pagina="mostrar_relatorio",
                             autenticado=True,
+                            admin = admin_autenticado(),
                             lab_id=id,
                             lab_nome=nome)
 
@@ -720,6 +726,7 @@ def mostrar_relatorio_post(id, nome):
                             lab_id=id,
                             lab_nome=nome,
                             autenticado=True,
+                            admin = admin_autenticado(),
                             pagina='mostrar_relatorio',
                             usuarios_presentes=presentes_list,
                             eventos=log_presenca_lista,
@@ -790,6 +797,7 @@ def anomalias(id, nome):
                             anomalias=anomalias,
                             pagina='anomalias',
                             autenticado=True,
+                            admin = admin_autenticado(),
                             lab_id=id,
                             lab_nome=nome)
 
@@ -804,6 +812,7 @@ def solucionar_anomalia(lab_id, lab_nome, id):
                            lab_id=lab_id,
                            lab_nome=lab_nome,
                            autenticado=True,
+                           admin = admin_autenticado(),
                            anomalia=anomalia)
 
 @app.route('/acao/<id>/<nome>', methods=["POST"])
