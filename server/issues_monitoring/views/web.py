@@ -349,10 +349,10 @@ def cadastro_equipamento(id, nome):
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
-    nome = request.form.get('nome')
+    nome_equip = request.form.get('nome')
     descricao = request.form.get('descricao')
 
-    args = [id, nome, descricao, temp_min, temp_max, MAC]
+    args = [id, nome_equip, descricao, temp_min, temp_max, MAC]
     kwargs = {"id": id,
               "nome": nome}
     if "" not in args:
