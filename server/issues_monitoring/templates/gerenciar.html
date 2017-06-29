@@ -16,29 +16,47 @@
         </div>
 
         <div class="lab-container">
-            <div>
+        
+            <span class="lab-item">
                 <a href="{{url_for('log_eventos_hoje', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/Clipboard.gif) no-repeat top; background-size: 110px 125px; background-position: 55% 19%;"><span class="lab-txt">Registro de Presença no Laboratório</span></a>
-
+            </span>
+            
+            <span class="lab-item">
                 <a href="{{url_for('usuarios_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/members.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Membros Associados</span></a>
-
-                <a href="{{url_for('equipamentos_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/tools.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt">Gerenciar Equipamentos</span></a>
-            </div>
-
-            <div>
+            </span>
+            
+            <span class="lab-item">
+                <a href="{{url_for('equipamentos_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/tools.png) no-repeat top; background-size: 110px 120px; background-position: 55% 22%;"><span class="lab-txt"><br>Gerenciar Equipamentos</span></a>
+            </span>
+            
+            <p></p>
+            
+            <span class="lab-item">
                 <a href="{{url_for('zona_de_conforto', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/termometro.png) no-repeat top; background-size: 150px 190px; background-position: 55% 8%;"><span class="lab-txt">Configurar Zona de Conforto</span></a>
-
+            </span>
+            
+            <span class="lab-item">
                 <a href="{{url_for('editar_laboratorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/pencil.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Alterar Dados do Laboratório</span></a>
-
+            </span>
+            
+            <span class="lab-item">
                 <a href="{{url_for('mostrar_grafico', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/grafico.png) no-repeat top; background-size: 130px 130px; background-position: 52% 17%;"><span class="lab-txt">Mostrar Gráficos dos Eventos</span></a>
-            </div>
+            </span>
+            
+            <p></p>
 
-            <div>
+            <span class="lab-item">
                 <a href="{{url_for('mostrar_relatorio', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/report.png) no-repeat top; background-size: 120px 140px; background-position: 52% 17%;"><span class="lab-txt">Mostrar Relatório dos Eventos</span></a>
-
-                <a href="{{url_for('system_status', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/status.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt">Status das partes do Sistema</span></a>
-
+            </span>
+            
+            <span class="lab-item">
+                <a href="{{url_for('system_status', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/status.png) no-repeat top; background-size: 130px 160px; background-position: 55% 14%;"><span class="lab-txt"><br>Status do Sistema</span></a>
+            </span>
+            
+            <span class="lab-item">
                 <a href="{{url_for('anomalias', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/anomalia.png) no-repeat top; background-size: 130px 130px; background-position: 51% 17%;"><span class="lab-txt">Anomalias Registradas no Sistema</span></a>
-            </div>
+            </span>
+            
         </div>
 
         <div class="div-botao-estilizado">

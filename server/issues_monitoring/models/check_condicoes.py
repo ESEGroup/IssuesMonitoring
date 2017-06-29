@@ -115,7 +115,6 @@ def check_for_abnormal_temperature(lab_id):
     temp_min=data[0]
     temp_max=data[1]
 
-
     data = db.fetchone("""
         SELECT temp
         FROM Log_Lab WHERE lab_id = ? ORDER BY data DESC; """, (lab_id,))
@@ -146,6 +145,8 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        tipo = "temp-min" if current_temp < temp_min else "temp-max"
+        Anomalia.registrar_anomalia(lab_id, tipo)
         return len(emails)
 
     #normal temperature
@@ -194,7 +195,8 @@ Pedimos que procure uma solução quanto a isso.
             for d in data:
                 emails += [d[0]]
 
-        send_email(subject, msg_content, emails)
+        tipo = "umid-min" if current_umid < umid_min else "umid-max"
+        Anomalia.registrar_anomalia(lab_id, tipo)
         return len(emails)
 
     #normal humidity
@@ -204,7 +206,7 @@ Pedimos que procure uma solução quanto a isso.
 
 def check_for_equipment_temperature(equipment_id, lab_id):
     data = db.fetchone("""
-    SELECT temp_min, temp, temp_max
+    SELECT temp_min, temp, temp_max, Equip.equip_id
     FROM Log_Equip
     INNER JOIN Equip ON Log_Equip.equip_id = Equip.equip_id
     WHERE Equip.equip_id = ?
@@ -237,6 +239,8 @@ Pedimos que procure uma solução quanto a isso.
                 emails += [d[0]]
 
         send_email(subject, msg_content, emails)
+        tipo = "temp-equip-min" if data[1] < data[0] else "temp-equip-max"
+        Anomalia.registrar_anomalia(lab_id, tipo, data[3])
         return 1
     else:
         return -1

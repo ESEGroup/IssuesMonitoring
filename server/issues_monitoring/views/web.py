@@ -8,9 +8,7 @@ from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from .. import app, Config, controllers
 from ..models import Laboratorio, Equipamento
 import json
-
 import pdfkit
-import webbrowser
 
 @app.route('/')
 def root():
@@ -327,33 +325,42 @@ def cadastro_usuario_lab_post():
     if not success:
         kwargs = {"e": "Id de usuário já existente."}
     else:
-        kwargs = {"c" : "Usuário cadastrado com sucesso."}
+        kwargs = {"c": "Usuário cadastrado com sucesso."}
 
-    if autenticado():
-        url = 'laboratorio'
-        kwargs['id'] = lab_id
-    else:
-        url = 'cadastro_usuario_lab'
-    return redirect(url_for(url, **kwargs))
+    return redirect(url_for('cadastro_usuario_lab', **kwargs))
 
-@app.route('/cadastro-equipamento', methods=["POST"])
-def cadastro_equipamento():
+@app.route('/remover-equipamento/<lab_id>/<lab_nome>/<id>/', methods=["POST"])
+def remover_equipamento(lab_id, lab_nome, id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login'))
+
+    controllers.remover_equipamento(id)
+    kwargs = {"c": "Equipamento removido com sucesso!",
+              "id": lab_id,
+              "nome": lab_nome}
+    return redirect(url_for('equipamentos_laboratorio', **kwargs))
+
+@app.route('/cadastro-equipamento/<id>/<nome>', methods=["POST"])
+def cadastro_equipamento(id, nome):
     if not admin_autenticado():
         return redirect(url_for('laboratorios'))
 
-    lab_id = request.form.get('id-lab')
     temp_min = request.form.get('temp-min')
     temp_max = request.form.get('temp-max')
     MAC = request.form.get('endereco-mac')
+    nome_equip = request.form.get('nome')
+    descricao = request.form.get('descricao')
 
-    args = [lab_id, temp_min, temp_max, MAC]
+    args = [id, nome_equip, descricao, temp_min, temp_max, MAC]
+    kwargs = {"id": id,
+              "nome": nome}
     if "" not in args:
         controllers.cadastro_equipamento(*args)
-
-    kwargs = {"c" : "Equipamento cadastrado com sucesso."}
-    kwargs['id']   = lab_id
-    kwargs['nome'] = Laboratorio.obter(lab_id).nome
-
+        kwargs["c"] = "Equipamento cadastrado com sucesso."
+    else:
+        kwargs["e"] = "Por favor preencha todos os campos."
+        kwargs["_anchor"] = "cadastrar"
     return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
@@ -460,8 +467,9 @@ def system_status(id, nome):
         return redirect(url_for('login', **kwargs))
 
     # pegar as infos do banco
+    lab_id = id
     timestamp_parser = int(controllers.ultima_atualizacao_parser())
-    tempos_arduinos  = controllers.ultima_atualizacao_arduino(id)
+    tempos_arduinos  = controllers.ultima_atualizacao_arduino(lab_id)
     agora = datetime.today()
     status_componente = "OK"
     dados = []
@@ -486,7 +494,7 @@ def system_status(id, nome):
                    "status"             : status_componente}]
 
     return render_template('system-status.html',
-                           lab_id = id,
+                           lab_id = lab_id,
                            lab_nome = nome,
                            componentes = dados,
                            pagina = 'system-status',
@@ -509,7 +517,7 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
-    equipamentos = controllers.obter_equipamentos(id)
+    equipamentos = controllers.obter_id_equipamentos(id)
 
     return render_template('grafico.html',
                             lab_id=id,
@@ -540,9 +548,10 @@ def mostrar_grafico_post(id, nome):
     args = [id]
     equipamentos = controllers.obter_id_equipamentos(*args)
 
+    temp_data = []
+
     if (chart_type == "temperatura"):
         if (chart_target == "laboratorio"):
-            print("no grafico do lab")
             args = [chart_type, start_date_epoch, end_date_epoch, id]
             temp_data = controllers.get_data_log(*args)
         else:
@@ -552,11 +561,21 @@ def mostrar_grafico_post(id, nome):
         args = [chart_type, start_date_epoch, end_date_epoch, id]
         temp_data = controllers.get_data_log(*args)
 
+    if temp_data == []:
+        kwargs = {"error_message": "Selecione tipo do gráfico!"}
+        return render_template('grafico.html',
+                               lab_id=id,
+                               lab_nome=nome,
+                               autenticado=True,
+                               equipamentos=equipamentos,
+                               pagina='mostrar_grafico',
+                               **kwargs)
+
     json.dumps(temp_data)
     arrayOfEpochs = json.loads(temp_data)
+    print ("Array of Epochs: ", arrayOfEpochs)
 
     if (arrayOfEpochs == []):
-        print ("Deu ruim!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         kwargs = {"error_message": "Não existem dados para o período selecionado. Por favor, selecione outro período"}
         return render_template('grafico.html',
                                lab_id=id,
@@ -603,28 +622,33 @@ def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
     intervalLimit = interval
     minimumValue = arrayOfEpochs[0][1]
     maximumValue = arrayOfEpochs[0][1]
+    #varrer o array calculando a média de cada intervalo
     for i in range(len(arrayOfEpochs)):
-      if(arrayOfEpochs[i][0]<beginningOfInterval+intervalLimit):
-        print("Adding %f to current sum", arrayOfEpochs[i][1])
-        sum+=arrayOfEpochs[i][1]
-        minimumValue = min(minimumValue, arrayOfEpochs[i][1])
-        maximumValue = max(maximumValue, arrayOfEpochs[i][1])
-        numberOfValuesInInterval+=1
-      else:
-        #surpassed last interval limit, move onward to next limit
-        mean = sum/numberOfValuesInInterval
-        print("Surpassed current interval limit, adding %f to index %i\n", mean, intervalIndex)
-        meansArray+=[[intervalIndex, mean, minimumValue, maximumValue]]
-        sum=arrayOfEpochs[i][1]
-        minimumValue = arrayOfEpochs[i][1]
-        maximumValue = arrayOfEpochs[i][1]
-        numberOfValuesInInterval=1
-        intervalIndex+=1
-        intervalLimit+=interval
+        print(arrayOfEpochs[i][0])
+        if(arrayOfEpochs[i][0] < beginningOfInterval+intervalLimit):
+            print("Adding {} to current sum".format(arrayOfEpochs[i][1]))
+            sum+=arrayOfEpochs[i][1]
+            minimumValue = min(minimumValue, arrayOfEpochs[i][1])
+            maximumValue = max(maximumValue, arrayOfEpochs[i][1])
+            numberOfValuesInInterval+=1
+        else:
+            #surpassed last interval limit, move onward to next limit
+            if numberOfValuesInInterval != 0:
+                mean = sum/numberOfValuesInInterval
+                print("Surpassed current interval limit, adding {} to index {}\n".format(mean, intervalIndex))
+                meansArray+=[[intervalIndex, mean, minimumValue, maximumValue]]
+                sum=arrayOfEpochs[i][1]
+                minimumValue = arrayOfEpochs[i][1]
+                maximumValue = arrayOfEpochs[i][1]
+                numberOfValuesInInterval=1
+                intervalIndex+=1
+                intervalLimit+=interval
     #if it leaves the for without even achieving the first interval, or if there is a remainder:
     #add the last value, the remainder
-    meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
+    if numberOfValuesInInterval != 0:
+        meansArray+=[[intervalIndex, sum/numberOfValuesInInterval, minimumValue, maximumValue]]
 
+    print (meansArray)
     return meansArray
 
 @app.route('/mostrar-relatorio/<id>/<nome>')
@@ -769,18 +793,36 @@ def anomalias(id, nome):
                             lab_id=id,
                             lab_nome=nome)
 
+@app.route('/solucionar-anomalia/<lab_id>/<lab_nome>/<id>')
+def solucionar_anomalia(lab_id, lab_nome, id):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login."}
+        return redirect(url_for('login', **kwargs))
+
+    anomalia = controllers.obter_anomalia(id)
+    return render_template('solucionar_anomalia.html',
+                           lab_id=lab_id,
+                           lab_nome=lab_nome,
+                           autenticado=True,
+                           anomalia=anomalia)
+
 @app.route('/acao/<id>/<nome>', methods=["POST"])
 def acao(id, nome):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login."}
         return redirect(url_for('login', **kwargs))
 
+    tipo_anomalia = request.form.get("tipo_anomalia") or ''
     id_anomalia = request.form.get("id_anomalia") or ''
     user_id = session.get("id")
     descricao_acao = request.form.get("descricao") or ""
-    args = [id_anomalia, user_id, descricao_acao]
+    args = [id_anomalia, descricao_acao, user_id]
     if "" not in args:
         controllers.resolver_anomalia(*args)
+        controllers.enviar_email_acao_realizada(id,
+                                                descricao_acao,
+                                                tipo_anomalia,
+                                                user_id)
 
     return redirect(url_for('anomalias',
                             id=id,
