@@ -468,9 +468,16 @@ def system_status(id, nome):
     lab_id = id
     timestamp_parser = int(controllers.ultima_atualizacao_parser())
     tempos_arduinos  = controllers.ultima_atualizacao_arduino(lab_id)
+
     agora = datetime.today()
     status_componente = "OK"
     dados = []
+
+    mydenox = controllers.ultima_atualizacao_mydenox()
+    if mydenox is not None:
+        dados += [{"nome_componente":    "MyDenox",
+                   "ultima_atualizacao": mydenox.ultima_atualizacao,
+                   "status":             mydenox.status}]
 
     # parsear as infos e preencher o dicionario com os dados
     if ((datetime.fromtimestamp(timestamp_parser)) <
