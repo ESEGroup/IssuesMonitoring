@@ -25,9 +25,6 @@
                 <tr>
                     <th class="text-center">Tipo</th>
                     <th class="text-center">Data</th>
-                    <th class="text-center">Data da Resolução</th>
-                    <th class="text-center">Ação</th>
-                    <th class="text-center">Autor</th>
                     <th class="text-center">Resolver</th>
                 </tr>
             </thead>
@@ -36,9 +33,6 @@
                 <tr>
                     <td class="text-center" title="{{anomalia.descricao}}">{{anomalia.tipo}}</td>
                     <td class="text-center">{{anomalia.data_anomalia|data_segundos}}</td>
-                    <td class="text-center">{{anomalia.data_resolucao|data_segundos}}</td>
-                    <td class="text-center">{{anomalia.acao|vazio}}</td>
-                    <td class="text-center">{{anomalia.nome_autor_resolucao|vazio}}</td>
                     <td class="text-center">
                         <a href="{{url_for('solucionar_anomalia', lab_id=lab_id, lab_nome=lab_nome, id=anomalia.id)}}">
                             <input type="image" src="/static/img/tools.png" alt="Solucionar" class="delete-table-opt">

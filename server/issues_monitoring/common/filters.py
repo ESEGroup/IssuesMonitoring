@@ -1,14 +1,24 @@
 from datetime import datetime, timedelta
 from .. import app
 
-@app.template_filter('vazio')
-def vazio(texto):
-    return "-" if texto is None else texto
+app.jinja_env.filters["existe"] = lambda x: x is not None
+app.jinja_env.filters["len"] = len
+app.jinja_env.filters["enumerate"] = enumerate
+app.jinja_env.filters["bool"] = lambda b: {True: "Sim", False: "Não"}.get(b, "-")
+app.jinja_env.filters["vazio"] = lambda texto: "-" if texto is None else texto
+app.jinja_env.filters["trans_evento"] = lambda evento: {"IN": "Entrada", "OUT": "Saída"}[evento.upper()]
 
-@app.template_filter('trans_evento')
-def trans_evento(evento):
-    return {"IN": "Entrada",
-            "OUT": "Saída"}[evento.upper()]
+@app.template_filter("max_len20")
+def max_len20(text):
+    return text[:20] + "..."
+
+@app.template_filter('format_dia_url')
+def format_dia_url(dia):
+    return datetime.fromtimestamp(dia).strftime("%d-%m-%Y")
+
+@app.template_filter('timestamp')
+def timestamp(dia):
+    return int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
 
 @app.template_filter('data')
 def data(timestamp):
@@ -39,25 +49,9 @@ def dia_mes_ano(timestamp):
     timestamp = int(timestamp)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y")
 
-@app.template_filter('existe')
-def existe(var):
-    return var is not None
-
 @app.template_filter('user_ids')
 def user_ids(usuarios):
     return [u.user_id for u in usuarios]
-
-@app.template_filter('len')
-def _len(l):
-    return len(l)
-
-@app.template_filter('enumerate')
-def _enumerate(l):
-    return enumerate(l)
-
-@app.template_filter('bool')
-def _bool(b):
-    return {True: "Sim", False: "Não"}.get(b, "-")
 
 @app.template_filter('int')
 def _int(n):
@@ -65,11 +59,3 @@ def _int(n):
         return int(n)
     except (ValueError, TypeError):
         return "-"
-
-@app.template_filter('format_dia_url')
-def format_dia_url(dia):
-    return datetime.fromtimestamp(dia).strftime("%d-%m-%Y")
-
-@app.template_filter('timestamp')
-def timestamp(dia):
-    return int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
