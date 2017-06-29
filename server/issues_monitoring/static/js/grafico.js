@@ -25,25 +25,22 @@ $(function() {
     //Ativa o slider de handle unico:
     rangeSlider();
     
-    //Ativa o timepicker:
-    $('.timepicker').wickedpicker();
     
-    
-    $("#datepicker-start").datepicker({
+    $("#datepicker-start").datetimepicker({
         onSelect: function() { 
             $("#start-date").val( $(this).datepicker({ dateFormat: 'dd-mm-yy' }).val() ); 
         }
     });
     
-    $("#datepicker-end").datepicker({
+    $("#datepicker-end").datetimepicker({
         onSelect: function() { 
             $("#end-date").val( $(this).datepicker({ dateFormat: 'dd-mm-yy' }).val() ); 
         }
     });
     
     //Ativa o datepicker:
-    $("#datepicker-start").datepicker();
-    $("#datepicker-end").datepicker();
+    $("#datepicker-start").datetimepicker();
+    $("#datepicker-end").datetimepicker();
 
     
 /*
