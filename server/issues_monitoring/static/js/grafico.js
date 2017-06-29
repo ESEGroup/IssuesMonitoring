@@ -24,10 +24,24 @@ $(function() {
     
     //Ativa o slider de handle unico:
     rangeSlider();
-
+    
+    
+    $("#datepicker-start").datepicker({
+        onSelect: function() { 
+            $("#start-date").val( $(this).datepicker({ dateFormat: 'dd-mm-yy' }).val() ); 
+        }
+    });
+    
+    $("#datepicker-end").datepicker({
+        onSelect: function() { 
+            $("#end-date").val( $(this).datepicker({ dateFormat: 'dd-mm-yy' }).val() ); 
+        }
+    });
+    
     //Ativa o datepicker:
-    $( "#datepicker-start" ).datepicker();
-    $( "#datepicker-end" ).datepicker();
+    $("#datepicker-start").datepicker();
+    $("#datepicker-end").datepicker();
+    
 /*
     //JS referente ao grafico:
     $('input[type=radio][name=chart_type]').on('change', function(){
