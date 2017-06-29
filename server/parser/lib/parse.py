@@ -20,7 +20,7 @@ def parse_messages(messages):
     for message in messages:
         # Test for MyDenox failure messages
         try:
-            search(r"Subject: AVISO: Falta de energia elétrica, utilizando bateria interna", message).group()
+            search(r"bateria interna", message).group()
             time = search(TIME_REGEXP, message).group()
 
             # Unix epoch
@@ -29,13 +29,13 @@ def parse_messages(messages):
 
             controllers.log_mydenox(
                     epoch,
-                    "Aviso de falta de energia às {} (utilizando bateria interna)".format(time))
+                    "Aviso de falta de energia (utilizando bateria interna)")
             continue
         except AttributeError:
             pass
 
         try:
-            search(r"Subject: ATENÇÃO: A central perdeu completamente a conexão com a Internet.", message).group()
+            search(r"Central Offline", message).group()
             time = search(TIME_REGEXP, message).group()
 
             # Unix epoch
@@ -43,7 +43,7 @@ def parse_messages(messages):
             epoch = dt.timestamp()
             controllers.log_mydenox(
                     epoch,
-                    "Aviso de falta de conexão com a internet às {}".format(time))
+                    "Aviso de falta de conexão com a Internet")
             continue
         except AttributeError:
             pass

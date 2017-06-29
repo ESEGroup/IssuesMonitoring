@@ -477,9 +477,9 @@ def system_status(id, nome):
 
     mydenox = controllers.ultima_atualizacao_mydenox()
     if mydenox is not None:
-        data += [{"nome_componente":    "MyDenox",
-                  "ultima_atualizacao": mydenox.ultima_atualizacao,
-                  "status":             mydenox.status}]
+        dados += [{"nome_componente":    "MyDenox",
+                   "ultima_atualizacao": mydenox.ultima_atualizacao,
+                   "status":             mydenox.status}]
 
     # parsear as infos e preencher o dicionario com os dados
     if ((datetime.fromtimestamp(timestamp_parser)) <
