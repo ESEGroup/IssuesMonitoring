@@ -48,17 +48,9 @@ def work():
             lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             temp_min FLOAT NOT NULL,
             temp_max FLOAT NOT NULL,
-            end_mac CHAR(17) NOT NULL);
+            end_mac CHAR(17) NOT NULL,
+            parent_id INTEGER);
     """)
-
-    cursor.execute("""
-    CREATE TABLE Arduino(
-            arduino_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
-            equip_id INTEGER NOT NULL REFERENCES Equip(equip_id),
-            end_mac_arduino CHAR(17) NOT NULL);
-    """)
-
 
     cursor.execute("""
     CREATE TABLE Log_Equip(
@@ -113,7 +105,7 @@ def work():
     cursor.execute("""
     CREATE TABLE Log_MyDenox(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            data INTEGER NOT NULL
+            data INTEGER NOT NULL,
             evento CHAR(255));
     """)
 
