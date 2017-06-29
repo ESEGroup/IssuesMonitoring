@@ -16,3 +16,5 @@ from .medida import Medida_Equip, Medida_Lab
 from .check_condicoes import *
 
 from .anomalia import Anomalia
+
+from .mydenox import MyDenox

@@ -35,7 +35,6 @@ def fetch_new_emails(host=HOST, username=USERNAME, password=PASSWORD):
     debug("Fetching {} new e-mails.".format(len(ids)))
     for num in ids:
         _type, data = email.fetch(num, '(RFC822)')
-        print(data)
         messages += [data[0][1].decode('utf-8')]
     email.close()
     email.logout()

@@ -3,6 +3,11 @@ from .log import debug
 from re import search
 from datetime import datetime, timedelta
 
+try:
+    from server.issues_monitoring import controllers
+except:
+    from issues_monitoring import controllers
+
 MAIL_FROM = Config.mydenox_email
 
 TIME_REGEXP = r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}"
@@ -11,22 +16,39 @@ EVENT_REGEXP = r"\[[^\W_]+(-[^\W_]+)?(-[^\W_]+)?\]"
 def parse_messages(messages):
     debug("Parsing messages.")
     data = []
-    mydenox_error = []
-
+    
     for message in messages:
         # Test for MyDenox failure messages
         try:
             search(r"Subject: AVISO: Falta de energia elétrica, utilizando bateria interna", message).group()
-            raise FaltaEnergia
+            time = search(TIME_REGEXP, message).group()
+
+            # Unix epoch
+            dt = datetime.strptime(time, "%d/%m/%Y %H:%M")
+            epoch = dt.timestamp()
+
+            controllers.log_mydenox(
+                    epoch,
+                    "Aviso de falta de energia às {} (utilizando bateria interna)".format(time))
+            continue
         except AttributeError:
             pass
 
         try:
             search(r"Subject: ATENÇÃO: A central perdeu completamente a conexão com a Internet.", message).group()
-            raise SemInternet
+            time = search(TIME_REGEXP, message).group()
+
+            # Unix epoch
+            dt = datetime.strptime(time, "%d/%m/%Y %H:%M")
+            epoch = dt.timestamp()
+            controllers.log_mydenox(
+                    epoch,
+                    "Aviso de falta de conexão com a internet às {}".format(time))
+            continue
         except AttributeError:
             pass
 
+        # Custom MyDenox events
         # Ignore message if needed information is missing
         try:
             search(r"From: {}".format(MAIL_FROM), message).group()
@@ -52,6 +74,7 @@ def parse_messages(messages):
             _dict["lab_id"] = args[2]
 
         data += [_dict]
+        controllers.log_mydenox(epoch, "OK")
 
     debug("Messages parsed.")
     return data

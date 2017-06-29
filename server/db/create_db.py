@@ -111,6 +111,13 @@ def work():
     """)
 
     cursor.execute("""
+    CREATE TABLE Log_MyDenox(
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            data INTEGER NOT NULL
+            evento CHAR(255));
+    """)
+
+    cursor.execute("""
     CREATE TABLE Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             slug CHAR(255) UNIQUE NOT NULL,
