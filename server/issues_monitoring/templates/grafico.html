@@ -129,12 +129,15 @@ $(function() {
     </div>
 
     <div id="curve_chart" style="width: 900px; height: 500px"></div>
+
+    {% if temp_data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
         <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
             <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             Não há registros o suficiente para gerar um gráfico.</p>
         </div>
     </div>
+    {% endif %}
 
     <div class="div-botao-estilizado">
         <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
