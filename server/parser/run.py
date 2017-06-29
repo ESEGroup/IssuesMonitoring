@@ -44,7 +44,7 @@ def work():
             data = parse_messages(messages)
             received_wait_for = registrar_presenca(data)
             debug("{} events registered.".format(len(data)))
-        except:
+        except Exception as ex:
             log("Unexpected Error.")
             mark_as_unread(ids)
 
