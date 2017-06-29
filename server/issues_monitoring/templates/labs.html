@@ -32,7 +32,7 @@
                        alt="Submit" class="delete-btn">
                 {% endif %}
                 <a class="lab-btn btn-blue" href="{{url_for('laboratorio', id=lab.id, nome=lab.nome)}}">
-                    <span class="lab-txt">{{lab.nome}}</span>
+                    <span class="lab-txt" title="{{lab.nome}}">{{lab.nome|max_len20}}</span>
                 </a>
             </span>
             {% endfor %}

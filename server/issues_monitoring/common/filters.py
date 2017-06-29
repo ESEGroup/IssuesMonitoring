@@ -8,6 +8,10 @@ app.jinja_env.filters["bool"] = lambda b: {True: "Sim", False: "Não"}.get(b, "-
 app.jinja_env.filters["vazio"] = lambda texto: "-" if texto is None else texto
 app.jinja_env.filters["trans_evento"] = lambda evento: {"IN": "Entrada", "OUT": "Saída"}[evento.upper()]
 
+@app.template_filter("max_len20")
+def max_len20(text):
+    return text[:20] + "..."
+
 @app.template_filter('format_dia_url')
 def format_dia_url(dia):
     return datetime.fromtimestamp(dia).strftime("%d-%m-%Y")
