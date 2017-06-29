@@ -1,5 +1,4 @@
 from . import db
-import sqlite3
 
 class Arduino:
     def __init__(self, lab_id, equip_id, MAC, id = None):

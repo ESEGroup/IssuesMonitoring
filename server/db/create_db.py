@@ -118,6 +118,18 @@ def work():
     """)
 
     cursor.execute("""
+    CREATE TABLE Sistema(
+            ultima_analise INT NOT NULL,
+            intervalo_parser INT NOT NULL);
+    """)
+
+    cursor.execute("""
+    INSERT INTO Sistema
+    (ultima_analise, intervalo_parser)
+    VALUES (0, 3);
+    """)
+
+    cursor.execute("""
     CREATE TABLE Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             slug CHAR(255) UNIQUE NOT NULL,
@@ -125,17 +137,17 @@ def work():
             descricao_anomalia CHAR(255) NOT NULL);
     """)
 
-
     cursor.executemany("""
     INSERT INTO Anomalias
     (id, slug, tipo_anomalia, descricao_anomalia)
     VALUES (?, ?, ?, ?);""",
-    [(1, "temp-min", "Temperatura Abaixo", "Temperatura do laboratório abaixo do mínimo da Zona de Conforto"),
-     (2, "temp-max", "Temperatura Acima", "Temperatura do laboratório acima do máximo da Zona de Conforto"),
-     (3, "umid-min", "Umidade Abaixo", "Umidade do laboratório abaixo do mínimo da Zona de Conforto"),
-     (4, "umid-max", "Umidade Acima", "Umidade do laboratório acima do máximo da Zona de Conforto"),
-     (5, "temp-equip-min", "Temperatura de Equipamento Abaixo", "Temperatura do Equipamento {} abaixo do mínimo da Zona de Conforto"),
-     (6, "temp-equip-max", "Temperatura de Equipamento Acima", "Temperatura do Equipamento {} acima do máximo da Zona de Conforto")])
+    [(1, "temp-min", "Temperatura Abaixo", "Temperatura {}ºC do laboratório abaixo do mínimo da Zona de Conforto ({}ºC)"),
+     (2, "temp-max", "Temperatura Acima", "Temperatura {}ºC do laboratório acima do máximo da Zona de Conforto ({}ºC)"),
+     (3, "umid-min", "Umidade Abaixo", "Umidade {}% do laboratório abaixo do mínimo da Zona de Conforto {}%"),
+     (4, "umid-max", "Umidade Acima", "Umidade {}% do laboratório acima do máximo da Zona de Conforto {}%"),
+     (5, "temp-equip-min", "Temperatura de Equipamento Abaixo", "Temperatura {}ºC do Equipamento {} abaixo do mínimo da Zona de Conforto ({}ºC)"),
+     (6, "temp-equip-max", "Temperatura de Equipamento Acima", "Temperatura {}ºC do Equipamento {} acima do máximo da Zona de Conforto ({}ºC)"),
+     (7, "luz", "Luz acesa sem pessoas presentes", "Luz do laboratório está acesa sem usuários presentes")])
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(
@@ -144,6 +156,8 @@ def work():
             lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             equip_id INTEGER,
             slug_anomalia CHAR(255) NOT NULL REFERENCES Anomalias(slug),
+            valor INTEGER,
+            valor_limite INTEGER,
             resolvido BOOLEAN NOT NULL);
     """)
 

@@ -1,7 +1,7 @@
 from .. import Config
 from .log import debug
 from re import search
-from datetime import datetime, timedelta
+from datetime import datetime
 
 try:
     from server.issues_monitoring import controllers

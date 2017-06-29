@@ -18,3 +18,4 @@ from .check_condicoes import *
 from .anomalia import Anomalia
 
 from .mydenox import MyDenox
+from .sistema import Sistema
