@@ -26,6 +26,7 @@ def work():
 
     while True:
         registrar_log_parser()
+        ids = []
         try:
             ids, messages = fetch_new_emails()
         except OSError:
@@ -36,28 +37,28 @@ def work():
             ids, messages = [], []
         except:
             log("Unexpected Error.")
-            mark_as_unread(ids)
             ids, messages = [], []
 
-        received_wait_for = -1
-        try:
-            data = parse_messages(messages)
-            received_wait_for = registrar_presenca(data)
-            debug("{} events registered.".format(len(data)))
-        except Exception as ex:
-            log("Unexpected Error.")
-            mark_as_unread(ids)
+        if len(messages) > 0:
+            received_wait_for = -1
+            try:
+                data = parse_messages(messages)
+                received_wait_for = registrar_presenca(data)
+                debug("{} events registered.".format(len(data)))
+            except Exception as ex:
+                log("Unexpected Error.")
+                mark_as_unread(ids)
 
-        debug("Received {} (minutes) from the DB, "
-              "to wait until next execution.".format(
-              received_wait_for))
+            debug("Received {} (minutes) from the DB, "
+                  "to wait until next execution.".format(
+                  received_wait_for))
 
-        if 0 < received_wait_for <= MAX_WAITING_PERIOD:
-            wait_for = received_wait_for
-        else:
-            debug("Ignoring {} as it's not between 1 and {}".format(
-                  received_wait_for,
-                  MAX_WAITING_PERIOD))
+            if 0 < received_wait_for <= MAX_WAITING_PERIOD:
+                wait_for = received_wait_for
+            else:
+                debug("Ignoring {} as it's not between 1 and {}".format(
+                      received_wait_for,
+                      MAX_WAITING_PERIOD))
 
         debug("Waiting for {} minutes before running again".format(
               wait_for))
