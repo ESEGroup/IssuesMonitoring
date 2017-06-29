@@ -85,9 +85,13 @@ Pedimos que procure uma solução quanto a isso.
             slug = "temp-max"
             anti_slug = "temp-min"
             temp_limite = zona_conforto.temp_max
-        if not Anomalia.nao_resolvida(slug, anti_slug):
+
+        id, nao_resolvida = Anomalia.nao_resolvida(slug, anti_slug)
+        if nao_resolvida:
             Anomalia.registrar_anomalia(lab_id, slug, int(temperatura), temp_limite)
             send_email(subject, msg_content, emails)
+        else:
+            Anomalia.atualizar_valor(id, int(temperatura))
 
 def checar_umidade(lab_id, lab_nome, umidade, zona_conforto, emails):
     if umidade < zona_conforto.umidade_min or umidade > zona_conforto.umidade_max:
@@ -106,9 +110,13 @@ Pedimos que procure uma solução quanto a isso.
             slug = "umid-max"
             anti_slug = "umid-min"
             umid_limite = zona_conforto.umidade_max
-        if not Anomalia.nao_resolvida(slug, anti_slug):
+
+        id, nao_resolvida = Anomalia.nao_resolvida(slug, anti_slug)
+        if nao_resolvida:
             Anomalia.registrar_anomalia(lab_id, slug, int(umidade), umid_limite)
             send_email(subject, msg_content, emails)
+        else:
+            Anomalia.atualizar_valor(id, int(umidade))
 
 def checar_luz_acesa_vazio(lab_id, lab_nome, luminosidade, emails):
     if luminosidade == 1:
@@ -144,14 +152,17 @@ Pedimos que procure uma solução quanto a isso.
             slug = "temp-equip-max"
             anti_slug = "temp-equip-min"
             temp_limite = temp_max
-        if not Anomalia.nao_resolvida(slug, anti_slug):
+
+        id, nao_resolvida = Anomalia.nao_resolvida(slug, anti_slug)
+        if nao_resolvida:
             Anomalia.registrar_anomalia(lab_id,
                                         slug,
                                         int(temperatura),
                                         temp_limite,
                                         equip_id)
-
             send_email(subject, msg_content, emails)
+        else:
+            Anomalia.atualizar_valor(id, int(temperatura))
 
 def checar_condicoes_ambiente(lab_id):
     data_inicio = Sistema.obter_data_inicio()

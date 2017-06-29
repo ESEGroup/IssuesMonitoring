@@ -90,12 +90,17 @@ class Anomalia:
         if anti_slug is None:
             anti_slug = slug
         data = db.fetchone("""
-            SELECT slug_anomalia
+            SELECT slug_anomalia, id
             FROM Log_Anomalias
             WHERE resolvido = ?
                   AND (slug_anomalia = ?
                        OR slug_anomalia = ?)
             ORDER BY data DESC;""",
             (0, slug, anti_slug))
-        return data is not None and data[0] == slug
+        return data[1], data is not None and data[0] == slug
 
+    def atualizar_valor(id, valor):
+        db.execute("""
+            UPDATE Log_Anomalia
+            SET valor = ?
+            WHERE id = ?;""", (valor, id))
