@@ -68,7 +68,7 @@ def obter_zona_de_conforto(id):
 def obter_laboratorios_id():
     return Laboratorio.obter_todos_ids()
 
-def checar_temperatura(lab_id, lab_nome, temperatura, zona_conforto, emails):
+def checar_temperatura(lab_id, lab_nome, temperatura, zona_conforto, emails, data):
     if temperatura < zona_conforto.temp_min or temperatura > zona_conforto.temp_max:
         subject = "Aviso de temperatura anormal"
         msg_content = """
@@ -91,9 +91,9 @@ Pedimos que procure uma solução quanto a isso.
             Anomalia.registrar_anomalia(lab_id, slug, int(temperatura), temp_limite)
             send_email(subject, msg_content, emails)
         else:
-            Anomalia.atualizar_valor(id, int(temperatura))
+            Anomalia.atualizar_valor(id, int(temperatura), data)
 
-def checar_umidade(lab_id, lab_nome, umidade, zona_conforto, emails):
+def checar_umidade(lab_id, lab_nome, umidade, zona_conforto, emails, data):
     if umidade < zona_conforto.umidade_min or umidade > zona_conforto.umidade_max:
         subject = "Aviso de umidade anormal"
         msg_content = """
@@ -116,9 +116,9 @@ Pedimos que procure uma solução quanto a isso.
             Anomalia.registrar_anomalia(lab_id, slug, int(umidade), umid_limite)
             send_email(subject, msg_content, emails)
         else:
-            Anomalia.atualizar_valor(id, int(umidade))
+            Anomalia.atualizar_valor(id, int(umidade), data)
 
-def checar_luz_acesa_vazio(lab_id, lab_nome, luminosidade, emails):
+def checar_luz_acesa_vazio(lab_id, lab_nome, luminosidade, emails, data):
     if luminosidade == 1:
         subject = "Aviso de luz acesa"
         msg_content = """
@@ -132,8 +132,11 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
             emails += Laboratorio.email_ultimo_a_sair(lab_id)
             Anomalia.registrar_anomalia(lab_id, slug)
             send_email(subject, msg_content, emails)
+        else:
+            Anomalia.atualizar_valor(id, None, data)
 
-def checar_temperatura_equipamento(lab_id, lab_nome, equip_id, emails, data_inicio, data_final):
+def checar_temperatura_equipamento(lab_id, lab_nome, equip_id, emails,
+                                   data_inicio, data_final, data):
     temp_min, temperatura, temp_max, equip_nome = Equipamento.obter_medida(equip_id, data_inicio, data_final)
 
     if temperatura < temp_min or temperatura > temp_max:
@@ -162,7 +165,7 @@ Pedimos que procure uma solução quanto a isso.
                                         equip_id)
             send_email(subject, msg_content, emails)
         else:
-            Anomalia.atualizar_valor(id, int(temperatura))
+            Anomalia.atualizar_valor(id, int(temperatura), data)
 
 def checar_condicoes_ambiente(lab_id):
     data_inicio = Sistema.obter_data_inicio()
@@ -179,17 +182,17 @@ def checar_condicoes_ambiente(lab_id):
 
         data_final = int(datetime.now().timestamp())
 
-        temperatura, umidade, lum = Laboratorio.obter_ultima_medida(lab_id, data_inicio, data_final)
+        data, temperatura, umidade, lum = Laboratorio.obter_ultima_medida(lab_id, data_inicio, data_final)
         if zona_de_conforto is not None:
             if len(presentes) == 0:
-                checar_luz_acesa_vazio(lab_id, nome, lum, emails)
+                checar_luz_acesa_vazio(lab_id, nome, lum, emails, data)
 
             if len(emails) > 0 and None not in [temperatura, umidade]:
-                checar_temperatura(lab_id, nome, temperatura, zona_de_conforto, emails)
-                checar_umidade(lab_id, nome, umidade, zona_de_conforto, emails)
+                checar_temperatura(lab_id, nome, temperatura, zona_de_conforto, emails, data)
+                checar_umidade(lab_id, nome, umidade, zona_de_conforto, emails, data)
 
                 for eq in equips:
-                    checar_temperatura_equipamento(lab_id, nome, eq, emails, data_inicio, data_final)
+                    checar_temperatura_equipamento(lab_id, nome, eq, emails, data_inicio, data_final, data)
 
         Sistema.definir_data_inicio(data_final)
         check_intervalo = 1. #TODO: Pegar do Banco de Dados
