@@ -11,7 +11,6 @@ from .usuario_lab import UsuarioLab
 from .usuario_sistema import UsuarioSistema
 from .administrador_sistema import AdministradorSistema
 
-from .arduino import Arduino
 from .medida import Medida_Equip, Medida_Lab
 from .check_condicoes import *
 

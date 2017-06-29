@@ -82,7 +82,7 @@ class Laboratorio:
             SELECT l.lab_id, l.nome, l.endereco, l.intervalo_parser,
             l.intervalo_arduino, zc.temp_min, zc.temp_max,
             zc.umid_min, zc.umid_max, l.lab_id,
-            e.nome, e.descricao, e.temp_min, e.temp_max, e.end_mac, e.equip_id,
+            e.nome, e.descricao, e.temp_min, e.temp_max, e.end_mac, e.parent_id, e.equip_id,
             u.user_id, u.nome, u.email, u.data_aprov
             FROM Lab as l
             INNER JOIN Zona_de_Conforto_Lab as zc
@@ -102,7 +102,7 @@ class Laboratorio:
             usuarios_id.setdefault(d[0], {None})
 
             usuario_lab   = UsuarioLab(*d[-4:])
-            equipamento   = Equipamento(*d[10:-4])
+            equipamento   = Equipamento(*d[9:-4])
             zona_conforto = ZonaConforto(*d[5:10])
             lab_info      = list(d[1:5]) + [zona_conforto]
 
