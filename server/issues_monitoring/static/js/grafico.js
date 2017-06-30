@@ -25,23 +25,27 @@ $(function() {
     //Ativa o slider de handle unico:
     rangeSlider();
     
-    
-    $("#datepicker-start").datetimepicker({
-        onSelect: function() { 
-            $("#start-date").val( $(this).datepicker({ dateFormat: 'dd-mm-yy' }).val() ); 
+    //Faz com que o datepicker atualize os inputs correspondentes quando selecionado:
+    $('.datepicker-class').datetimepicker({
+        dateFormat: 'yy-m-d',
+        inline: true,
+        onSelect: function(dateText, inst) { 
+            var date = $(this).datepicker('getDate'),
+                day  = date.getDate(),  
+                month = date.getMonth() + 1,              
+                year =  date.getFullYear();
+                hours = date.getHours();
+                minutes = date.getMinutes();
+            if ( $(this).attr('id') == 'datepicker-start'){
+                $('#start-date').val( day + '/' + month + '/' + year + ' ' + hours + ':' + minutes );
+            } else if ( $(this).attr('id') == 'datepicker-end'){
+                $('#end-date').val( day + '/' + month + '/' + year + ' ' + hours + ':' + minutes );
+            }
+            $('#daterange').val( $('#start-date').val() + " - " + $('#end-date').val() );
         }
     });
     
-    $("#datepicker-end").datetimepicker({
-        onSelect: function() { 
-            $("#end-date").val( $(this).datepicker({ dateFormat: 'dd-mm-yy' }).val() ); 
-        }
-    });
-    
-    //Ativa o datepicker:
-    $("#datepicker-start").datetimepicker();
-    $("#datepicker-end").datetimepicker();
-
+  
     
 /*
     //JS referente ao grafico:
