@@ -54,17 +54,16 @@ class UsuarioSistema(Usuario):
             SELECT user_id, senha, admin, data_aprov
             FROM User_Sys
             WHERE login = ?;""", (login,))
-
         if args is None:
             raise InformacoesIncorretas
 
         (_id, _hash, _admin, data_aprov) = args
-
         if data_aprov is None:
             raise NaoAutorizado
-
         if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
             return _id, _admin
+        else:
+            raise InformacoesIncorretas
 
     def existe(login, email):
         return db.fetchone("""

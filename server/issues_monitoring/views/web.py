@@ -34,7 +34,7 @@ def login_post():
     usuario = request.form.get('login') or ''
     senha = request.form.get('senha') or ''
     if '' in [usuario, senha]:
-        kwargs = {"e": "Por favor preencha todos os campos."}
+        kwargs = {"e": "Por favor preencha todos os campos"}
         return redirect(url_for('login', **kwargs))
 
     try:
@@ -44,9 +44,9 @@ def login_post():
         session['expiration'] = now + Config.session_duration
         kwargs = {}
     except NaoAutorizado:
-        kwargs = {"e": "Usuário não autorizado."}
+        kwargs = {"e": "Usuário não autorizado"}
     except InformacoesIncorretas:
-        kwargs = {"e": "Usuário ou senha incorretos."}
+        kwargs = {"e": "Usuário ou senha incorretos"}
 
     return redirect(url_for('login', **kwargs))
 
@@ -66,14 +66,14 @@ def laboratorios():
     if "" not in args:
         controllers.atualizar_informacoes_lab(*args)
 
-    kwargs = {"c" : "Informações atualizadas com sucesso."}
+    kwargs = {"c" : "Informações atualizadas com sucesso"}
     return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
 
 @app.route('/laboratorio/<id>/')
 @app.route('/laboratorio/<id>/<nome>')
 def laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     laboratorio = controllers.obter_laboratorio(id)
@@ -88,7 +88,7 @@ def laboratorio(id, nome=""):
 @app.route('/remover-laboratorio/<id>/', methods=["POST"])
 def remover_laboratorio(id):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login'))
 
     controllers.remover_laboratorio(id)
@@ -99,7 +99,7 @@ def remover_laboratorio(id):
 @app.route('/editar-laboratorio/<id>/<nome>')
 def editar_laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     laboratorio = controllers.obter_laboratorio(id)
@@ -116,7 +116,7 @@ def editar_laboratorio(id, nome=""):
 @app.route('/editar-laboratorio/<id>/<nome>', methods=["POST"])
 def editar_laboratorio_post(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     nome = request.form.get("nome") or ''
@@ -129,17 +129,17 @@ def editar_laboratorio_post(id, nome=""):
         if (endereco is ' '):
             args[2] = ''
         controllers.atualizar_informacoes_lab(*args)
-        kwargs = {"c" : "Dados do laboratório atualizados com sucesso."}
+        kwargs = {"c" : "Dados do laboratório atualizados com sucesso"}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
-        kwargs = {"e" : "Por favor, preencha todos os campos."}
+        kwargs = {"e" : "Por favor, preencha todos os campos"}
         return redirect(url_for('zona_de_conforto', id=id, nome=nome, **kwargs))
 
 @app.route('/zona-de-conforto/<id>/')
 @app.route('/zona-de-conforto/<id>/<nome>')
 def zona_de_conforto(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     zc = controllers.obter_zona_de_conforto(id)
@@ -155,7 +155,7 @@ def zona_de_conforto(id, nome=""):
 @app.route('/zona-de-conforto/<id>/<nome>', methods=["POST"])
 def zona_de_conforto_post(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     temp_min = request.form.get("temp-min") or ''
@@ -166,17 +166,17 @@ def zona_de_conforto_post(id, nome=""):
     args = [temp_min, temp_max, umid_min, umid_max, id]
     if "" not in args:
         controllers.atualizar_zona_de_conforto(*args)
-        kwargs = {"c" : "Zona de Conforto atualizada com sucesso."}
+        kwargs = {"c" : "Zona de Conforto atualizada com sucesso"}
         return redirect(url_for("laboratorio", id=id, nome=nome, **kwargs))
     else:
-        kwargs = {"e" : "Por favor, preencha todos os campos."}
+        kwargs = {"e" : "Por favor, preencha todos os campos"}
         return redirect(url_for('zona_de_conforto', id=id, nome=nome, **kwargs))
 
 @app.route('/usuarios-lab/<id>/')
 @app.route('/usuarios-lab/<id>/<nome>')
 def usuarios_laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     usuarios_laboratorio = controllers.obter_usuarios_laboratorio(id)
@@ -213,9 +213,9 @@ def cadastro_lab():
         if (endereco is " "):
             args[1] = ""
         controllers.cadastro_laboratorio(*args)
-        kwargs = {"c" : "Laboratório cadastrado com sucesso."}
+        kwargs = {"c" : "Laboratório cadastrado com sucesso"}
     else:
-        kwargs = {"e" : "Por favor, lembre-se de preencher o nome do laboratório."}
+        kwargs = {"e" : "Por favor, lembre-se de preencher o nome do laboratório"}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/cadastro')
@@ -238,7 +238,7 @@ def cadastro_post():
                                                     senha,
                                                     email,
                                                     nome):
-            kwargs = {"e": "Login ou e-mail já utilizados."}
+            kwargs = {"e": "Login ou e-mail já utilizados"}
             return redirect(url_for("cadastro", **kwargs))
     kwargs = {"c": "Usuário enviado para autorização!"}
     return redirect(url_for('login', **kwargs))
@@ -246,7 +246,7 @@ def cadastro_post():
 @app.route('/remover-usuario/<id>/', methods=["POST"])
 def remover_usuario_sistema(id):
     if not admin_autenticado():
-        kwargs = {"e" : "Por favor, faça login como administrador."}
+        kwargs = {"e" : "Por favor, faça login como administrador"}
         return redirect(url_for('login'))
 
     if id == session["id"]:
@@ -259,7 +259,7 @@ def remover_usuario_sistema(id):
 @app.route('/remover-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
 def remover_usuario_lab(lab_id, lab_nome, id):
     if not admin_autenticado():
-        kwargs = {"e" : "Por favor, faça login como administrador."}
+        kwargs = {"e" : "Por favor, faça login como administrador"}
         return redirect(url_for('login'))
 
     controllers.remover_usuario_lab(lab_id, id)
@@ -282,15 +282,15 @@ def aprovar_usuario_lab(id):
 @app.route('/adicionar-usuario-lab/<id>/<nome>', methods=["POST"])
 def adicionar_usuario_lab(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login'))
 
     user_id = request.form.get('id-user') or ''
     if user_id != "":
         controllers.adicionar_usuario_lab(id, user_id)
-        kwargs = {'c': "Usuário associado ao laboratório com sucesso."}
+        kwargs = {'c': "Usuário associado ao laboratório com sucesso"}
     else:
-        kwargs = {'e': "Por favor, escolha um usuário."}
+        kwargs = {'e': "Por favor, escolha um usuário"}
 
     return redirect(url_for('usuarios_laboratorio', id=id, nome=nome, **kwargs))
 
@@ -298,7 +298,7 @@ def adicionar_usuario_lab(id, nome):
 def cadastro_usuario_lab():
     laboratorios = controllers.obter_laboratorios()
     if len(laboratorios) == 0:
-        kwargs = {"e" : "Primeiro, cadastre um laboratório."}
+        kwargs = {"e" : "Primeiro, cadastre um laboratório"}
         return redirect(url_for("laboratorios", _anchor="cadastrar", **kwargs))
 
     return render_template('cadastro_usuario_lab.html',
@@ -320,16 +320,16 @@ def cadastro_usuario_lab_post():
         success = controllers.cadastro_usuario_lab(*args)
 
     if not success:
-        kwargs = {"e": "Id de usuário já existente."}
+        kwargs = {"e": "Id de usuário já existente"}
     else:
-        kwargs = {"c": "Usuário cadastrado com sucesso."}
+        kwargs = {"c": "Usuário cadastrado com sucesso"}
 
     return redirect(url_for('cadastro_usuario_lab', **kwargs))
 
 @app.route('/remover-equipamento/<lab_id>/<lab_nome>/<id>/', methods=["POST"])
 def remover_equipamento(lab_id, lab_nome, id):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login'))
 
     controllers.remover_equipamento(id)
@@ -355,16 +355,16 @@ def cadastro_equipamento(id, nome):
               "nome": nome}
     if "" not in args:
         controllers.cadastro_equipamento(*args)
-        kwargs["c"] = "Equipamento cadastrado com sucesso."
+        kwargs["c"] = "Equipamento cadastrado com sucesso"
     else:
-        kwargs["e"] = "Por favor preencha todos os campos."
+        kwargs["e"] = "Por favor preencha todos os campos"
         kwargs["_anchor"] = "cadastrar"
     return redirect(url_for('equipamentos_laboratorio', **kwargs))
 
 @app.route('/log-eventos/<id>/<nome>/')
 def log_eventos_hoje(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
@@ -419,9 +419,9 @@ def aprovar_usuario_post(id):
     controllers.aprovar_usuario(id, aprovar)
 
     if aprovar:
-        kwargs = {"c": "Usuário autorizado com sucesso."}
+        kwargs = {"c": "Usuário autorizado com sucesso"}
     else:
-        kwargs = {"c": "Autorização do usuário removida com sucesso."}
+        kwargs = {"c": "Autorização do usuário removida com sucesso"}
 
     return redirect(url_for('laboratorios', **kwargs))
 
@@ -433,14 +433,14 @@ def editar_status_administrador(id):
     aprovar = request.form.get('aprovar') == 'true'
     controllers.editar_status_administrador(id, aprovar)
 
-    kwargs = {"c": "Status de administrador alterado com sucesso."}
+    kwargs = {"c": "Status de administrador alterado com sucesso"}
     return redirect(url_for('laboratorios', **kwargs))
 
 @app.route('/equipamentos-lab/<id>/')
 @app.route('/equipamentos-lab/<id>/<nome>')
 def equipamentos_laboratorio(id, nome=""):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     equipamentos = controllers.obter_equipamentos(id)
@@ -458,7 +458,7 @@ def equipamentos_laboratorio(id, nome=""):
 @app.route('/status-sistema/<id>/<nome>')
 def system_status(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     # pegar as infos do banco
@@ -477,9 +477,9 @@ def system_status(id, nome):
                    "status":             mydenox.status}]
     else:
         dados += [{"nome_componente":    "MyDenox",
-                   "ultima_atualizacao": None, 
+                   "ultima_atualizacao": None,
                    "status":             "Nenhuma mensagem recebida"}]
-        
+
 
     # parsear as infos e preencher o dicionario com os dados
     if ((datetime.fromtimestamp(timestamp_parser)) <
@@ -522,7 +522,7 @@ def robots_txt():
 @app.route('/mostrar-grafico/<id>/<nome>')
 def mostrar_grafico(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     equipamentos = controllers.obter_ids_equipamentos(id)
@@ -538,7 +538,7 @@ def mostrar_grafico(id, nome):
 @app.route('/mostrar-grafico/<id>/<nome>', methods=["POST"])
 def mostrar_grafico_post(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     chart_type = request.form.get("chart_type") or ''
@@ -666,7 +666,7 @@ def getIntervalMeans(interval, arrayOfEpochs, epochBeginning, epochEnding):
 @app.route('/mostrar-relatorio/<id>/<nome>')
 def mostrar_relatorio(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     return render_template('relatorio.html',
@@ -679,7 +679,7 @@ def mostrar_relatorio(id, nome):
 @app.route('/mostrar-relatorio/<id>/<nome>', methods=["POST"])
 def mostrar_relatorio_post(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     # dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
@@ -795,7 +795,7 @@ def organizePresenceList(currentDayEpoch, presence):
 @app.route('/anomalias/<id>/<nome>')
 def anomalias(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     anomalias = controllers.obter_anomalias(id)
@@ -811,7 +811,7 @@ def anomalias(id, nome):
 @app.route('/solucionar-anomalia/<lab_id>/<lab_nome>/<id>')
 def solucionar_anomalia(lab_id, lab_nome, id):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     anomalia = controllers.obter_anomalia(id)
@@ -825,7 +825,7 @@ def solucionar_anomalia(lab_id, lab_nome, id):
 @app.route('/acao/<id>/<nome>', methods=["POST"])
 def acao(id, nome):
     if not autenticado():
-        kwargs = {"e" : "Por favor, faça o login."}
+        kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
     tipo_anomalia = request.form.get("tipo_anomalia") or ''
