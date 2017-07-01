@@ -1,3 +1,10 @@
+//JS para os input radios escondidos de Temperatura e Umidade:
+$(document).ready(function(){
+    $('input[type=radio][name=radio-1]').change(function() {
+        $(".hidden-radio").slideToggle(300);
+    });
+});
+
 $(function() {
 
     //JS para os sliders de dois handles presentes em cadastrar lab:

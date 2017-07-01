@@ -166,7 +166,7 @@ body {
 }
 
 .ui-state-success .ui-icon {
-    background-image: url("/static/jquery-ui/images/ui-icons_085c04_256x240.png") !important;
+    background-image: url("/static/img/ui-icons_085c04_256x240.png") !important;
 }
 
 .ui-state-warning .ui-icon {
