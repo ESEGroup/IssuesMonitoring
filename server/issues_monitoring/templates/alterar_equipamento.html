@@ -1,0 +1,85 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/switch_view.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script src="/static/js/lista_equipamentos.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<div id="nav-bar">
+
+    <div class="page-title">
+        <h3>Alterar Equipamento</h3>
+        <h4>{{lab_nome}}</h4>
+    </div>
+
+    <div class="neat-form" anchor="alterar" id="view2">
+        <form method="POST" action="{{url_for('alterar_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=id)}}">
+            <fieldset>
+                <legend><span class="number">1</span> Identificação do Equipamento</legend>
+                <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC" value = "{{equip.MAC}}">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Nome do Equipamento</legend>
+                <input type="text" name="nome" id="nome" placeholder="Nome" value = "{{equip.nome}}">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">3</span> Descrição do Equipamento</legend>
+                <input type="text" name="descricao" id="descricao" placeholder="Descrição" value = "{{equip.descricao}}">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">4</span> Zona de Conforto</legend>
+                <div class="legenda-cadastro">Temperatura do Equipamento:</div>
+                <div class="div-double-slider">
+                    <div id="slider-temp" class="double-slider"></div>
+                    <input type="hidden" name="temp-min" id="temp-min" value="0">
+                    <input type="hidden" name="temp-max" id="temp-max" value="0">
+                    <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                </div>
+            </fieldset>
+            <!-- <fieldset>
+                <legend><span class="number">5</span> Tipo do Equipamento</legend>
+                <input type="hidden" name="parent_id" id="parent_id" value="0">
+
+                <label for="ardu_radio">Arduino</label>
+                <input type="radio" name="radio-1" id="ardu_radio" checked="checked">
+
+                {% if lista_arduinos|len > 0%}
+                <label for="comp_radio">Computador</label>
+                <input type="radio" name="radio-1" id="comp_radio">
+                <div id="div_select_arduino" class=" hidden">
+                    <label for="select_arduino">Selecione o Arduino ao qual o computador será associado:</label>
+                    <select name="select_arduino" id="select_arduino">
+                        <option disabled selected>Selecione</option>
+                        {% for arduino in lista_arduinos %}
+                        <option value="{{arduino.id}}">{{arduino.nome}} - {{arduino.MAC}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            </fieldset> -->
+            <input type="submit" value="Alterar Equipamento" />
+        </form>
+    </div>
+
+    <div class="div-botao-estilizado trocar-view-btn ">
+        <form method="POST" action="{{url_for('equipamentos_laboratorio', id=lab_id, nome=lab_nome)}}">
+            <a class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
