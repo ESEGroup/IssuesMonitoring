@@ -257,7 +257,7 @@ def remover_usuario_sistema(id):
         kwargs = {"c" : "Usuário removido com sucesso!"}
     return redirect(url_for('aprovar_usuario', **kwargs))
 
-@app.route('/alterar-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["GET"])
+@app.route('/alterar-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["GET", "POST"])
 def alterar_usuario_lab(lab_id, lab_nome, id):
     if not admin_autenticado():
         kwargs = {"e" : "Por favor, faça login como administrador"}
@@ -270,19 +270,19 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
                            autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina='alterar_usuario_lab'
-                           )    
+                           )   
 
-@app.route('/alterar-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
-def alterar_usuario_lab(lab_id, lab_nome, id):
-    if not admin_autenticado():
-        kwargs = {"e" : "Por favor, faça login como administrador"}
-        return redirect(url_for('login'))
+# @app.route('/alterar-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
+# def alterar_usuario_lab(lab_id, lab_nome, id):
+#     if not admin_autenticado():
+#         kwargs = {"e" : "Por favor, faça login como administrador"}
+#         return redirect(url_for('login'))
 
-    #controllers.remover_usuario_lab(lab_id, id)
-    kwargs = {"c" : "Usuário selecionado p/ edição com sucesso!",
-              "id": lab_id,
-              "nome": lab_nome}
-    return redirect(url_for('usuarios_laboratorio', **kwargs))
+#     #controllers.remover_usuario_lab(lab_id, id)
+#     kwargs = {"c" : "Usuário selecionado p/ edição com sucesso!",
+#               "id": lab_id,
+#               "nome": lab_nome}
+#     return redirect(url_for('usuarios_laboratorio', **kwargs))
 
 @app.route('/remover-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
 def remover_usuario_lab(lab_id, lab_nome, id):
