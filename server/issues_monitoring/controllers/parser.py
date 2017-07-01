@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from time import sleep
 from ..common.mail import send_email
-from ..models import Laboratorio, Evento, UsuarioLab, MyDenox
+from ..models import (Laboratorio, Evento, UsuarioLab, MyDenox,
+                      AdministradorSistema)
 
 def log_mydenox(epoch, message):
     MyDenox.log(epoch, message)
@@ -12,8 +13,10 @@ def obter_intervalo_parser():
 def registrar_presenca(dict_eventos):
     if len(dict_eventos) > 0:
         eventos = []
+        user_ids = []
         for e in dict_eventos:
             try:
+                user_ids += [e['user_id']]
                 eventos += [Evento(e['epoch'],
                                    e['event'],
                                    e['user_id'],
@@ -21,7 +24,25 @@ def registrar_presenca(dict_eventos):
             except KeyError:
                 pass
         UsuarioLab.registrar_presenca(eventos)
+
+        registered_user_ids = UsuarioLab.user_ids_registradas(user_ids)
+        unregistered_user_ids = set(user_ids) - set(registered_user_ids)
+        enviar_email_usuarios_nao_cadastrados(unregistered_user_ids)
     return obter_intervalo_parser()
+
+def enviar_email_usuarios_nao_cadastrados(user_ids):
+    if len(user_ids) == 0:
+        return
+
+    admins = AdministradorSistema.obter_administradores()
+    emails = [a.email for a in admins]
+
+    plural = "s" if len(user_ids) > 1 else ""
+    subject = "Usuário{0} cadastrado{0} no MyDenox não cadastrado{0} no Sistema".format(plural)
+    msg_content = "Foi recebido log de presença/saída no sistema MyDenox referente ao{0} usuário{0} {1}, porém não há cadastro dele{0} no Sistema.\nPor favor cadastre-os em seus respectivos laboratórios.".format(
+            plural,
+            ", ".join(list(user_ids)))
+    send_email(subject, msg_content, emails)
 
 def enviar_email_presenca_zerada(emails):
     msg_content = """

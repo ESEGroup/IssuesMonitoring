@@ -211,3 +211,12 @@ class UsuarioLab(Usuario):
           log_presenca_set.add(d[0])
         log_presenca += [UsuarioLab(*d[:-2], data_evento=d[-2], evento=d[-1])]
       return log_presenca
+
+    def user_ids_registradas(user_ids):
+        values = ', '.join("?" for i in user_ids)
+        data = db.fetchall("""
+            SELECT user_id
+            FROM User_Lab
+            WHERE user_id in ({})""".format(values),
+            user_ids)
+        return data
