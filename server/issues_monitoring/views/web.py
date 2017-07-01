@@ -244,6 +244,21 @@ def cadastro_post():
     kwargs = {"c": "Usuário enviado para autorização!"}
     return redirect(url_for('login', **kwargs))
 
+@app.route('/alterar-usuario-sistema/<lab_id>/<lab_nome>/<id>', methods=["POST"])
+def alterar_usuario_sistema(lab_id, lab_nome, id):
+    if not admin_autenticado():
+        kwargs = {"e" : "Por favor, faça login como administrador"}
+        return redirect(url_for('login'))
+
+    return render_template('alterar_usuario_sistema.html',
+                           lab_id=lab_id,
+                           lab_nome=lab_nome,
+                           user = UsuarioLab.obter(id),
+                           autenticado=autenticado(),
+                           admin=admin_autenticado(),
+                           pagina='alterar_usuario_lab'
+                           )  
+
 @app.route('/remover-usuario/<id>/', methods=["POST"])
 def remover_usuario_sistema(id):
     if not admin_autenticado():
@@ -262,15 +277,27 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
     if not admin_autenticado():
         kwargs = {"e" : "Por favor, faça login como administrador"}
         return redirect(url_for('login'))
+    if request.method == 'POST':
+        user_id = request.form.get('id-user') or ''
+        nome = request.form.get('nome') or ''
+        email = request.form.get('email') or ''
+        userToEdit = UsuarioLab(user_id, nome, email)
+        userToEdit.editar()
+        kwargs = {"c":"Usuário alterado com sucesso!"}
+        return redirect(url_for('usuarios_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
+    
 
-    return render_template('alterar_usuario_lab.html',
-                           lab_id=lab_id,
-                           lab_nome=lab_nome,
-                           user = UsuarioLab.obter(id),
-                           autenticado=autenticado(),
-                           admin=admin_autenticado(),
-                           pagina='alterar_usuario_lab'
-                           )   
+    else:
+        return render_template('alterar_usuario_lab.html',
+                               lab_id=lab_id,
+                               lab_nome=lab_nome,
+                               user = UsuarioLab.obter(id),
+                               autenticado=autenticado(),
+                               admin=admin_autenticado(),
+                               pagina='alterar_usuario_lab'
+                               )   
+
+
 
 # @app.route('/alterar-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
 # def alterar_usuario_lab(lab_id, lab_nome, id):
