@@ -67,7 +67,7 @@
             </fieldset>
             
             <fieldset>
-                <legend><span class="number">2</span> Datas de início e fim</legend>
+                <legend><span class="number">2</span> Datas de Início e Fim</legend>
                 <div class="date-tools">
                     <input type="text" id="start-date" style="display:none;">
                     <input type="text" id="end-date" style="display:none;">
@@ -78,19 +78,19 @@
             </fieldset>
             
             <fieldset>
-                <legend><span class="number">3</span> Intervalo do gráfico (minutos)</legend>
+                <legend><span class="number">3</span> Intervalo do Gráfico (minutos)</legend>
                 <div class="range-slider">
                     <input class="range-slider__range" name="intervalo_grafico" id="intervalo_grafico" type="range" value="20" min="1" max="120" step="1">
                     <span class="range-slider__value">0</span>
                 </div>
             </fieldset>
             
-            <input type="submit" id="graphic" value="Gerar gráfico" />
+            <input type="submit" id="graphic" value="Gerar Gráfico" />
             
         </form>
     </div>
 
-    <div id="curve-chart"></div>
+    <div id="curve-chart" style="display:none;"></div>
     
     {% if temp_data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
