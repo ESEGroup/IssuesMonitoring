@@ -77,3 +77,4 @@ def ultima_atualizacao_parser():
 
 def registrar_log_parser():
     Laboratorio.registrar_log_parser()
+    return Laboratorio.obter_intervalo_parser()
