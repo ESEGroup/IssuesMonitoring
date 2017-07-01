@@ -4,9 +4,14 @@
 }
 
 .datepicker-class {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    vertical-align: text-top;
     margin-left: 12px;
     margin-right: 12px;
     display: inline-block !important;
 }
+
+.date-tools {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+

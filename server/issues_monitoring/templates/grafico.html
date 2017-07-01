@@ -13,7 +13,7 @@
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/jquery-ui/addons/jquery-ui-timepicker-addon.js"></script>
-<script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>
+<script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-pt-BR.js"></script>
 <script src="/static/js/grafico.js"></script>
 {% endblock %}
 
@@ -47,11 +47,13 @@
             
             <fieldset>
                 <legend><span class="number">2</span> Datas de início e fim</legend>
-                <div class="datepicker-class" id="datepicker-start"></div>
-                <div class="datepicker-class" id="datepicker-end"></div>
-                <input type="text" id="start-date">
-                <input type="text" id="end-date">
-                <input type="text" name="temp_data" id="temp_data">
+                <div class="date-tools">
+                    <input type="text" id="start-date" style="display:none;">
+                    <input type="text" id="end-date" style="display:none;">
+                    <input type="text" name="daterange" id="daterange" style="display:none">
+                    <div class="datepicker-class" id="datepicker-start"></div>
+                    <div class="datepicker-class" id="datepicker-end"></div>
+                </div>
             </fieldset>
             
             <fieldset>
