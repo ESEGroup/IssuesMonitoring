@@ -1,12 +1,13 @@
 from datetime import datetime
 from ..common.utils import hoje
+from ..common.erros import UsuarioLabJaCadastrado
 from .evento import Evento
 from .usuario import Usuario
 from . import db
 
 class UsuarioLab(Usuario):
     def __init__(self, user_id, nome, email, data_aprovacao = None,
-                 laboratorio = None, lab_id = None, data_entrada = None, data_evento = None, evento = None):
+                 laboratorio = None, lab_id = None, data_entrada = None, data_evento = None, evento = None, id = None):
         super().__init__(nome, email, data_aprovacao)
         self.user_id = user_id
         self.nome = nome
@@ -17,25 +18,29 @@ class UsuarioLab(Usuario):
         self.data_entrada = data_entrada
         self.data_evento = data_evento
         self.evento = evento
+        self.id = id
 
     def obter(user_id):
-        data = db.fetchone("""SELECT user_id, nome, email, data_aprov
+        data = db.fetchone("""SELECT id, user_id, nome, email, data_aprov
                            FROM User_Lab
                            WHERE user_id = ?;""",
                            (user_id,))
-        return UsuarioLab(*data)
+        if data is None:
+            return data
+
+        return UsuarioLab(*data[1:], id=data[0])
 
     def obter_todos():
-        data = db.fetchall("SELECT user_id, nome, email, data_aprov FROM User_Lab")
-        return [UsuarioLab(*d) for d in data]
+        data = db.fetchall("SELECT id, user_id, nome, email, data_aprov FROM User_Lab")
+        return [UsuarioLab(*d[1:], id=d[0]) for d in data]
 
     def obter_do_laboratorio(id):
-        data = db.fetchall("""SELECT u.user_id, u.nome, u.email, u.data_aprov
+        data = db.fetchall("""SELECT u.id, u.user_id, u.nome, u.email, u.data_aprov
                             FROM User_Lab u
                             INNER JOIN Presenca p
                               ON p.user_id = u.user_id
                             WHERE p.lab_id = ?;""", (id,))
-        return [UsuarioLab(*d) for d in data]
+        return [UsuarioLab(*d[1:], id=d[0]) for d in data]
 
     def registrar_presenca(eventos):
         usuarios_presenca = []
@@ -110,6 +115,12 @@ class UsuarioLab(Usuario):
                   self.nome,
                   self.email,
                   self.data_aprovacao)
+
+        data = UsuarioLab.obter(self.user_id)
+
+        if data is not None:
+            raise UsuarioLabJaCadastrado
+
         db.execute("""
             INSERT INTO User_Lab
             (user_id, nome, email, data_aprov)
@@ -122,11 +133,13 @@ class UsuarioLab(Usuario):
         db.execute("""
             UPDATE User_Lab
             SET nome = ?,
-                email = ?
-            WHERE user_id = ?;""",
+                email = ?,
+                user_id = ?
+            WHERE id = ?;""",
             (self.nome,
              self.email,
-             self.user_id))
+             self.user_id,
+             self.id))
 
     def remover(lab_id, user_id):
         db.execute("""
@@ -200,7 +213,7 @@ class UsuarioLab(Usuario):
     def get_presence_data(dateToday, dateTomorrow, lab_id):
       data = db.fetchall("""
                 SELECT User_Lab.user_id, User_Lab.nome, User_Lab.email, Log_Presenca.data, Log_Presenca.evento
-                FROM Log_Presenca 
+                FROM Log_Presenca
                 INNER JOIN User_Lab ON Log_Presenca.user_id = User_Lab.user_id
                 WHERE Log_Presenca.lab_id = ? AND Log_Presenca.data >= ? AND Log_Presenca.data <= ?
                 ORDER BY nome ASC, data ASC""", (lab_id, dateToday, dateTomorrow,))

@@ -3,7 +3,9 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
+<link rel="stylesheet" type="text/css" href="/static/jquery-ui/jquery-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/labs.css" />
 {% endblock %}
 
 {% block content %}
@@ -21,7 +23,7 @@
                         {% for lab in laboratorios %}
                         <option value="{{lab.id}}">{{lab.nome}}</option>
                         {% endfor %}
-                    </optgroup>    
+                    </optgroup>
                 </select>
             </fieldset>
             <fieldset>

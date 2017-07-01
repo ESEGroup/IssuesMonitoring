@@ -799,9 +799,11 @@ def anomalias(id, nome):
         return redirect(url_for('login', **kwargs))
 
     anomalias = controllers.obter_anomalias(id)
+    anomalias_resolvidas = controllers.obter_anomalias_resolvidas(id)
 
     return render_template('anomalias.html',
                             anomalias=anomalias,
+                            anomalias_resolvidas=anomalias_resolvidas,
                             pagina='anomalias',
                             autenticado=True,
                             admin = admin_autenticado(),

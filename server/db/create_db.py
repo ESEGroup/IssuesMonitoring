@@ -62,7 +62,8 @@ def work():
 
     cursor.execute("""
     CREATE TABLE User_Lab(
-            user_id CHAR(4) NOT NULL PRIMARY KEY,
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            user_id CHAR(4) NOT NULL,
             nome CHAR(255) NOT NULL,
             email CHAR(255) NOT NULL,
             data_aprov INTEGER);
