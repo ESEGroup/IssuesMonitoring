@@ -4,6 +4,7 @@ from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import autenticado, admin_autenticado, hoje, agora
 from ..             import app, Config, controllers
+from ..models       import UsuarioLab, UsuarioSistema, Equipamento
 import json
 import pdfkit
 
@@ -265,6 +266,7 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
     return render_template('alterar_usuario_lab.html',
                            lab_id=lab_id,
                            lab_nome=lab_nome,
+                           user = UsuarioLab.obter(id),
                            autenticado=autenticado(),
                            admin=admin_autenticado(),
                            pagina='alterar_usuario_lab'
