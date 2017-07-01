@@ -93,43 +93,43 @@
                     <input type="text" name="descricao" id="descricao" placeholder="Descrição">
                 </fieldset>
                 <fieldset>
-                    <legend><span class="number">4</span> Zona de Conforto</legend>
-                    <div class="legenda-cadastro">Temperatura do Equipamento:</div>
-                    <div class="div-double-slider">
-                        <div id="slider-temp" class="double-slider"></div>
-                        <input type="hidden" name="temp-min" id="temp-min" value="0">
-                        <input type="hidden" name="temp-max" id="temp-max" value="0">
-                        <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend><span class="number">5</span> Tipo do Equipamento</legend>
-                    <input type="hidden" name="parent_id" id="parent_id" value="0">
-                    
+                    <legend><span class="number">4</span> Tipo do Equipamento</legend>
+                    <input type="text" name="parent_id" id="parent-id" value="0">
+
                     <div class="radio">
-                        <input id="ardu_radio" name="radio-1" type="radio" checked>
-                        <label for="ardu_radio" class="radio-label">Arduino</label>
+                        <input id="ardu-radio" name="radio-1" type="radio" checked>
+                        <label for="ardu-radio" class="radio-label">Arduino</label>
                     </div>
 
                     {% if lista_arduinos|len > 0%}
                     <div class="radio">
-                        <input id="comp_radio" name="radio-1" type="radio">
-                        <label for="comp_radio" class="radio-label">Computador</label>
+                        <input id="comp-radio" name="radio-1" type="radio">
+                        <label for="comp-radio" class="radio-label">Computador</label>
                     </div>
-                    
+
                     <div class="hidden-radio shrink-div hidden">
                         <div id="arduino-select">Selecione o Arduino ao qual o Computador será associado:</div>
                         {% for arduino in lista_arduinos %}
-                        <div class="radio">
-                            <input id="radio-arduino-{{arduino.id}}" name="radio-arduino" type="radio" value="{{arduino.id}}">
+                        <div class="radio" id="select-radio">
+                            <input id="radio-arduino-{{arduino.id}}" name="radio-arduino" type="radio" value="{{arduino.id}}" class="inner-radio">
                             <label for="radio-arduino-{{arduino.id}}" class="radio-label">{{arduino.nome}} - {{arduino.MAC}}</label>
                         </div>
                         {% endfor %}
                     </div>
-                    
-                    
                     {% endif %}
                 </fieldset>
+                <div class="hidden-zona-conforto shrink-div hidden">
+                    <fieldset>
+                        <legend><span class="number">5</span> Zona de Conforto</legend>
+                        <div class="legenda-cadastro">Temperatura do Equipamento:</div>
+                        <div class="div-double-slider">
+                            <div id="slider-temp" class="double-slider"></div>
+                            <input type="hidden" name="temp-min" id="temp-min" value="0">
+                            <input type="hidden" name="temp-max" id="temp-max" value="0">
+                            <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                        </div>
+                    </fieldset>
+                </div>
                 <input type="submit" value="Cadastrar Equipamento" />
             </form>
         </div>
