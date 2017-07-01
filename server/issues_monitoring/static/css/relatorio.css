@@ -8,6 +8,8 @@
 .date-tools {
     margin-top: 25px;
     margin-bottom: 25px;
+    position: relative;
+    left: 15px;
 }
 
 #view1 {
