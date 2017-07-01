@@ -42,7 +42,7 @@
                 <tr>
                     <td class="text-center" title="Id: {{equipamento.id}}">{{equipamento.MAC}}</td>
                     <td class="text-center" title="{{equipamento.descricao}}">{{equipamento.nome}}</td>
-                    <td class="text-center">{{'%d'| format(equipamento.temp_min|float)}}ºC até {{'%d'| format(equipamento.temp_max|float)}}ºC</td>
+                    <td class="text-center">{% if equipamento.nome_arduino %}{{'%d'| format(equipamento.temp_min|float)}}ºC até {{'%d'| format(equipamento.temp_max|float)}}ºC{% else %}{{'-'}}{% endif %}</td>
                     <td class="text-center" title="{{equipamento.MAC_arduino}}">{{equipamento.nome_arduino|vazio}}</td>
                     <td class="text-center">
                         <input data-url="{{url_for('remover_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=equipamento.id)}}"
@@ -94,7 +94,7 @@
                 </fieldset>
                 <fieldset>
                     <legend><span class="number">4</span> Tipo do Equipamento</legend>
-                    
+
                     <input type="hidden" name="parent_id" id="parent-id" value="0">
 
                     <div class="radio">
