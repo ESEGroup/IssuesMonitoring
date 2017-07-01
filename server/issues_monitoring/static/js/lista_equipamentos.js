@@ -45,15 +45,6 @@ $(function() {
     var inner_radio_arduino_list = document.getElementsByClassName("inner-radio");
     ardu_radio.addEventListener("click", function(ev) {
         parent_id.value = 0;
-        //alert(parent_id.value);
     });
 
-    for (i = 0; i < inner_radio_arduino_list.length; i++) {
-        var inner_radio_arduino = inner_radio_arduino_list[i];
-        //alert(inner_radio_arduino)
-        inner_radio_arduino.addEventListener("click", function(ev) {
-            parent_id.value = inner_radio_arduino.value;
-            //alert(parent_id.value);
-        });
-    }
 });
