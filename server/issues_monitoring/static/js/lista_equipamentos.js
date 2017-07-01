@@ -1,3 +1,15 @@
+//JS para os input radios escondidos dos arduinos:
+$(document).ready(function(){
+    $('input[type=radio][name=radio-1]').change(function() {
+        $(".hidden-radio").slideToggle(300);
+        $(".hidden-zona-conforto").slideToggle(300);
+    });
+
+    $('input[type=radio][name=radio-arduino]').change(function() {
+        $('#parent-id').val( $('input[name=radio-arduino]:checked', "#register-form").val() );
+    });
+});
+
 $(function() {
 
     //JS para os sliders de dois handles presentes em cadastrar lab:
@@ -28,21 +40,11 @@ $(function() {
     }
 
     // JS para os radiobutton
-    var comp_radio         = document.getElementById("comp_radio");
-    var ardu_radio         = document.getElementById("ardu_radio");
-    var div_select_arduino = document.getElementById("div_select_arduino");
-    var select_arduino     = document.getElementById("select_arduino");
-    var parent_id          = document.getElementById("parent_id");
+    var ardu_radio               = document.getElementById("ardu-radio");
+    var parent_id                = document.getElementById("parent-id");
+    var inner_radio_arduino_list = document.getElementsByClassName("inner-radio");
     ardu_radio.addEventListener("click", function(ev) {
-        div_select_arduino.className += " hidden";
         parent_id.value = 0;
     });
 
-    comp_radio.addEventListener("click", function(ev) {
-        div_select_arduino.className = div_select_arduino.className.replace(" hidden", "");
-    });
-
-    select_arduino.addEventListener("change", function(ev) {
-        parent_id.value = ev.target.value;
-    });
 });
