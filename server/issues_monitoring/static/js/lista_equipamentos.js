@@ -6,7 +6,7 @@ $(document).ready(function(){
     });
 
     $('input[type=radio][name=radio-arduino]').change(function() {
-        $('input[name=parent_id]').value = $('input[name=radio-arduino]:checked').val();
+        $('#parent-id').val( $('input[name=radio-arduino]:checked', "#register-form").val() );
     });
 });
 

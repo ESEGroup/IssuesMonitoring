@@ -79,7 +79,7 @@
         </div>
 
         <div class="neat-form" anchor="cadastrar" id="view2">
-            <form method="POST" action="{{url_for('cadastro_equipamento', id=lab_id, nome=lab_nome)}}">
+            <form method="POST" action="{{url_for('cadastro_equipamento', id=lab_id, nome=lab_nome)}}" id="register-form">
                 <fieldset>
                     <legend><span class="number">1</span> Identificação do Equipamento</legend>
                     <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC">
@@ -94,7 +94,8 @@
                 </fieldset>
                 <fieldset>
                     <legend><span class="number">4</span> Tipo do Equipamento</legend>
-                    <input type="text" name="parent_id" id="parent-id" value="0">
+                    
+                    <input type="hidden" name="parent_id" id="parent-id" value="0">
 
                     <div class="radio">
                         <input id="ardu-radio" name="radio-1" type="radio" checked>
