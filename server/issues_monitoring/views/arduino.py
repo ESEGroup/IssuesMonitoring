@@ -24,7 +24,7 @@ def arduino():
 
 @app.route('/arduino', methods=['GET'])
 def arduino_get():
-    json_str = request.args.get("json",None)
+    json_str = request.args.get("json", None)
     if json_str is not None:
         j = json.loads(json_str)
         try:

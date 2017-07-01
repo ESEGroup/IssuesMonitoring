@@ -93,6 +93,17 @@
         </div>
         {% endif %}
 
+        {% if dia_anterior != proximo_dia %}
+        <div class="div-botao-estilizado">
+            {% if dia_anterior != dia %}
+                <a href="{{url_for('log_eventos', id=lab_id, nome=lab_nome, dia=dia_anterior|format_dia_url, _anchor='log')}}" class="btn-estilizado btn-estilizado-blue">Dia anterior ({{dia_anterior|dia_mes_ano}})</a>
+            {% endif %}
+            {% if proximo_dia != dia %}
+                <a href="{{url_for('log_eventos', id=lab_id, nome=lab_nome, dia=proximo_dia|format_dia_url, _anchor='log')}}" class="btn-estilizado btn-estilizado-blue">Próximo dia ({{proximo_dia|dia_mes_ano}})</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
         <div class="div-botao-estilizado trocar-view-btn">
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back-reload">Ver Membros Presentes</a>
         </div>

@@ -84,9 +84,6 @@ def usuarios_presentes(lab_id):
 def remover_usuario_lab(id_lab, user_id):
     UsuarioLab.remover(id_lab, user_id)
 
-def remover_usuario_de_todos_labs(user_id):
-    UsuarioLab.remover_de_todos(user_id)
-
 def log_eventos(lab_id, dia):
     return UsuarioLab.eventos(lab_id, dia)
 
