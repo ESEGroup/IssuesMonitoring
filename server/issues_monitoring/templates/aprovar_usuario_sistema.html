@@ -30,6 +30,7 @@
                     <th class="text-center">E-mail</th>
                     <th class="text-center">Autorizado</th>
                     <th class="text-center">Administrador</th>
+                    <th class="text-center">Alterar</th>
                     <th class="text-center">Excluir</th>
                 </tr>
             </thead>
@@ -50,6 +51,12 @@
                                 <input type="checkbox" data-url="{{url_for('editar_status_administrador', id=usuario.id)}}" class="aprovar" {% if usuario.admin %}checked="checked"{% endif %}>
                                 <div class="check-slide round"></div>
                             </label>
+                        </td>
+                        <td class="text-center">
+                            <input data-url="{{url_for('alterar_usuario_sistema', id=usuario.id)}}"
+                                   data-nome="{{usuario.nome}}"
+                                   type="image" src="/static/img/pencil.png"
+                                   alt="Apagar" class="delete-table-opt alter-btn">
                         </td>
                         <td class="text-center">
                             <input data-url="{{url_for('remover_usuario_sistema', id=usuario.id)}}"

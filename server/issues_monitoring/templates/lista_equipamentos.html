@@ -31,6 +31,7 @@
                     <th class="text-center">Nome</th>
                     <th class="text-center">Zona de Conforto</th>
                     <th class="text-center">Arduino Associado</th>
+                    <th class="text-center">Alterar Equipamento</th>
                     <th class="text-center">Excluir</th>
                 </tr>
             </thead>
@@ -41,6 +42,12 @@
                     <td class="text-center" title="{{equipamento.descricao}}">{{equipamento.nome}}</td>
                     <td class="text-center">{{'%d'| format(equipamento.temp_min|float)}}ºC até {{'%d'| format(equipamento.temp_max|float)}}ºC</td>
                     <td class="text-center" title="{{equipamento.MAC_arduino}}">{{equipamento.nome_arduino|vazio}}</td>
+                    <td class="text-center">
+                        <input data-url="{{url_for('alterar_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=equipamento.id)}}"
+                               data-mac="{{equipamento.MAC}}"
+                               type="image" src="/static/img/pencil.png"
+                               alt="Apagar" class="delete-table-opt alter-btn">
+                    </td>
                     <td class="text-center">
                         <input data-url="{{url_for('remover_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=equipamento.id)}}"
                                data-mac="{{equipamento.MAC}}"
@@ -128,5 +135,71 @@
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
         </div>
     </div>
+
+
+
+
+    <div anchor="alterar" id="view2" style="display:none">
+        <div class="page-title">
+            <h3>Alterar Equipamento</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
+
+        <div class="neat-form" anchor="alterar" id="view2">
+            <form method="GET" action="{{url_for('alterar_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=id)}}">
+                <fieldset>
+                    <legend><span class="number">1</span> Identificação do Equipamento</legend>
+                    <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC" value = "lab_nome">
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">2</span> Nome do Equipamento</legend>
+                    <input type="text" name="nome" id="nome" placeholder="Nome" value = "">
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">3</span> Descrição do Equipamento</legend>
+                    <input type="text" name="descricao" id="descricao" placeholder="Descrição" value = "">
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">4</span> Zona de Conforto</legend>
+                    <div class="legenda-cadastro">Temperatura do Equipamento:</div>
+                    <div class="div-double-slider">
+                        <div id="slider-temp" class="double-slider"></div>
+                        <input type="hidden" name="temp-min" id="temp-min" value="0">
+                        <input type="hidden" name="temp-max" id="temp-max" value="0">
+                        <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><span class="number">5</span> Tipo do Equipamento</legend>
+                    <input type="hidden" name="parent_id" id="parent_id" value="0">
+
+                    <label for="ardu_radio">Arduino</label>
+                    <input type="radio" name="radio-1" id="ardu_radio" checked="checked">
+
+                    {% if lista_arduinos|len > 0%}
+                    <label for="comp_radio">Computador</label>
+                    <input type="radio" name="radio-1" id="comp_radio">
+                    <div id="div_select_arduino" class=" hidden">
+                        <label for="select_arduino">Selecione o Arduino ao qual o computador será associado:</label>
+                        <select name="select_arduino" id="select_arduino">
+                            <option disabled selected>Selecione</option>
+                            {% for arduino in lista_arduinos %}
+                            <option value="{{arduino.id}}">{{arduino.nome}} - {{arduino.MAC}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                </fieldset>
+                <input type="submit" value="Alterar Equipamento" />
+            </form>
+        </div>
+
+        <div class="div-botao-estilizado trocar-view-btn ">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back">Cancelar</a>
+        </div>
+    </div>
+
+
+
 </div>
 {% endblock %}
