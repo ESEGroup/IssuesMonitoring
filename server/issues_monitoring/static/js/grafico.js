@@ -1,3 +1,9 @@
+$(document).ready(function(){
+    $('input[type=radio][name=chart_type]').change(function() {
+        $(".hidden-radio").slideToggle(300);
+    });
+});
+
 //JS para o slider de handle unico:
 
 var rangeSlider = function(){
@@ -25,9 +31,10 @@ $(function() {
     //Ativa o slider de handle unico:
     rangeSlider();
     
-    //Declara o objeto do datetimepicker:
+    //Declara o objeto do datetimepicker (e faz com que o datepicker atualize os inputs correspondentes quando selecionado):
     var datetimepickerInit = {
         dateFormat: 'yy-m-d',
+        timeFormat: "hh:mm tt",
         inline: true,
         onSelect: function(dateText, inst) { 
             var date = $(this).datepicker('getDate'),
@@ -45,7 +52,7 @@ $(function() {
         }
     };
     
-    //Faz com que o datepicker atualize os inputs correspondentes quando selecionado:
+    //Atribui os valores iniciais de hoje e ontem aos datepickers:
     $('#datepicker-end').datetimepicker(datetimepickerInit);
     datetimepickerInit["defaultDate"] = -1;
     $('#datepicker-start').datetimepicker(datetimepickerInit);
@@ -64,73 +71,42 @@ $(function() {
     //Inicializa o date-picker de ontem:
     $("#datepicker-start").datetimepicker({ defaultDate: -1 });
     
-/*
+
     //JS referente ao grafico:
-    $('input[type=radio][name=chart_type]').on('change', function(){
-        console.log($(this).val());
-        if ($(this).val() == "temperatura"){
-            $('.equips').remove();
-            var equips = JSON.parse('{{equipamentos}}');
-            var equips_div = $('<div />').addClass('equips');
-            var lab_div = $('<div />');
-            var lab_radio = $('<input />')
-                                        .attr('type', 'radio')
-                                        .attr('name', 'equipamento')
-                                        .attr('value', 'laboratorio')
-            var lab_span = $('<span />').text("Laboratório");
-            $(lab_div).append(lab_radio);
-            $(lab_div).append(lab_span);
-            $(equips_div).append(lab_div);
-            $.each(equips, function(idx,row){
-                var equip_div = $('<div />');
-                var equip_radio = $('<input />')
-                                            .attr('type', 'radio')
-                                            .attr('name', 'equipamento')
-                                            .attr('value', row)
-                var equip_span = $('<span />').text('Equipamento ' + row);
-                $(equip_div).append(equip_radio);
-                $(equip_div).append(equip_span);
-                $(equips_div).append(equip_div);
-            });
-            $('.graphic_mode').append(equips_div)
-        }
-        else{
-            $('.equips').remove();
-        }
-    });
+    
 
-  var mydata = JSON.parse('{{temp_data}}' || "[]");
+    var mydata = JSON.parse('{{temp_data}}' || "[]");
 
-  function drawChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('number', 'index');
-    data.addColumn('number', 'mean');
-    data.addColumn({id: 'min', type:'number', role: 'interval'});
-    data.addColumn({id: 'max', type:'number', role: 'interval'});
+    function drawChart() {
+       var data = new google.visualization.DataTable();
+       data.addColumn('number', 'index');
+       data.addColumn('number', 'mean');
+       data.addColumn({id: 'min', type:'number', role: 'interval'});
+       data.addColumn({id: 'max', type:'number', role: 'interval'});
 
-    data.addRows(mydata);
+       data.addRows(mydata);
 
-    var options = {
-        title:'Grafico',
-        curveType:'function',
-        lineWidth: 4,
-        series: [{'color': '#D3362D'}],
-        intervals: { 'lineWidth':2, 'barWidth': 0.5 },
-        legend: 'none',
-    };
+       var options = {
+           title:'Grafico',
+           curveType:'function',
+           lineWidth: 4,
+           series: [{'color': '#D3362D'}],
+           intervals: { 'lineWidth':2, 'barWidth': 0.5 },
+           legend: 'none',
+        };
 
-    var chart = new google.visualization.LineChart(document.getElementById('curve-chart'));
+        var chart = new google.visualization.LineChart(document.getElementById('curve-chart'));
 
-    chart.draw(data, options);
-  }
+        chart.draw(data, options);
+    }
 
-  if (mydata.length > 0) {
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-  } else {
-      document.getElementById('curve-chart').remove();
-      document.getElementById('warning-chart').style = "";
-  }
-*/
+    if (mydata.length > 0) {
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+    } else {
+        document.getElementById('curve-chart').remove();
+        document.getElementById('warning-chart').style = "";
+    }
+
 });
 

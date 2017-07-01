@@ -14,6 +14,7 @@
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/jquery-ui/addons/jquery-ui-timepicker-addon.js"></script>
 <script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-pt-BR.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- JS do grafico -->
 <script src="/static/js/grafico.js"></script>
 {% endblock %}
 
@@ -21,7 +22,7 @@
 <div id="nav-bar">
 
     <div class="page-title">
-        <h3>Gráfico</h3>
+        <h3>Gráficos dos Eventos</h3>
         <h4>{{lab_nome}}</h4>
     </div>
                 
@@ -33,13 +34,33 @@
                 <div class="container">
                 
                     <div class="radio">
-                        <input id="radio-1" name="chart_type" type="radio" checked>
-                        <label for="radio-1" class="radio-label">Temperatura</label>
+                        <input id="radio-temp" name="chart_type" type="radio" value="temperatura" checked>
+                        <label for="radio-temp" class="radio-label">Temperatura</label>
+                    </div>
+                    
+                    <div class="hidden-radio shrink-div">
+                        <div class="radio">
+                            <input id="radio-lab-equip" name="equipamento" type="radio" value="laboratorio" checked>
+                            <label for="radio-lab-equip" class="radio-label">Laboratório</label>
+                        </div>
+                        {% for equipamento in equipamentos %}
+                        <div class="radio">
+                            <input id="radio-equip-{{equipamento.id}}" name="equipamento" type="radio" value="{{equipamento.id}}">
+                            <label for="radio-equip-{{equipamento.id}}" class="radio-label">{{equipamento.nome}}</label>
+                        </div>
+                        {% endfor %}
                     </div>
 
                     <div class="radio">
-                        <input id="radio-2" name="chart_type" type="radio">
-                        <label  for="radio-2" class="radio-label">Umidade</label>
+                        <input id="radio-umidade" name="chart_type" type="radio" value="umidade">
+                        <label  for="radio-umidade" class="radio-label">Umidade</label>
+                    </div>
+                    
+                    <div class="hidden-radio shrink-div" style="display:none;">
+                        <div class="radio">
+                            <input id="radio-lab-umidade" name="umidade" type="radio" value="laboratorio" checked>
+                            <label for="radio-lab-umidade" class="radio-label">Laboratório</label>
+                        </div>
                     </div>
                     
                 </div>
