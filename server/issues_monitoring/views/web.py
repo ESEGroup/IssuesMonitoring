@@ -259,6 +259,35 @@ def alterar_usuario_sistema(lab_id, lab_nome, id):
                            pagina='alterar_usuario_lab'
                            )  
 
+
+@app.route('/alterar-usuario-sistema/<id>', methods=["GET", "POST"])
+def alterar_usuario_sistema(id):
+    if not admin_autenticado():
+        kwargs = {"e" : "Por favor, faça login como administrador"}
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        user_id = request.form.get('id-user') or ''
+        login = request.form.get("login") or ''
+        senha = request.form.get("senha") or ''
+        nome = request.form.get('nome') or ''
+        email = request.form.get('email') or ''
+        userToEdit = UsuarioSistema(login, senha, email, nome)
+        userToEdit.editar()
+        kwargs = {"c":"Usuário alterado com sucesso!"}
+        return redirect(url_for('aprovar-usuario', id=lab_id, nome=lab_nome, **kwargs))
+    
+
+    else:
+        return render_template('alterar_usuario_sistema.html',
+                               lab_id=lab_id,
+                               lab_nome=lab_nome,
+                               user = UsuarioSistema.obter(id),
+                               autenticado=autenticado(),
+                               admin=admin_autenticado(),
+                               pagina='alterar_usuario_sistema'
+                               )   
+
+
 @app.route('/remover-usuario/<id>/', methods=["POST"])
 def remover_usuario_sistema(id):
     if not admin_autenticado():
