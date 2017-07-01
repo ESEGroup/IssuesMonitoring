@@ -1,3 +1,4 @@
+//JS para os input radios escondidos de Temperatura e Umidade:
 $(document).ready(function(){
     $('input[type=radio][name=chart_type]').change(function() {
         $(".hidden-radio").slideToggle(300);

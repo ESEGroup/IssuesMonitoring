@@ -6,7 +6,9 @@
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/radio_input.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/round_sliders.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/lista_equipamentos.css" />
 {% endblock %}
 
 {% block js %}
@@ -103,22 +105,29 @@
                 <fieldset>
                     <legend><span class="number">5</span> Tipo do Equipamento</legend>
                     <input type="hidden" name="parent_id" id="parent_id" value="0">
-
-                    <label for="ardu_radio">Arduino</label>
-                    <input type="radio" name="radio-1" id="ardu_radio" checked="checked">
+                    
+                    <div class="radio">
+                        <input id="ardu_radio" name="radio-1" type="radio" checked>
+                        <label for="ardu_radio" class="radio-label">Arduino</label>
+                    </div>
 
                     {% if lista_arduinos|len > 0%}
-                    <label for="comp_radio">Computador</label>
-                    <input type="radio" name="radio-1" id="comp_radio">
-                    <div id="div_select_arduino" class=" hidden">
-                        <label for="select_arduino">Selecione o Arduino ao qual o computador será associado:</label>
-                        <select name="select_arduino" id="select_arduino">
-                            <option disabled selected>Selecione</option>
-                            {% for arduino in lista_arduinos %}
-                            <option value="{{arduino.id}}">{{arduino.nome}} - {{arduino.MAC}}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="radio">
+                        <input id="comp_radio" name="radio-1" type="radio">
+                        <label for="comp_radio" class="radio-label">Computador</label>
                     </div>
+                    
+                    <div class="hidden-radio shrink-div hidden">
+                        <div id="arduino-select">Selecione o Arduino ao qual o Computador será associado:</div>
+                        {% for arduino in lista_arduinos %}
+                        <div class="radio">
+                            <input id="radio-arduino-{{arduino.id}}" name="radio-arduino" type="radio" value="{{arduino.id}}">
+                            <label for="radio-arduino-{{arduino.id}}" class="radio-label">{{arduino.nome}} - {{arduino.MAC}}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    
                     {% endif %}
                 </fieldset>
                 <input type="submit" value="Cadastrar Equipamento" />
