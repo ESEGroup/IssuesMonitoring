@@ -4,96 +4,17 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css"/>
-<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/radio_input.css" />
+<link rel="stylesheet" type="text/css" href="/static/jquery-ui/addons/jquery-ui-timepicker-addon.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/grafico.css" />
 {% endblock %}
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<script type="text/javascript">
-$(function() {
-    $('input[name="daterange"]').daterangepicker({
-        timePicker: true,
-        timePicker24Hour: true,
-        timePickerSeconds: true,
-        locale: {
-            format: 'DD/MM/YYYY HH:mm:ss'
-        }
-    });
-    $('input[type=radio][name=chart_type]').on('change', function(){
-        console.log($(this).val());
-        if ($(this).val() == "temperatura"){
-            $('.equips').remove();
-            var equips = JSON.parse('{{equipamentos}}');
-            var equips_div = $('<div />').addClass('equips');
-            var lab_div = $('<div />');
-            var lab_radio = $('<input />')
-                                        .attr('type', 'radio')
-                                        .attr('name', 'equipamento')
-                                        .attr('value', 'laboratorio')
-            var lab_span = $('<span />').text("Laboratório");
-            $(lab_div).append(lab_radio);
-            $(lab_div).append(lab_span);
-            $(equips_div).append(lab_div);
-            $.each(equips, function(idx,row){
-                var equip_div = $('<div />');
-                var equip_radio = $('<input />')
-                                            .attr('type', 'radio')
-                                            .attr('name', 'equipamento')
-                                            .attr('value', row)
-                var equip_span = $('<span />').text('Equipamento ' + row);
-                $(equip_div).append(equip_radio);
-                $(equip_div).append(equip_span);
-                $(equips_div).append(equip_div);
-            });
-            $('.graphic_mode').append(equips_div)
-        }
-        else{
-            $('.equips').remove();
-        }
-    });
-
-  var mydata = JSON.parse('{{temp_data}}' || "[]");
-
-  function drawChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('number', 'index');
-    data.addColumn('number', 'mean');
-    data.addColumn({id: 'min', type:'number', role: 'interval'});
-    data.addColumn({id: 'max', type:'number', role: 'interval'});
-
-    data.addRows(mydata);
-
-    var options = {
-        title:'Grafico',
-        curveType:'function',
-        lineWidth: 4,
-        series: [{'color': '#D3362D'}],
-        intervals: { 'lineWidth':2, 'barWidth': 0.5 },
-        legend: 'none',
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-    chart.draw(data, options);
-  }
-
-  if (mydata.length > 0) {
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-  } else {
-      document.getElementById('curve_chart').remove();
-      document.getElementById('warning-chart').style = "";
-  }
-
-});
-
-</script>
+<script src="/static/jquery-ui/addons/jquery-ui-timepicker-addon.js"></script>
+<script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>
+<script src="/static/js/grafico.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -103,33 +24,51 @@ $(function() {
         <h3>Gráfico</h3>
         <h4>{{lab_nome}}</h4>
     </div>
-    {% if error_message %}
-    <div class="ui-widget error-msg">
-        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
-            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-            <strong>Erro: </strong>{{error_message}}</p>
-        </div>
-    </div>
-    {% endif %}
-    <div class="neat-form">
+                
+    <div class="neat-form" style="max-width: 640px !important;">
         <form method="POST">
+        
             <fieldset>
-                <div class="legenda-cadastro">Tipo do gráfico:</div>
-                <div class="graphic_mode">
-                    <input type="radio" name="chart_type" value="temperatura">Temperatura
-                    <input type="radio" name="chart_type" value="umidade">Umidade
+                <legend><span class="number">1</span> Tipo do Gráfico</legend>
+                <div class="container">
+                
+                    <div class="radio">
+                        <input id="radio-1" name="chart_type" type="radio" checked>
+                        <label for="radio-1" class="radio-label">Temperatura</label>
+                    </div>
+
+                    <div class="radio">
+                        <input id="radio-2" name="chart_type" type="radio">
+                        <label  for="radio-2" class="radio-label">Umidade</label>
+                    </div>
+                    
                 </div>
-                <div class="legenda-cadastro">Data de início e fim:</div>
-                <input type="text" name="daterange" value="17/06/2017 00:00:00 - 18/06/2017 12:00:03" />
-                <div class="legenda-cadastro">Intervalo do gráfico (em min):</div>
-                <input type="text" name="intervalo_grafico" id="intervalo_grafico">
             </fieldset>
+            
+            <fieldset>
+                <legend><span class="number">2</span> Datas de início e fim</legend>
+                <div class="datepicker-class" id="datepicker-start"></div>
+                <div class="datepicker-class" id="datepicker-end"></div>
+                <input type="text" id="start-date">
+                <input type="text" id="end-date">
+                <input type="text" name="daterange" id="daterange">
+            </fieldset>
+            
+            <fieldset>
+                <legend><span class="number">3</span> Intervalo do gráfico (minutos)</legend>
+                <div class="range-slider">
+                    <input class="range-slider__range" name="intervalo_grafico" id="intervalo_grafico" type="range" value="20" min="1" max="120" step="1">
+                    <span class="range-slider__value">0</span>
+                </div>
+            </fieldset>
+            
             <input type="submit" id="graphic" value="Gerar gráfico" />
+            
         </form>
     </div>
 
-    <div id="curve_chart" style="width: 900px; height: 500px"></div>
-
+    <div id="curve-chart"></div>
+    
     {% if temp_data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
         <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
