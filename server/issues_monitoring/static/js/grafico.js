@@ -37,11 +37,11 @@ $(function() {
                 hours = date.getHours();
                 minutes = date.getMinutes();
             if ( $(this).attr('id') == 'datepicker-start'){
-                $('#start-date').val( day + '/' + month + '/' + year + ' ' + hours + ':' + minutes );
+                $('#start-date').val( day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':0');
             } else if ( $(this).attr('id') == 'datepicker-end'){
-                $('#end-date').val( day + '/' + month + '/' + year + ' ' + hours + ':' + minutes );
+                $('#end-date').val( day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':0');
             }
-            $('#daterange').val( $('#start-date').val() + " - " + $('#end-date').val() );
+            $('#temp_data').val( $('#start-date').val() + " - " + $('#end-date').val() );
         }
     });
     
