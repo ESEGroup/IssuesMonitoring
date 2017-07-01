@@ -25,19 +25,19 @@
         <h3>Gráficos dos Eventos</h3>
         <h4>{{lab_nome}}</h4>
     </div>
-                
+
     <div class="neat-form" style="max-width: 680px !important;">
         <form method="POST">
-        
+
             <fieldset>
                 <legend><span class="number">1</span> Tipo do Gráfico</legend>
                 <div class="container">
-                
+
                     <div class="radio">
                         <input id="radio-temp" name="chart_type" type="radio" value="temperatura" checked>
                         <label for="radio-temp" class="radio-label">Temperatura</label>
                     </div>
-                    
+
                     <div class="hidden-radio shrink-div">
                         <div class="radio">
                             <input id="radio-lab-equip" name="equipamento" type="radio" value="laboratorio" checked>
@@ -55,17 +55,17 @@
                         <input id="radio-umidade" name="chart_type" type="radio" value="umidade">
                         <label  for="radio-umidade" class="radio-label">Umidade</label>
                     </div>
-                    
+
                     <div class="hidden-radio shrink-div" style="display:none;">
                         <div class="radio">
                             <input id="radio-lab-umidade" name="umidade" type="radio" value="laboratorio" checked>
                             <label for="radio-lab-umidade" class="radio-label">Laboratório</label>
                         </div>
                     </div>
-                    
+
                 </div>
             </fieldset>
-            
+
             <fieldset>
                 <legend><span class="number">2</span> Datas de Início e Fim</legend>
                 <div class="date-tools">
@@ -76,7 +76,7 @@
                     <div class="datepicker-class" id="datepicker-end"></div>
                 </div>
             </fieldset>
-            
+
             <fieldset>
                 <legend><span class="number">3</span> Intervalo do Gráfico (minutos)</legend>
                 <div class="range-slider">
@@ -84,14 +84,14 @@
                     <span class="range-slider__value">0</span>
                 </div>
             </fieldset>
-            
+
             <input type="submit" id="graphic" value="Gerar Gráfico" />
-            
+
         </form>
     </div>
 
     <div id="curve-chart" style="display:none;"></div>
-    
+
     {% if temp_data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
         <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
