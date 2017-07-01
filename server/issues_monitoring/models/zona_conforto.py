@@ -48,7 +48,7 @@ class ZonaConforto:
             FROM Zona_de_Conforto_Lab as zc
             INNER JOIN Lab as l
               ON l.zona_conforto_id = zc.zona_conforto_id
-            WHERE lab_id = ?""",
+            WHERE l.lab_id = ?""",
             (id,))
         if data is not None:
             return ZonaConforto(*data)

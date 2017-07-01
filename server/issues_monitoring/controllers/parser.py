@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
 from time import sleep
 from ..common.mail import send_email
-from ..models import Laboratorio, Evento, UsuarioLab
+from ..models import Laboratorio, Evento, UsuarioLab, MyDenox
+
+def log_mydenox(epoch, message):
+    MyDenox.log(epoch, message)
 
 def obter_intervalo_parser():
     return Laboratorio.obter_intervalo_parser()
@@ -44,6 +47,9 @@ def reset_presencas_meia_noite():
         sleep(segundos_ate)
         emails = Laboratorio.reset_lista_presenca()
         enviar_email_presenca_zerada(emails)
+
+def ultima_atualizacao_mydenox():
+    return MyDenox.ultima_atualizacao()
 
 def ultima_atualizacao_parser():
     return Laboratorio.ultima_atualizacao_parser()

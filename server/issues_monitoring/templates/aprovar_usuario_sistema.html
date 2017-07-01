@@ -58,14 +58,20 @@
                                    alt="Apagar" class="delete-table-opt delete-btn">
                         </td>
                     {% else %}
-                        <td class="text-center one-word-per-line">Não Disponível</td>
-                        <td class="text-center one-word-per-line">Não Disponível</td>
-                        <td class="text-center one-word-per-line">Não Disponível</td>
+                        <td class="text-center one-word-per-line">-</td>
+                        <td class="text-center one-word-per-line">-</td>
+                        <td class="text-center one-word-per-line">-</td>
                     {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        {% if (not (usuarios|len == 1 and usuarios[0] != session["id"])) %}
+        <div class="div-botao-estilizado div-btn-below">
+            <a id="salvar" href="#" class="btn-estilizado btn-estilizado-blue">Salvar</a>
+        </div>
+        {% endif %}
         {% else %}
         <div class="ui-widget msg">
             <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">

@@ -31,7 +31,8 @@ import bcrypt
 
 if not isfile("db/Issues.db"):
     Popen(["rm",
-           "Issues.db"]).wait() 
+           "Issues.db"],
+           stderr=DEVNULL).wait() 
     create_db()
     Popen(["mv",
            "Issues.db",

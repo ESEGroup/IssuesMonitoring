@@ -35,5 +35,5 @@ def send_email(subject, message, emails):
         server.sendmail("", emails, msg.as_string())
         server.quit()
         # print("Emails sent!")
-    except:
-        print("Error: Couldn't open the mail server.")
+    except Exception as e:
+        print("Error: Couldn't open the mail server.\n", repr(e))
