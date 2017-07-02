@@ -19,8 +19,8 @@ sensacao_termica = 0.0
 equipamento1 = {'id': 1, 'temperatura': 0.0}
 equipamento2 = {'id': 2, 'temperatura': 0.0}
 
-if(len(sys.argv) != 3):
-    print("Uso: python3 pseudo_arduino.py [ip-do-servidor/rota] [periodo de envio em segundos]")
+if(len(sys.argv) != 4):
+    print("Uso: python3 pseudo_arduino.py [ip-do-servidor/rota] [periodo de envio em segundos] [modo_operacao]")
 
 while(True):
     #Calculando os valores das medidas
@@ -28,7 +28,7 @@ while(True):
     #luz
 
     #acesa
-    luz = 1
+    luz = 0
 
     #alguem da uma "luz" de como fazer. qual distribuicao?
 
@@ -36,25 +36,28 @@ while(True):
 
     #minimo de 40% e maximo de 75%
 
-    umidade = random.gauss(57.5, 12.5)
+    umidade = random.gauss(57.5, 5)
 
     #sensacao termica
 
     #minimo de 20 e maximo de 26
-    sensacao_termica = random.gauss(23, 3)
+    if (sys.argv[3] == "errors"):
+        sensacao_termica = 45
+    else:
+        sensacao_termica = random.gauss(23, 1)
 
     #equipamento 1
     #pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
-    equipamento1['temperatura'] = random.gauss(40, 20)
-    equipamento1['id'] = 1
+    equipamento1['temperatura'] = random.gauss(30, 1)
+    equipamento1['id'] = 2
 
     #equipamento 2
     #pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
-    equipamento2['temperatura'] = random.gauss(40, 20)
-    equipamento2['id'] = 2
+    equipamento2['temperatura'] = random.gauss(20,1)
+    equipamento2['id'] = 4
 
     r = requests.post("http://" + sys.argv[1], json={"MAC":"AB:BB:CC:DD:EE","lab_id":1,"dados":[{"luz":luz,"umidade":umidade,"sensacao_termica":sensacao_termica,"equipamentos":[equipamento1,equipamento2]}]})
-
+    print("Medidas:\nSensação Térmica: {}\nEquipamento1:{}\nEquipamento2:{}\n".format(sensacao_termica, equipamento1['temperatura'], equipamento2['temperatura']))
     print(r.text)
 
     try:
