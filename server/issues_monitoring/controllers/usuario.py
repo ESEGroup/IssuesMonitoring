@@ -35,7 +35,7 @@ def enviar_emails_cadastro_usuario():
     msg_content = """
 Caro responsável,
 Você está recebendo essa mensagem pois um novo usuário foi cadastrado no banco de dados do sistema ISSUES Monitoring.
-Para continuar o processo de cadastro do novo usuário, por favor entre no site do sistema com seu nome de usuário e senha e aprove o cadastro.
+Para continuar o processo de cadastro do novo usuário, por favor entre no site do sistema com seu nome de usuário e senha e autorize o cadastro.
 \n\nAtenciosamente, \nEquipe ISSUES Monitoring"""
 
     send_email("Alerta de cadastro de novo usuário",
