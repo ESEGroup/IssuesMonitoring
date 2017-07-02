@@ -411,6 +411,7 @@ def alterar_equipamento(lab_id, lab_nome, id):
         return redirect(url_for('laboratorios'))
 
     if request.method == 'POST':
+        print("started editing")
         #create new Equipment, save changes to BD
         temp_min = request.form.get('temp-min')
         temp_max = request.form.get('temp-max')
@@ -418,19 +419,25 @@ def alterar_equipamento(lab_id, lab_nome, id):
         nome_equip = request.form.get('nome')
         descricao = request.form.get('descricao')
         parent_id = request.form.get('parent_id')
-        equipToEdit = Equipamento(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id)
+        equipToEdit = Equipamento(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id, id=id)
         equipToEdit.editar()
 
-
+        print("Finished editing")
         kwargs = {"c":"Equipamento alterado com sucesso!"}
         return redirect(url_for('equipamentos_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
     
 
     else:
+        print("going to edit page...")
+
+        equips = controllers.obter_equipamentos(id)
+        lista_arduinos = controllers.listar_arduinos_laboratorio(id)
         return render_template('alterar_equipamento.html',
                                lab_id=lab_id,
                                lab_nome=lab_nome,
                                equip = Equipamento.obter(id),
+                               lista_arduinos = lista_arduinos,
+                               equipamentos = equips+lista_arduinos,
                                autenticado=autenticado(),
                                admin=admin_autenticado(),
                                pagina='equipamentos_laboratorio'

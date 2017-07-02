@@ -32,6 +32,24 @@ class Equipamento:
             DELETE FROM Equip
             WHERE equip_id = ?;""", (_id,))
 
+    def editar(self):
+        db.execute("""
+          UPDATE Equip
+          SET nome = ?,
+              descricao = ?,
+              lab_id = ?,
+              temp_min = ?,
+              temp_max = ?,
+              end_mac = ?
+          WHERE equip_id = ?""",
+          (self.nome,
+           self.descricao,
+           self.lab_id,
+           self.temp_min,
+           self.temp_max,
+           self.MAC, 
+           self.id))
+
     def obter(id):
         data = db.fetchone("""SELECT lab_id, nome, descricao, temp_min, temp_max, end_mac, parent_id, equip_id
                               FROM Equip

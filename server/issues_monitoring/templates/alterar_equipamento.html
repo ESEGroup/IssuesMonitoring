@@ -13,7 +13,7 @@
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
 <script src="/static/js/switch_view.js"></script>
 <script src="/static/js/ajax.js"></script>
-<script src="/static/js/lista_equipamentos.js"></script>
+<script src="/static/js/alterar_equipamentos.js"></script>
 {% endblock %}
 
 
@@ -25,8 +25,8 @@
         <h4>{{lab_nome}}</h4>
     </div>
 
-    <div class="neat-form" anchor="alterar" id="view2">
-        <form method="POST" action="{{url_for('alterar_equipamento', lab_id=lab_id, lab_nome=lab_nome, id=id)}}">
+    <div class="neat-form" anchor="alterar" id="viewAlt">
+        <form method="POST">
             <fieldset>
                 <legend><span class="number">1</span> Identificação do Equipamento</legend>
                 <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC" value = "{{equip.MAC}}">
@@ -44,8 +44,8 @@
                 <div class="legenda-cadastro">Temperatura do Equipamento:</div>
                 <div class="div-double-slider">
                     <div id="slider-temp" class="double-slider"></div>
-                    <input type="hidden" name="temp-min" id="temp-min" value="0">
-                    <input type="hidden" name="temp-max" id="temp-max" value="0">
+                    <input type="hidden" name="temp-min" id="temp-min-alter" value="{{equip.temp_min}}">
+                    <input type="hidden" name="temp-max" id="temp-max-alter" value="{{equip.temp_max}}">
                     <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
                 </div>
             </fieldset>
