@@ -51,6 +51,57 @@
         </div>
         {% endif %}
 
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#log" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Ver Log de Anomalias Resolvidas</a>
+        </div>
+
+        <div class="div-botao-estilizado">
+            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
+        </div>
+    </div>
+
+    <div anchor="log" id="view2" style="display:none">
+        <div class="page-title">
+            <h3>Anomalias Resolvidas</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
+        {% if anomalias_resolvidas|len > 0 %}
+        <table class="table-fill">
+            <thead>
+                <tr>
+                    <th class="text-center">Tipo</th>
+                    <th class="text-center">Data da Anomalia</th>
+                    <th class="text-center">Ação</th>
+                    <th class="text-center">Autor</th>
+                    <th class="text-center">Data da Resolução</th>
+                </tr>
+            </thead>
+            <tbody class="table-hover">
+                {% for i in range(anomalias_resolvidas|len) %}
+                <tr>
+                    <td class="text-center" title="{{anomalias_resolvidas[i].descricao}}">{{anomalias_resolvidas[i].tipo}}</td>
+                    <td class="text-center">{{anomalias_resolvidas[i].data_anomalia|data_segundos}}</td>
+                    <td class="text-center">{{anomalias_resolvidas[i].acao}}</td>
+                    <td class="text-center">{{anomalias_resolvidas[i].nome_autor_resolucao}}</td>
+                    <td class="text-center">{{anomalias_resolvidas[i].data_resolucao|data_segundos}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="ui-widget msg">
+            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                Não há anomalias resolvidas.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back-reload">Ver Anomalias Pendentes</a>
+        </div>
+
+>>>>>>> 004a94d48a469e2b9883669fdf188f9bd5acd57d
         <div class="div-botao-estilizado">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>

@@ -1,0 +1,13 @@
+.shrink-div {
+    -webkit-transform:scale(0.95);
+    -moz-transform:scale(0.95);
+    -ms-transform:scale(0.95);
+    transform:scale(0.95);
+    margin-left: 18px;
+}
+
+#arduino-select {
+    margin-left: 10px;
+    margin-bottom: 13px;
+    text-decoration: underline;
+}

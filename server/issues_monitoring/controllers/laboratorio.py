@@ -220,3 +220,6 @@ def obter_intervalo_arduino(lab_id):
 
 def obter_equipamentos(lab_id):
     return Equipamento.obter_equipamentos_laboratorio(lab_id)
+
+def obter_computadores_laboratorio(lab_id):
+    return Equipamento.obter_computadores_laboratorio(lab_id)

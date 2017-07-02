@@ -103,7 +103,7 @@ class Equipamento:
             FROM Equip as e
             WHERE e.lab_id = ?
                   AND e.parent_id = 0;""", (lab_id,))
-        
+
         return [Equipamento(*d) for d in data]
 
     def obter_equipamentos_laboratorio(lab_id):
@@ -114,5 +114,17 @@ class Equipamento:
             INNER JOIN Equip a
               ON a.equip_id = e.parent_id
             WHERE e.lab_id = ?;""", (lab_id,))
-        
+
+        return [Equipamento(*d) for d in data]
+
+    def obter_computadores_laboratorio(lab_id):
+        data = db.fetchall("""
+            SELECT e.lab_id, e.nome, e.descricao, e.temp_min, e.temp_max, e.end_mac, e.parent_id, e.equip_id,
+                   a.nome, a.end_mac
+            FROM Equip as e
+            INNER JOIN Equip a
+              ON a.equip_id = e.parent_id
+            WHERE e.lab_id = ?
+                  AND e.parent_id != 0;""", (lab_id,))
+
         return [Equipamento(*d) for d in data]

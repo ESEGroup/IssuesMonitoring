@@ -635,7 +635,7 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
-    equipamentos = controllers.obter_ids_equipamentos(id)
+    equipamentos = controllers.obter_computadores_laboratorio(id)
 
     return render_template('grafico.html',
                             lab_id=id,
@@ -909,9 +909,11 @@ def anomalias(id, nome):
         return redirect(url_for('login', **kwargs))
 
     anomalias = controllers.obter_anomalias(id)
+    anomalias_resolvidas = controllers.obter_anomalias_resolvidas(id)
 
     return render_template('anomalias.html',
                             anomalias=anomalias,
+                            anomalias_resolvidas=anomalias_resolvidas,
                             pagina='anomalias',
                             autenticado=True,
                             admin = admin_autenticado(),

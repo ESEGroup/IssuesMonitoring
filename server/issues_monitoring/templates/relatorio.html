@@ -6,43 +6,37 @@
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="/static/jquery-ui/addons/jquery-ui-timepicker-addon.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/relatorio.css" />
 {% endblock %}
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<script type="text/javascript">
-$(function() {
-    $('input[name="daterange"]').daterangepicker({
-        timePicker: true,
-        timePicker24Hour: true,
-        timePickerSeconds: true,
-        locale: {
-            format: 'DD/MM/YYYY HH:mm:ss'
-        }
-    });
-  });
-
-</script>
+<script src="/static/jquery-ui/addons/jquery-ui-timepicker-addon.js"></script>
+<script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-pt-BR.js"></script>
+<script src="/static/js/relatorio.js"></script>
 {% endblock %}
 
 {% block content %}
 <div id="nav-bar">
 
     <div class="page-title">
-        <h3>Relatório</h3>
+        <h3>Relatório dos Eventos</h3>
         <h4>{{lab_nome}}</h4>
     </div>
-    <div class="neat-form">
+    <div class="neat-form" style="max-width: 680px !important;">
         <form method="POST">
             <fieldset>
-                <div class="legenda-cadastro">Data de início e fim:</div>
-                <input type="text" name="daterange" value="17/06/2017 00:00:00 - 18/06/2017 12:00:03" />
+                <legend><span class="number">!</span> Datas de Início e Fim</legend>
+                <div class="date-tools">
+                    <input type="text" id="start-date" style="display:none;">
+                    <input type="text" id="end-date" style="display:none;">
+                    <input type="text" name="daterange" id="daterange" style="display:none">
+                    <div class="datepicker-class" id="datepicker-start"></div>
+                    <div class="datepicker-class" id="datepicker-end"></div>
+                </div>
             </fieldset>
-            <input type="submit" id="report" value="Gerar relatório" />           
+            <input type="submit" id="report" value="Gerar Relatório" />           
         </form>
     </div>
 

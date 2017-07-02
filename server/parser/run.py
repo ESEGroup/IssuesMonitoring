@@ -25,7 +25,7 @@ def work():
         exit()
 
     while True:
-        registrar_log_parser()
+        wait_for = float(registrar_log_parser())
         ids = []
         try:
             ids, messages = fetch_new_emails()

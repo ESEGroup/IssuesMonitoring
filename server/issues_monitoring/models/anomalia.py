@@ -34,7 +34,7 @@ class Anomalia:
                                 ON a.slug = log.slug_anomalia
                               LEFT JOIN Log_Acoes r
                                 ON r.id_log_anomalia = log.id
-                              LEFT JOIN User_Lab u
+                              LEFT JOIN User_Sys u
                                 ON u.user_id = r.autor
                               LEFT JOIN Equip e
                                 ON e.equip_id = log.equip_id
@@ -43,7 +43,7 @@ class Anomalia:
         if data is not None:
             return Anomalia(*data)
 
-    def obter_do_lab(lab_id):
+    def obter_do_lab(lab_id, resolvido=False):
         data = db.fetchall("""SELECT a.tipo_anomalia, log.lab_id, a.descricao_anomalia,
                                      log.data, log.resolvido, log.id,
                                      r.data, r.descricao_acao, u.nome,
@@ -54,13 +54,13 @@ class Anomalia:
                                 ON a.slug = log.slug_anomalia
                               LEFT JOIN Log_Acoes r
                                 ON r.id_log_anomalia = log.id
-                              LEFT JOIN User_Lab u
+                              LEFT JOIN User_Sys u
                                 ON u.user_id = r.autor
                               LEFT JOIN Equip e
                                 ON e.equip_id = log.equip_id
                               WHERE log.lab_id = ?
                                     AND log.resolvido = ?;""",
-                              (lab_id, False))
+                              (lab_id, resolvido))
         return [Anomalia(*d) for d in data]
 
     def registrar_anomalia(lab_id, slug_anomalia, valor=None, valor_limite=None, equip_id=None):
@@ -105,5 +105,5 @@ class Anomalia:
         db.execute("""
             UPDATE Log_Anomalias
             SET valor = ?,
-                data = ? 
+                data = ?
             WHERE id = ?;""", (valor, data, id))
