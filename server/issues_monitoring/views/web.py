@@ -1,10 +1,12 @@
+from os import getcwd
+from os.path import join
 from flask          import render_template, request, redirect, url_for, session
 from flask          import send_file, current_app as app
 from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
-from ..common.utils import autenticado, admin_autenticado, hoje, agora, get_interval_means
+from ..common.utils import (autenticado, admin_autenticado, hoje, agora,
+                            get_interval_means, random_string)
 from ..             import app, Config, controllers
-from ..models       import UsuarioLab, UsuarioSistema, Equipamento
 import json
 import pdfkit
 
@@ -250,20 +252,18 @@ def alterar_usuario_sistema(id):
     if not admin_autenticado():
         kwargs = {"e" : "Por favor, faça login como administrador"}
         return redirect(url_for('login'))
+
     if request.method == 'POST':
         login = request.form.get("login") or ''
         senha = request.form.get("senha") or ''
         nome = request.form.get('nome') or ''
         email = request.form.get('email') or ''
-        userToEdit = UsuarioSistema(login, senha, email, nome, id=id)
-        userToEdit.editar()
+        controllers.editar_usuario_sistema(id, login, senha, nome, email)
         kwargs = {"c":"Usuário alterado com sucesso!"}
         return redirect(url_for('aprovar_usuario', **kwargs))
-
-
     else:
         return render_template('alterar_usuario_sistema.html',
-                                user = UsuarioSistema.obter(id),
+                                user = controllers.obter_usuario_sistema(id),
                                 autenticado=autenticado(),
                                 admin=admin_autenticado(),
                                 pagina='aprovar_usuario')
@@ -293,7 +293,7 @@ def alterar_senha_post(user_id):
         kwargs = {"e" : "Nova senha e confirmação de nova senha não são iguais"}
         return redirect(url_for('alterar_senha', user_id=user_id, **kwargs))
 
-    usuario = UsuarioSistema.obter(user_id)
+    usuario = controllers.obter_usuario_sistema(user_id)
 
     try:
         controllers.autenticar(usuario.login, senha_atual)
@@ -331,7 +331,7 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
         user_id = request.form.get('id-user') or ''
         nome = request.form.get('nome') or ''
         email = request.form.get('email') or ''
-        userToEdit = UsuarioLab.obter(id)
+        userToEdit = controllers.obter_usuario_lab(id)
         userToEdit.nome = nome
         userToEdit.email = email
         userToEdit.user_id = user_id
@@ -348,7 +348,7 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
         return render_template('alterar_usuario_lab.html',
                                lab_id=lab_id,
                                lab_nome=lab_nome,
-                               user = UsuarioLab.obter(id),
+                               user = controllers.obter_usuario_lab(id),
                                autenticado=autenticado(),
                                admin=admin_autenticado(),
                                pagina='usuarios_laboratorio')
@@ -449,13 +449,9 @@ def alterar_equipamento(lab_id, lab_nome, id):
         nome_equip = request.form.get('nome')
         descricao = request.form.get('descricao')
         parent_id = request.form.get('parent_id')
-        equipToEdit = Equipamento(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id, id=id)
-        equipToEdit.editar()
-
+        controllers.atualizar_equipamento(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id, id)
         kwargs = {"c":"Equipamento alterado com sucesso!"}
         return redirect(url_for('equipamentos_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
-
-
     else:
         #GET
         equips = controllers.obter_equipamentos(lab_id)
@@ -463,9 +459,9 @@ def alterar_equipamento(lab_id, lab_nome, id):
         return render_template('alterar_equipamento.html',
                                lab_id=lab_id,
                                lab_nome=lab_nome,
-                               equip = Equipamento.obter(id),
-                               lista_arduinos = lista_arduinos,
-                               equipamentos = equips+lista_arduinos,
+                               equip=controllers.obter_equipamento(id),
+                               lista_arduinos=lista_arduinos,
+                               equipamentos=equips+lista_arduinos,
                                autenticado=autenticado(),
                                admin=admin_autenticado(),
                                pagina='equipamentos_laboratorio')
@@ -650,7 +646,7 @@ def mostrar_grafico(id, nome):
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
-    equipamentos = controllers.obter_computadores_laboratorio(id)
+    equipamentos = controllers.obter_equipamentos(id)
 
     return render_template('grafico.html',
                             lab_id=id,
@@ -734,71 +730,56 @@ def mostrar_relatorio_post(id, nome):
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
-    # dia = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
-    # dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
-
     date = request.form.get("daterange") or ''
     dates = date.split('-');
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
     end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
 
-    # dateTomorrow = dia+24*60*60. -1.
-    # args = [start_date_epoch, end_date_epoch, id]
-    # temp_data = controllers.log_usuario(*args)
-    # presenceList = []
-    # if(len(temp_data)>0):
-    #     presenceList = organizePresenceList(dia, temp_data)
-
-    #     for i in presenceList:
-    #         i[1] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[1]))
-    #         i[2] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[2]))
-
-
     # tabela para log de temperatura e umidade
     args = [start_date_epoch, end_date_epoch, id]
-    lab_table = controllers.get_lab_log(*args)
-    json.dumps(lab_table)
-    lab_temp_umid = json.loads(lab_table)
+    lab_temp_umid = controllers.obter_dados_entre_tempos(*args)
     print("lab temp e umid: ", lab_temp_umid)
 
     # tabela de log de temperatura para equipamentos
     equipamentos = controllers.obter_ids_equipamentos(id)
     equip_dict ={}
     for equipamento in equipamentos:
-        args = ["temperatura", equipamento, start_date_epoch, end_date_epoch, id]
-        equip_table = controllers.get_equip_log(*args)
-        json.dumps(equip_table)
-        equip_temp_umid = json.loads(equip_table)
+        args = [start_date_epoch, end_date_epoch, equipamento]
+        equip_temp_umid = controllers.obter_dados_entre_tempos_equip(*args)
         equip_dict[equipamento] = equip_temp_umid
-    print (equip_dict)
+
+    nome_equips = controllers.obter_nome_equipamentos(id)
+
     # tabela para log de presença
     args = [start_date_epoch, end_date_epoch, id]
     log_presenca_lista = controllers.log_usuario(*args)
-    print ("log presenca: ", log_presenca_lista)
 
     # tabela para usuários presentes
     presentes_list = controllers.usuarios_presentes(id)
-    print ("presentes: ", presentes_list)
 
-    page = render_template('relatorio.html',
-                            lab_id=id,
-                            lab_nome=nome,
-                            autenticado=True,
-                            admin = admin_autenticado(),
-                            pagina='mostrar_relatorio',
-                            usuarios_presentes=presentes_list,
-                            eventos=log_presenca_lista,
-                            condicoes_ambiente_equip=equip_dict,
-                            condicoes_ambiente_lab=lab_temp_umid)
+    kwargs = {
+              "lab_id": id,
+              "path": join(getcwd(), "issues_monitoring"),
+              "lab_nome": nome,
+              "autenticado": True,
+              "admin": admin_autenticado(),
+              "pagina": 'mostrar_relatorio',
+              "usuarios_presentes": presentes_list,
+              "eventos": log_presenca_lista,
+              "nome_equips": nome_equips,
+              "condicoes_ambiente_equip": equip_dict,
+              "condicoes_ambiente_lab": lab_temp_umid}
+    page = render_template('relatorio_template.html',
+                           **kwargs)
 
     css = './issues_monitoring/static/css/table.css'
-    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/out.pdf', css=css)
+    name = random_string(20)
+    kwargs["nome_pdf"] = name
+    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/{}.pdf'.format(name), css=css)
 
-    # return send_file('reports/out.pdf', as_attachment = False)
-    # webbrowser.open_new_tab('./issues_monitoring/reports/out.pdf')
-
-    return page
+    return render_template('relatorio.html',
+                           **kwargs)
 
 #presence: comes in the form of [[name, date, event], ...], event = IN/OUT
 def organizePresenceList(currentDayEpoch, presence):
@@ -915,3 +896,12 @@ def acao(id, nome):
     return redirect(url_for('anomalias_hoje',
                             id=id,
                             nome=nome))
+
+
+@app.route('/relatorio/<nome>')
+def relatorio_pdf(nome):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login"}
+        return redirect(url_for('login', **kwargs))
+
+    return send_file('reports/{}.pdf'.format(nome))

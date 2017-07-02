@@ -4,7 +4,8 @@ db = DB(Config.db_path)
 from .laboratorio import Laboratorio
 from .zona_conforto import ZonaConforto
 from .evento import Evento
-from .equipamento import Equipamento
+from .arduino import Arduino
+from .computador import Computador
 
 from .usuario import Usuario
 from .usuario_lab import UsuarioLab

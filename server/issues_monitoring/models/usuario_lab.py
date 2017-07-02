@@ -70,23 +70,6 @@ class UsuarioLab(Usuario):
             FROM User_lab
             WHERE user_id = ?;""", (user_id,)) is not None
 
-    def adicionar_ao_laboratorio(lab_id, user_id):
-        if db.fetchone("""
-                SELECT user_id
-                FROM Presenca
-                WHERE user_id = ?
-                      AND lab_id = ?;""",
-                (user_id, lab_id)) is not None:
-            return
-
-        db.execute("""
-            INSERT INTO Presenca
-            (lab_id, user_id, presente)
-            VALUES (?, ?, ?);""",
-            (lab_id,
-             user_id,
-             False))
-
     def presentes(lab_id):
         data = db.fetchall("""SELECT u.user_id, u.nome, u.email,
                                      u.data_aprov, log.data
@@ -154,6 +137,7 @@ class UsuarioLab(Usuario):
             WHERE lab_id = ? AND
                   user_id = ?;""", (lab_id, user_id))
         count = db.fetchone("""
+
             SELECT COUNT(presenca_id)
             FROM Presenca
             WHERE user_id = ?;""", (user_id,))[0]
@@ -161,14 +145,6 @@ class UsuarioLab(Usuario):
             db.execute("""
                 DELETE FROM User_Lab
                 WHERE user_id = ?;""", (user_id,))
-
-    def remover_de_todos(user_id):
-        db.execute("""
-            DELETE FROM Presenca
-            WHERE user_id = ?;""", (user_id,))
-        db.execute("""
-            DELETE FROM User_Lab
-            WHERE user_id = ?;""", (user_id,))
 
     def eventos(lab_id, dia):
         prox_dia = dia + 60 * 60 * 24 + 1
@@ -217,13 +193,14 @@ class UsuarioLab(Usuario):
             return data[0]
         return dia
 
-    def get_presence_data(dateToday, dateTomorrow, lab_id):
+    def obter_dado_presenca(hoje, amanha, lab_id):
       data = db.fetchall("""
                 SELECT User_Lab.user_id, User_Lab.nome, User_Lab.email, Log_Presenca.data, Log_Presenca.evento
                 FROM Log_Presenca
                 INNER JOIN User_Lab ON Log_Presenca.user_id = User_Lab.user_id
                 WHERE Log_Presenca.lab_id = ? AND Log_Presenca.data >= ? AND Log_Presenca.data <= ?
-                ORDER BY nome ASC, data ASC""", (lab_id, dateToday, dateTomorrow,))
+                ORDER BY nome ASC, data ASC""",
+                (lab_id, hoje, amanha))
       log_presenca = []
       log_presenca_set = set()
       for d in data:

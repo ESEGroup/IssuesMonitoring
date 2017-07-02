@@ -1,6 +1,6 @@
 from . import db
 from .usuario_lab import UsuarioLab
-from .equipamento import Equipamento
+from .computador import Computador
 from .zona_conforto import ZonaConforto
 from .medida import Medida_Lab, Medida_Equip
 from datetime import datetime
@@ -102,7 +102,7 @@ class Laboratorio:
             usuarios_id.setdefault(d[0], {None})
 
             usuario_lab   = UsuarioLab(*d[-4:])
-            equipamento   = Equipamento(*d[9:-4])
+            equipamento   = Computador(*d[9:-4])
             zona_conforto = ZonaConforto(*d[5:10])
             lab_info      = list(d[1:5]) + [zona_conforto]
 
@@ -223,6 +223,14 @@ class Laboratorio:
                 equipamentos.append(d[0])
         return equipamentos
 
+    def obter_nome_equipamentos(id):
+        data = db.fetchall("SELECT equip_id, nome FROM Equip WHERE lab_id=?",(id,))
+
+        equipamentos = {}
+        for d in data:
+            equipamentos[d[0]] = d[1]
+        return equipamentos
+
     def nome(lab_id):
         data = db.fetchone("""SELECT nome FROM Lab WHERE lab_id = ?;""", (lab_id,))
         if data is not None:
@@ -280,4 +288,17 @@ class Laboratorio:
         if data is not None:
             return data
 
+        return []
+
+    def obter_dados_entre_tempos_lab(tempo_inicio, tempo_final, lab_id):
+        data = db.fetchall("""
+            SELECT data, temp, umid
+            FROM Log_Lab
+            WHERE lab_id = ?
+                  AND data >= ?
+                  AND data < ?
+            ORDER BY data ASC;""", (lab_id, tempo_inicio, tempo_final))
+
+        if data is not None:
+            return data
         return []

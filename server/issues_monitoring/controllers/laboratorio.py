@@ -1,4 +1,4 @@
-from ..models import (Laboratorio, Evento, UsuarioLab, Equipamento,
+from ..models import (Laboratorio, Evento, UsuarioLab, Computador,
                       ZonaConforto, Anomalia, AdministradorSistema,
                       Sistema)
 from threading import Thread
@@ -53,14 +53,17 @@ def obter_laboratorio(id):
     return Laboratorio.obter(id)
 
 def cadastro_equipamento(lab_id, nome, descricao, temp_min, temp_max, MAC, parent_id):
-    equipamento = Equipamento(lab_id, nome, descricao, temp_min, temp_max, MAC, parent_id)
+    equipamento = Computador(lab_id, nome, descricao, temp_min, temp_max, MAC, parent_id)
     equipamento.cadastrar()
 
 def remover_equipamento(_id):
-    Equipamento.remover(_id)
+    Computador.remover(_id)
 
 def obter_ids_equipamentos(id):
     return Laboratorio.obter_todos_ids_equipamentos(id)
+
+def obter_nome_equipamentos(id):
+    return Laboratorio.obter_nome_equipamentos(id)
 
 def obter_zona_de_conforto(id):
     return ZonaConforto.obter(id)
@@ -138,7 +141,12 @@ Pedimos que procure uma solução quanto a isso, para evitar o gasto desnecessá
 
 def checar_temperatura_equipamento(lab_id, lab_nome, equip_id, emails,
                                    data_inicio, data_final, data):
-    temp_min, temperatura, temp_max, equip_nome = Equipamento.obter_medida(equip_id, data_inicio, data_final)
+    (temp_min,
+     temperatura,
+     temp_max,
+     equip_nome) = Computador.obter_medida(equip_id,
+                                           data_inicio,
+                                           data_final)
 
     if temperatura < temp_min or temperatura > temp_max:
         subject = "Aviso de temperatura anormal no equipamento"
@@ -207,7 +215,7 @@ def get_data_log(chart_type, chart_target, start_date, end_date, lab_id):
             return data
         else:
             equip_id = chart_target
-            data = Equipamento.obter_medidas_entre_tempos_equip(start_date, end_date, equip_id)
+            data = Computador.obter_medidas_entre_tempos_equip(start_date, end_date, equip_id)
             return data
     elif chart_type == "umidade":
         data = Laboratorio.obter_umidade_entre_tempos_lab(start_date, end_date, lab_id)
@@ -220,7 +228,17 @@ def obter_intervalo_arduino(lab_id):
     return Laboratorio.obter_intervalo_arduino(lab_id)
 
 def obter_equipamentos(lab_id):
-    return Equipamento.obter_equipamentos_laboratorio(lab_id)
+    return Computador.obter_do_lab(lab_id)
 
-def obter_computadores_laboratorio(lab_id):
-    return Equipamento.obter_computadores_laboratorio(lab_id)
+def atualizar_equipamento(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id, id):
+    equip = Computador(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id, id=id)
+    equip.editar()
+
+def obter_equipamento(id):
+    return Computador.obter(id)
+
+def obter_dados_entre_tempos(tempo_inicio, tempo_final, lab_id):
+    return Laboratorio.obter_dados_entre_tempos_lab(tempo_inicio, tempo_final, lab_id)
+
+def obter_dados_entre_tempos_equip(tempo_inicio, tempo_final, lab_id):
+    return Computador.obter_medidas_entre_tempos_equip(tempo_inicio, tempo_final, lab_id)

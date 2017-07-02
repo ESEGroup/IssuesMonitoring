@@ -113,13 +113,14 @@ def work():
     cursor.execute("""
     CREATE TABLE Sistema(
             ultima_analise INT NOT NULL,
-            intervalo_parser INT NOT NULL);
+            intervalo_parser INT NOT NULL,
+            intervalo_arduino INT NOT NULL);
     """)
 
     cursor.execute("""
     INSERT INTO Sistema
-    (ultima_analise, intervalo_parser)
-    VALUES (0, 3);
+    (ultima_analise, intervalo_parser, intervalo_arduino)
+    VALUES (0, 3, 3);
     """)
 
     cursor.execute("""

@@ -1,4 +1,5 @@
-from ..models import Laboratorio, Evento, UsuarioLab, Medida_Lab, Medida_Equip, Equipamento
+from ..models import (Laboratorio, Evento, UsuarioLab, Medida_Lab,
+                      Medida_Equip, Arduino)
 
 def registrar_medidas(j):
     dict_medidas = {}
@@ -37,7 +38,7 @@ def registrar_medidas(j):
     return True
 
 def listar_todos_mac_arduino():
-    data         = Equipamento.listar_todos_arduinos()
+    data         = Arduino.obter_todos()
     mac_arduinos = []
 
     for a in data:
@@ -45,14 +46,14 @@ def listar_todos_mac_arduino():
     return str(mac_arduinos)
 
 def listar_todos_arduinos():
-    data         = Equipamento.listar_todos_arduinos()
+    data         = Arduino.obter_todos()
     arduinos     = []
     for a in data:
-        arduinos += [Equipamento(*a)]
+        arduinos += [Arduino(*a)]
     return arduinos
 
 def listar_arduinos_laboratorio(lab_id):
-    return Equipamento.obter_arduinos_do_lab(lab_id)
+    return Arduino.obter_do_lab(lab_id)
 
 def ultima_atualizacao_arduino(id):
     return Laboratorio.ultima_atualizacao_arduino(id)
