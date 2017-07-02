@@ -52,7 +52,7 @@
         {% endif %}
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#log" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Ver Log de Anomalias Resolvidas</a>
+            <a href="#resolvidas" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Ver Log de Anomalias Resolvidas</a>
         </div>
 
         <div class="div-botao-estilizado">
@@ -60,9 +60,9 @@
         </div>
     </div>
 
-    <div anchor="log" id="view2" style="display:none">
+    <div anchor="resolvidas" id="view2" style="display:none">
         <div class="page-title">
-            <h3>Anomalias Resolvidas</h3>
+            <h3>Anomalias Resolvidas de {{dia|dia_mes_ano}}</h3>
             <h4>{{lab_nome}}</h4>
         </div>
         {% if anomalias_resolvidas|len > 0 %}
@@ -73,7 +73,7 @@
                     <th class="text-center">Data da Anomalia</th>
                     <th class="text-center">Ação</th>
                     <th class="text-center">Autor</th>
-                    <th class="text-center">Data da Resolução</th>
+                    <th class="text-center">Hora da Resolução</th>
                 </tr>
             </thead>
             <tbody class="table-hover">
@@ -83,7 +83,7 @@
                     <td class="text-center">{{anomalias_resolvidas[i].data_anomalia|data_segundos}}</td>
                     <td class="text-center">{{anomalias_resolvidas[i].acao}}</td>
                     <td class="text-center">{{anomalias_resolvidas[i].nome_autor_resolucao}}</td>
-                    <td class="text-center">{{anomalias_resolvidas[i].data_resolucao|data_segundos}}</td>
+                    <td class="text-center">{{anomalias_resolvidas[i].data_resolucao|hora_min}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -94,6 +94,17 @@
                 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
                 Não há anomalias resolvidas.</p>
             </div>
+        </div>
+        {% endif %}
+
+        {% if dia_anterior != proximo_dia %}
+        <div class="div-botao-estilizado">
+            {% if dia_anterior != dia %}
+                <a href="{{url_for('anomalias', id=lab_id, nome=lab_nome, dia=dia_anterior|format_dia_url, _anchor='resolvidas')}}" class="btn-estilizado btn-estilizado-blue">Dia anterior ({{dia_anterior|dia_mes_ano}})</a>
+            {% endif %}
+            {% if proximo_dia != dia %}
+                <a href="{{url_for('anomalias', id=lab_id, nome=lab_nome, dia=proximo_dia|format_dia_url, _anchor='resolvidas')}}" class="btn-estilizado btn-estilizado-blue">Próximo dia ({{proximo_dia|dia_mes_ano}})</a>
+            {% endif %}
         </div>
         {% endif %}
 
