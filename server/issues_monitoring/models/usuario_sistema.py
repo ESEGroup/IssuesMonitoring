@@ -92,10 +92,10 @@ class UsuarioSistema(Usuario):
                     self.login,
                     self.id))
 
-    def remover(user_id):
+    def remover(id):
         db.execute("""DELETE FROM User_Sys
                    WHERE user_id = ?;""",
-                   (user_id,))
+                   (id,))
 
     def __hash_senha(senha, _hash = None):
         if isinstance(senha, str):

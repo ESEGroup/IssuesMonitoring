@@ -6,6 +6,10 @@ from os.path import join, isfile
 from subprocess import Popen, DEVNULL
 from db.create_db import work as create_db
 
+Popen(["mkdir",
+       "issues_monitoring/reports"],
+       stderr=DEVNULL).wait()
+
 Popen(["virtualenv",
        "-p",
        "python3",

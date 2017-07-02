@@ -14,8 +14,8 @@ def obter_usuarios_sistema():
 def obter_usuario_sistema(user_id):
     return UsuarioSistema.obter(user_id)
 
-def editar_usuario_sistema(user_id, login, nome, email):
-    usuario = UsuarioSistema(login, "", email, nome, user_id)
+def editar_usuario_sistema(user_id, login, senha, nome, email):
+    usuario = UsuarioSistema(login, senha, email, nome, user_id)
     usuario.editar()
 
 def remover_usuario_sistema(user_id):
@@ -50,9 +50,6 @@ def cadastro_usuario_sistema(login, senha, email, nome):
         return True
     else:
         return False
-
-def adicionar_usuario_lab(lab_id, user_id):
-    UsuarioLab.adicionar_ao_laboratorio(lab_id, user_id)
 
 def aprovar_usuario_lab(user_id, aprovar):
     AdministradorSistema.autorizar_usuario_lab(user_id, aprovar)
@@ -96,5 +93,5 @@ def data_proximo_evento_mydenox(lab_id, dia):
 def data_evento_anterior_mydenox(lab_id, dia):
     return UsuarioLab.data_evento_anterior(lab_id, dia)
 
-def log_usuario(dateToday, dateTomorrow, lab_id):
-    return UsuarioLab.get_presence_data(dateToday, dateTomorrow, lab_id)
+def log_usuario(hoje, amanha, lab_id):
+    return UsuarioLab.obter_dado_presenca(hoje, amanha, lab_id)

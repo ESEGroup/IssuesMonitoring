@@ -14,3 +14,9 @@ class Sistema:
             UPDATE Sistema
             SET ultima_analise = ?;""",
             (data,))
+
+    def obter_intervalo_parser():
+        pass
+
+    def definir_intervalo_parser():
+        pass
