@@ -39,34 +39,27 @@
                 <div class="container">
 
                     <div class="radio">
-                        <input id="radio-temp" name="chart_type" type="radio" value="temperatura" checked>
+                        <input id="radio-umidade" name="chart_type" type="radio" value="umidade" checked>
+                        <label  for="radio-umidade" class="radio-label">Umidade do Laboratório</label>
+                    </div>
+                    
+                    <div class="radio">
+                        <input id="radio-temp" name="chart_type" type="radio" value="temperatura">
                         <label for="radio-temp" class="radio-label">Temperatura</label>
                     </div>
-
-                    <div class="hidden-radio shrink-div">
-                        <div class="radio">
-                            <input id="radio-lab-equip" name="equipamento" type="radio" value="laboratorio" checked>
-                            <label for="radio-lab-equip" class="radio-label">Laboratório</label>
-                        </div>
-                        {% for equipamento in equipamentos %}
-                        <div class="radio">
-                            <input id="radio-equip-{{equipamento.id}}" name="equipamento" type="radio" value="{{equipamento.id}}">
-                            <label for="radio-equip-{{equipamento.id}}" class="radio-label">{{equipamento.nome}}</label>
-                        </div>
-                        {% endfor %}
+                    
+                    
+                    <div class="hidden-select hidden shrink-div">
+                        <select id="select-equip">
+                            <optgroup label="Temperatura">
+                                <option value="laboratorio">Laboratório</option>
+                                {% for equipamento in equipamentos %}
+                                    <option value="{{equipamento.id}}">{{equipamento.nome}}</option>
+                                {% endfor %}
+                            </optgroup>
+                        </select>
                     </div>
-
-                    <div class="radio">
-                        <input id="radio-umidade" name="chart_type" type="radio" value="umidade">
-                        <label  for="radio-umidade" class="radio-label">Umidade</label>
-                    </div>
-
-                    <div class="hidden-radio shrink-div" style="display:none;">
-                        <div class="radio">
-                            <input id="radio-lab-umidade" name="umidade" type="radio" value="laboratorio" checked>
-                            <label for="radio-lab-umidade" class="radio-label">Laboratório</label>
-                        </div>
-                    </div>
+                  
 
                 </div>
             </fieldset>

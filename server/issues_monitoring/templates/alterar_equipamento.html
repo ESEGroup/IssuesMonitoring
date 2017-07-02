@@ -14,7 +14,6 @@
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
-<script src="/static/js/switch_view.js"></script>
 <script src="/static/js/ajax.js"></script>
 <script src="/static/js/lista_equipamentos.js"></script>
 {% endblock %}
@@ -46,16 +45,17 @@
                 <fieldset>
                     <legend><span class="number">4</span> Arduino associado</legend>
 
-                    <input type="hidden" name="parent_id" id="parent-id" value="{{equip.parent_id}}">
+                    <input type="" name="parent_id" id="parent-id" value="{{equip.parent_id}}">
 
                     {% if lista_arduinos|len > 0%}
                     <div class="hidden-radio shrink-div {% if equip.parent_id == 0 %}hidden{% endif %}">
-                        {% for arduino in lista_arduinos %}
-                        <div class="radio" id="select-radio">
-                            <input id="radio-arduino-{{arduino.id}}" name="radio-arduino" type="radio" value="{{arduino.id}}" class="inner-radio" {% if equip.parent_id == arduino.id %}checked{% endif %}>
-                            <label for="radio-arduino-{{arduino.id}}" class="radio-label">{{arduino.nome}} - {{arduino.MAC}}</label>
-                        </div>
-                        {% endfor %}
+                        <select id="select-arduino">
+                            <optgroup label="Arduino - Endereço MAC">
+                                {% for arduino in lista_arduinos %}
+                                <option value="{{arduino.id}}" {% if equip.parent_id == arduino.id %}selected="selected"{% endif %}>{{arduino.nome}} - {{arduino.MAC}}</option>
+                                {% endfor %}
+                            </optgroup>
+                        </select>   
                     </div>
                     {% endif %}
                 </fieldset>
