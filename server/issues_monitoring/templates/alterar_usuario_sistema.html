@@ -17,15 +17,23 @@
             <fieldset>
                 <legend><span class="number">1</span> Informações de Acesso</legend>
                 <input type="text" name="login" placeholder="Login (ex.: jcviola)" value="{{user.login}}">
-                <input type="password" name="senha" readonly placeholder="Imutável">
+                <div class="div-botao-estilizado">
+                    <a href="{{url_for('alterar_senha', user_id=user.id)}}" class="btn-estilizado btn-estilizado-blue">Alterar senha</a>
+                </div>
             </fieldset>
             <fieldset>
-                <legend><span class="number">2</span> Dados do Usuário</legend>
-                <input type="text" name="nome" placeholder = "Nome do usuário" value="{{user.nome}}">
-                <input type="text" name="email" placeholder = "E-mail do usuário" value="{{user.email}}">
+                <legend><span class="number">2</span> Nome Completo</legend>
+                <input type="text" name="nome" placeholder = "Nome Completo" value="{{user.nome}}">
             </fieldset>
-            <input type="submit" value="Alterar Usuário do Sistema" />
+            <fieldset>
+                <legend><span class="number">3</span> E-mail</legend>
+                <input type="text" name="email" placeholder = "E-mail" value="{{user.email}}">
+            </fieldset>
+            <input type="submit" value="Salvar Alterações" />
         </form>
+        <div class="div-botao-estilizado">
+            <a href="{{url_for('aprovar_usuario')}}" class="btn-estilizado btn-estilizado-blue">Voltar para os Usuários do Sistema</a>
+        </div>
     </div>
 </div>
 {% endblock %}

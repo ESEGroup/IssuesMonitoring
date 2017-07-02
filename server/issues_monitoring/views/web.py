@@ -259,16 +259,44 @@ def alterar_usuario_sistema(id):
         userToEdit.editar()
         kwargs = {"c":"Usuário alterado com sucesso!"}
         return redirect(url_for('aprovar_usuario', **kwargs))
-    
+
 
     else:
         return render_template('alterar_usuario_sistema.html',
-                               user = UsuarioSistema.obter(id),
-                               autenticado=autenticado(),
-                               admin=admin_autenticado(),
-                               pagina='alterar_usuario_sistema'
-                               )   
+                                user = UsuarioSistema.obter(id),
+                                autenticado=autenticado(),
+                                admin=admin_autenticado(),
+                                pagina='aprovar_usuario')
 
+@app.route('/alterar-senha/<user_id>')
+def alterar_senha(user_id):
+    if not autenticado():
+        return redirect(url_for('login'))
+
+    return render_template('alterar_senha.html',
+                           pagina='aprovar_usuario',
+                           autenticado=autenticado(),
+                           admin=admin_autenticado(),
+                           user_id=user_id)
+
+
+@app.route('/alterar-senha/<user_id>', methods=["POST"])
+def alterar_senha_post(user_id):
+    if not autenticado():
+        return redirect(url_for('login'))
+
+    senha_atual        = request.form.get('senha_atual')
+    senha_nova         = request.form.get('senha_nova')
+    senha_nova_confirm = request.form.get('senha_nova_confirm')
+
+    if (senha_nova != senha_nova_confirm):
+        kwargs = {"e" : "Nova senha e confirmação de nova senha não são iguais"}
+        return redirect(url_for('alterar_senha', user_id=user_id, **kwargs))
+
+    #if controllers.alterar_senha(user_id, senha_atual, senha_nova)
+
+    kwargs = {"c" : "Senha alterada com sucesso"}
+    return redirect(url_for('aprovar_usuario', **kwargs))
 
 @app.route('/remover-usuario/<id>/', methods=["POST"])
 def remover_usuario_sistema(id):
@@ -296,7 +324,7 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
         userToEdit.editar()
         kwargs = {"c":"Usuário alterado com sucesso!"}
         return redirect(url_for('usuarios_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
-    
+
 
     else:
         return render_template('alterar_usuario_lab.html',
@@ -305,22 +333,7 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
                                user = UsuarioLab.obter(id),
                                autenticado=autenticado(),
                                admin=admin_autenticado(),
-                               pagina='alterar_usuario_lab'
-                               )   
-
-
-
-# @app.route('/alterar-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
-# def alterar_usuario_lab(lab_id, lab_nome, id):
-#     if not admin_autenticado():
-#         kwargs = {"e" : "Por favor, faça login como administrador"}
-#         return redirect(url_for('login'))
-
-#     #controllers.remover_usuario_lab(lab_id, id)
-#     kwargs = {"c" : "Usuário selecionado p/ edição com sucesso!",
-#               "id": lab_id,
-#               "nome": lab_nome}
-#     return redirect(url_for('usuarios_laboratorio', **kwargs))
+                               pagina='usuarios_laboratorio')
 
 @app.route('/remover-usuario-lab/<lab_id>/<lab_nome>/<id>', methods=["POST"])
 def remover_usuario_lab(lab_id, lab_nome, id):
@@ -425,7 +438,7 @@ def alterar_equipamento(lab_id, lab_nome, id):
         print("Finished editing")
         kwargs = {"c":"Equipamento alterado com sucesso!"}
         return redirect(url_for('equipamentos_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
-    
+
 
     else:
         print("going to edit page...")
@@ -440,10 +453,7 @@ def alterar_equipamento(lab_id, lab_nome, id):
                                equipamentos = equips+lista_arduinos,
                                autenticado=autenticado(),
                                admin=admin_autenticado(),
-                               pagina='equipamentos_laboratorio'
-                               ) 
-
-
+                               pagina='equipamentos_laboratorio')
 
 @app.route('/cadastro-equipamento/<id>/<nome>', methods=["POST"])
 def cadastro_equipamento(id, nome):
@@ -618,13 +628,6 @@ def system_status(id, nome):
 @app.route('/robots.txt')
 def robots_txt():
     return """User-Agent: *<br>\nDisallow: /"""
-
-# @app.route('/escolher-grafico/')
-# def escolher_grafico(id):
-#     json.dumps(temp_data)
-#     return render_template('grafico.html',
-#                             lab_id=id,
-#                             pagina='grafico')
 
 @app.route('/mostrar-grafico/<id>/<nome>')
 def mostrar_grafico(id, nome):

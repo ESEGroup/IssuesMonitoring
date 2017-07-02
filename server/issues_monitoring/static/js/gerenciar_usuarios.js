@@ -18,7 +18,6 @@ $(function() {
             var nome = ev.target.getAttribute("data-nome"),
                 url = ev.target.getAttribute("data-url");
             ajax_get(url);
-            
         });
     }
 });
