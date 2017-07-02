@@ -21,7 +21,7 @@
             <h3>Gerenciar Usuários do Sistema</h3>
             <h4>Os usuários do sistema cadastrados encontram-se abaixo.</h4>
         </div>
-        
+
         {% if usuarios|len > 0 %}
         <table class="table-fill">
             <thead>
@@ -56,7 +56,7 @@
                             <input data-url="{{url_for('alterar_usuario_sistema', id=usuario.id)}}"
                                    data-nome="{{usuario.nome}}"
                                    type="image" src="/static/img/pencil.png"
-                                   alt="Apagar" class="delete-table-opt alter-btn">
+                                   alt="Alterar" class="delete-table-opt alter-btn">
                         </td>
                         <td class="text-center">
                             <input data-url="{{url_for('remover_usuario_sistema', id=usuario.id)}}"
@@ -67,6 +67,12 @@
                     {% else %}
                         <td class="text-center one-word-per-line">-</td>
                         <td class="text-center one-word-per-line">-</td>
+                        <td class="text-center">
+                            <input data-url="{{url_for('alterar_usuario_sistema', id=usuario.id)}}"
+                                   data-nome="{{usuario.nome}}"
+                                   type="image" src="/static/img/pencil.png"
+                                   alt="Alterar" class="delete-table-opt alter-btn">
+                        </td>
                         <td class="text-center one-word-per-line">-</td>
                     {% endif %}
                 </tr>
