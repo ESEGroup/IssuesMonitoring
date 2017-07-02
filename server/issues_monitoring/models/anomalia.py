@@ -43,24 +43,29 @@ class Anomalia:
         if data is not None:
             return Anomalia(*data)
 
-    def obter_do_lab(lab_id, resolvido=False):
-        data = db.fetchall("""SELECT a.tipo_anomalia, log.lab_id, a.descricao_anomalia,
-                                     log.data, log.resolvido, log.id,
-                                     r.data, r.descricao_acao, u.nome,
-                                     log.equip_id, e.nome, e.end_mac, log.valor,
-                                     log.valor_limite
-                              FROM Log_Anomalias log
-                              INNER JOIN Anomalias a
-                                ON a.slug = log.slug_anomalia
-                              LEFT JOIN Log_Acoes r
-                                ON r.id_log_anomalia = log.id
-                              LEFT JOIN User_Sys u
-                                ON u.user_id = r.autor
-                              LEFT JOIN Equip e
-                                ON e.equip_id = log.equip_id
-                              WHERE log.lab_id = ?
-                                    AND log.resolvido = ?;""",
-                              (lab_id, resolvido))
+    def obter_do_lab(lab_id, resolvido=False, dia=None):
+        args = [lab_id, resolvido]
+        if dia is not None:
+            args += [dia, dia + 60 * 60 * 24]
+        query = """SELECT a.tipo_anomalia, log.lab_id, a.descricao_anomalia,
+                          log.data, log.resolvido, log.id,
+                          r.data, r.descricao_acao, u.nome,
+                          log.equip_id, e.nome, e.end_mac, log.valor,
+                          log.valor_limite
+                   FROM Log_Anomalias log
+                   INNER JOIN Anomalias a
+                     ON a.slug = log.slug_anomalia
+                   LEFT JOIN Log_Acoes r
+                     ON r.id_log_anomalia = log.id
+                   LEFT JOIN User_Sys u
+                     ON u.user_id = r.autor
+                   LEFT JOIN Equip e
+                     ON e.equip_id = log.equip_id
+                   WHERE log.lab_id = ?
+                         AND log.resolvido = ? {};""".format(
+                             "AND r.data > ? AND r.data < ?"
+                             if dia is not None else "")
+        data = db.fetchall(query, args)
         return [Anomalia(*d) for d in data]
 
     def registrar_anomalia(lab_id, slug_anomalia, valor=None, valor_limite=None, equip_id=None):
@@ -107,3 +112,42 @@ class Anomalia:
             SET valor = ?,
                 data = ?
             WHERE id = ?;""", (valor, data, id))
+
+    def data_proxima_resolvida(lab_id, dia):
+        dia_dt = datetime.fromtimestamp(dia)
+        dia = int(datetime(day=dia_dt.day,
+                           month=dia_dt.month,
+                           year=dia_dt.year,
+                           hour=23,
+                           minute=59,
+                           second=59).timestamp())
+        data = db.fetchone("""SELECT r.data
+                           FROM Log_Anomalias log
+                           INNER JOIN Log_Acoes r
+                             ON r.id_log_anomalia = log.id
+                           WHERE log.lab_id = ?
+                                 AND log.resolvido = ?
+                                 AND r.data > ?
+                           ORDER BY r.data ASC;""",
+                           (lab_id,
+                            True,
+                            dia))
+        if data is not None:
+            return data[0]
+        return dia_dt.timestamp()
+
+    def data_resolvida_anterior(lab_id, dia):
+        data = db.fetchone("""SELECT r.data
+                           FROM Log_Anomalias log
+                           INNER JOIN Log_Acoes r
+                             ON r.id_log_anomalia = log.id
+                           WHERE log.lab_id = ?
+                                 AND log.resolvido = ?
+                                 AND r.data < ?
+                           ORDER BY r.data DESC;""",
+                           (lab_id,
+                            True,
+                            dia))
+        if data is not None:
+            return data[0]
+        return dia

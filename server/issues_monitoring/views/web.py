@@ -843,23 +843,42 @@ def organizePresenceList(currentDayEpoch, presence):
 
     return presenceList
 
-@app.route('/anomalias/<id>/<nome>')
-def anomalias(id, nome):
+@app.route('/anomalias/<id>/<nome>/')
+def anomalias_hoje(id, nome):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
+    _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
+    return redirect(url_for('anomalias',
+                            id=id,
+                            nome=nome,
+                            dia=_hoje))
+
+@app.route('/anomalias/<id>/<nome>/<dia>')
+def anomalias(id, nome, dia):
+    if not autenticado():
+        kwargs = {"e" : "Por favor, faça o login"}
+        return redirect(url_for('login', **kwargs))
+
+    dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
     anomalias = controllers.obter_anomalias(id)
-    anomalias_resolvidas = controllers.obter_anomalias_resolvidas(id)
+    anomalias_resolvidas = controllers.obter_anomalias_resolvidas_dia(id, dia)
+
+    proximo_dia = controllers.data_proxima_anomalia_resolvida(id, dia)
+    dia_anterior = controllers.data_anomalia_resolvida_anterior(id, dia)
 
     return render_template('anomalias.html',
-                            anomalias=anomalias,
-                            anomalias_resolvidas=anomalias_resolvidas,
-                            pagina='anomalias',
-                            autenticado=True,
-                            admin = admin_autenticado(),
-                            lab_id=id,
-                            lab_nome=nome)
+                           anomalias=anomalias,
+                           anomalias_resolvidas=anomalias_resolvidas,
+                           proximo_dia=proximo_dia,
+                           dia_anterior=dia_anterior,
+                           dia=dia,
+                           pagina='anomalias',
+                           autenticado=True,
+                           admin=admin_autenticado(),
+                           lab_id=id,
+                           lab_nome=nome)
 
 @app.route('/solucionar-anomalia/<lab_id>/<lab_nome>/<id>')
 def solucionar_anomalia(lab_id, lab_nome, id):
@@ -893,6 +912,6 @@ def acao(id, nome):
                                                 tipo_anomalia,
                                                 user_id)
 
-    return redirect(url_for('anomalias',
+    return redirect(url_for('anomalias_hoje',
                             id=id,
                             nome=nome))
