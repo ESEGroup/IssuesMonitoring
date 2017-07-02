@@ -6,7 +6,7 @@ $(document).ready(function(){
     });
 
     $('input[type=radio][name=radio-arduino]').change(function() {
-        $('#parent-id').val( $('input[name=radio-arduino]:checked', "#register-form").val() );
+        $('#parent-id').val( $('input[name=radio-arduino]:checked', "#form").val() );
     });
 });
 
@@ -46,7 +46,7 @@ $(function() {
             var mac = ev.target.getAttribute("data-mac"),
                 url = ev.target.getAttribute("data-url");
             ajax_get(url);
-            
+
         });
     }
 

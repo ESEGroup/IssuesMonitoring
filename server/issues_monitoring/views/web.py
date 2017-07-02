@@ -320,13 +320,20 @@ def alterar_usuario_lab(lab_id, lab_nome, id):
         user_id = request.form.get('id-user') or ''
         nome = request.form.get('nome') or ''
         email = request.form.get('email') or ''
-        userToEdit = UsuarioLab(user_id, nome, email)
-        userToEdit.editar()
+        userToEdit = UsuarioLab.obter(id)
+        userToEdit.nome = nome
+        userToEdit.email = email
+        userToEdit.user_id = user_id
+        if (id != user_id):
+            userToEdit.editar(old_user_id=id)
+        else:
+            userToEdit.editar()
         kwargs = {"c":"Usuário alterado com sucesso!"}
         return redirect(url_for('usuarios_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
 
 
     else:
+        #GET
         return render_template('alterar_usuario_lab.html',
                                lab_id=lab_id,
                                lab_nome=lab_nome,
@@ -424,7 +431,6 @@ def alterar_equipamento(lab_id, lab_nome, id):
         return redirect(url_for('laboratorios'))
 
     if request.method == 'POST':
-        print("started editing")
         #create new Equipment, save changes to BD
         temp_min = request.form.get('temp-min')
         temp_max = request.form.get('temp-max')
@@ -435,16 +441,14 @@ def alterar_equipamento(lab_id, lab_nome, id):
         equipToEdit = Equipamento(lab_id, nome_equip, descricao, temp_min, temp_max, MAC, parent_id, id=id)
         equipToEdit.editar()
 
-        print("Finished editing")
         kwargs = {"c":"Equipamento alterado com sucesso!"}
         return redirect(url_for('equipamentos_laboratorio', id=lab_id, nome=lab_nome, **kwargs))
 
 
     else:
-        print("going to edit page...")
-
-        equips = controllers.obter_equipamentos(id)
-        lista_arduinos = controllers.listar_arduinos_laboratorio(id)
+        #GET
+        equips = controllers.obter_equipamentos(lab_id)
+        lista_arduinos = controllers.listar_arduinos_laboratorio(lab_id)
         return render_template('alterar_equipamento.html',
                                lab_id=lab_id,
                                lab_nome=lab_nome,

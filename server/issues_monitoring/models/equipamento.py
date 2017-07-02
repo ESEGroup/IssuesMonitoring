@@ -40,14 +40,16 @@ class Equipamento:
               lab_id = ?,
               temp_min = ?,
               temp_max = ?,
-              end_mac = ?
+              end_mac = ?,
+              parent_id = ?
           WHERE equip_id = ?""",
           (self.nome,
            self.descricao,
            self.lab_id,
            self.temp_min,
            self.temp_max,
-           self.MAC, 
+           self.MAC,
+           self.parent_id,
            self.id))
 
     def obter(id):

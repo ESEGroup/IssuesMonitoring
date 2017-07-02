@@ -129,7 +129,7 @@ class UsuarioLab(Usuario):
         UsuarioLab.adicionar_ao_laboratorio(self.lab_id,
                                             self.user_id)
 
-    def editar(self):
+    def editar(self, old_user_id=None):
         db.execute("""
             UPDATE User_Lab
             SET nome = ?,
@@ -140,6 +140,13 @@ class UsuarioLab(Usuario):
              self.email,
              self.user_id,
              self.id))
+        if old_user_id is not None:
+            db.execute("""
+                UPDATE Presenca
+                SET user_id = ?
+                    WHERE user_id = ?;""",
+                    (self.user_id,
+                    old_user_id))
 
     def remover(lab_id, user_id):
         db.execute("""
