@@ -130,9 +130,9 @@
                 <tbody class="table-hover">
                     {% for cond in condicoes_ambiente_lab %}
                     <tr>
-                        <td class="text-left">{{cond[0]}}</td>
-                        <td class="text-left">{{cond[1]}}</td>
-                        <td class="text-left">{{cond[2]}}</td>
+                        <td class="text-left">{{cond[0]|data}}</td>
+                        <td class="text-left">{{cond[1]}}ºC</td>
+                        <td class="text-left">{{cond[2]}}%</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -162,8 +162,8 @@
                   <tbody class="table-hover">
                       {% for cond in value %}
                       <tr>
-                          <td class="text-left">{{cond[0]}}</td>
-                          <td class="text-left">{{cond[1]}}</td>
+                          <td class="text-left">{{cond[0]|data}}</td>
+                          <td class="text-left">{{cond[1]ºC}}</td>
                       </tr>
                       {% endfor %}
                   </tbody>
