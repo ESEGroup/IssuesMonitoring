@@ -731,6 +731,7 @@ def mostrar_relatorio_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     date = request.form.get("daterange") or ''
+    print(date)
     dates = date.split('-');
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
