@@ -203,14 +203,15 @@ def checar_condicoes_ambiente(lab_id):
 def get_data_log(chart_type, chart_target, start_date, end_date, lab_id):
     if chart_type == "temperatura":
         if chart_target == "laboratorio":
-            print("Entrou no get_data")
-            data = Laboratorio.obter_medias_entre_tempos_lab(start_date, end_date, lab_id)
-            print("Saiu do get_data")
+            data = Laboratorio.obter_temperatura_entre_tempos_lab(start_date, end_date, lab_id)
             return data
         else:
-            pass
+            equip_id = chart_target
+            data = Equipamento.obter_medidas_entre_tempos_equip(start_date, end_date, equip_id)
+            return data
     elif chart_type == "umidade":
-        pass
+        data = Laboratorio.obter_umidade_entre_tempos_lab(start_date, end_date, lab_id)
+        return data
 
 def obter_anomalias(lab_id):
     return Laboratorio.obter_anomalias(lab_id)

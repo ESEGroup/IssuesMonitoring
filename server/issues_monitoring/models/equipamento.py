@@ -84,6 +84,20 @@ class Equipamento:
             return data
         return [0, 0, 0, ""]
 
+    def obter_medidas_entre_tempos_equip(tempo_inicio, tempo_final, equip_id):
+        data = db.fetchall("""
+            SELECT data, temp
+            FROM Log_Equip
+            WHERE equip_id = ?
+                  AND data >= ?
+                  AND data < ?
+            ORDER BY data ASC;""", (equip_id, tempo_inicio, tempo_final))
+
+        if data is not None:
+            return data
+
+        return []
+
     def listar_todos_arduinos():
         data = db.fetchall("""
             SELECT lab_id, nome, descricao, temp_min, temp_max, end_mac, parent_id, equip_id

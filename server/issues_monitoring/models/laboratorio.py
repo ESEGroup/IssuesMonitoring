@@ -254,13 +254,27 @@ class Laboratorio:
             return [data[0]]
         return []
 
-    def obter_medias_entre_tempos_lab(tempo_inicio, tempo_final, lab_id):
+    def obter_temperatura_entre_tempos_lab(tempo_inicio, tempo_final, lab_id):
         data = db.fetchall("""
             SELECT data, temp
             FROM Log_Lab
             WHERE lab_id = ?
                   AND data >= ?
-                  AND data <= ?
+                  AND data < ?
+            ORDER BY data ASC;""", (lab_id, tempo_inicio, tempo_final))
+
+        if data is not None:
+            return data
+
+        return []
+
+    def obter_umidade_entre_tempos_lab(tempo_inicio, tempo_final, lab_id):
+        data = db.fetchall("""
+            SELECT data, umid
+            FROM Log_Lab
+            WHERE lab_id = ?
+                  AND data >= ?
+                  AND data < ?
             ORDER BY data ASC;""", (lab_id, tempo_inicio, tempo_final))
 
         if data is not None:

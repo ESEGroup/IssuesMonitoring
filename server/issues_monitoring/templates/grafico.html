@@ -18,7 +18,6 @@
 <script src="/static/js/grafico.js"></script>
 {% if data|len > 0 %}
 <script>
-    alert({{data|safe}});
     drawIssuesChart({{data|safe}});
 </script>
 {% endif %}

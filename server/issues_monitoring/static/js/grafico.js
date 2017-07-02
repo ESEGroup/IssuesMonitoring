@@ -75,8 +75,6 @@ $(function() {
 
 function drawIssuesChart(mydata){
 
-    alert(mydata);
-
     function drawChart() {
         $(".curve-chart").slideToggle(300);
         var data = new google.visualization.DataTable();

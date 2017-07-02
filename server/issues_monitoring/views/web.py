@@ -2,7 +2,7 @@ from flask          import render_template, request, redirect, url_for, session
 from flask          import send_file, current_app as app
 from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
-from ..common.utils import autenticado, admin_autenticado, hoje, agora
+from ..common.utils import autenticado, admin_autenticado, hoje, agora, get_interval_means
 from ..             import app, Config, controllers
 from ..models       import UsuarioLab, UsuarioSistema, Equipamento
 import json
@@ -667,20 +667,13 @@ def mostrar_grafico_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     chart_type = request.form.get("chart_type") or ''
-    print(chart_type)
     chart_target = request.form.get("equipamento") or 'laboratorio'
-    print(chart_target)
     date = request.form.get("daterange") or ''
-    print(date)
     dates = date.split('-');
-    print(dates)
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
-    print(intervalo_grafico)
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
     end_date_epoch = int(datetime.strptime(dates[1], " %d/%m/%Y %H:%M:%S").timestamp())
-    print (start_date_epoch)
-    print (end_date_epoch)
 
     interval = int(intervalo_grafico)*60
 
@@ -689,19 +682,8 @@ def mostrar_grafico_post(id, nome):
 
     data = []
 
-    if (chart_type == "temperatura"):
-        if (chart_target == "laboratorio"):
-            args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
-            print("TEMP LAB: ", args)
-            data = controllers.get_data_log(*args)
-        else:
-            args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
-            print("TEMP EQUIP: ", args)
-            data = controllers.get_equip_log(*args)
-    elif (chart_type == "umidade"):
-        args = [chart_type, start_date_epoch, end_date_epoch, id]
-        print("UMIDADE: ", args)
-        data = controllers.get_data_log(*args)
+    args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
+    data = controllers.get_data_log(*args)
 
     if data == []:
         kwargs = {"e" : "Não existem dados para o período selecionado. Por favor, selecione outro período",
@@ -712,13 +694,16 @@ def mostrar_grafico_post(id, nome):
     data = json.dumps(data)
     array_of_epochs = json.loads(data)
 
-    print("Array of Epochs: {}".format(array_of_epochs))
-
     result = []
 
-    result = get_interval_means(interval, array_of_epochs, start_date_epoch, end_date_epoch)
+    try:
+        result = get_interval_means(interval, array_of_epochs, start_date_epoch, end_date_epoch)
+    except:
+        kwargs = {"e" : "Intervalo de datas muito curto! Um período maior que 2 horas",
+                  "id" : id,
+                  "nome" : nome}
+        return redirect(url_for('mostrar_grafico', **kwargs))
 
-    print("result: ", result)
     return render_template('grafico.html',
                             pagina='mostrar_grafico',
                             autenticado=True,
@@ -729,46 +714,6 @@ def mostrar_grafico_post(id, nome):
                             admin = admin_autenticado(),
                             intervalo_grafico=intervalo_grafico)
 
-#array of epochs has format = [[epoch1, value1], [epoch2, value2],...]
-def get_interval_means(interval, array_of_epochs, epoch_beginning, epoch_ending):
-    #exceptions handling
-    if(len(array_of_epochs)<1):
-      print ("Error: entry array is null")
-      return [[]]
-
-    # calculando o numero de intervalos
-    delta_epoch = epoch_ending - epoch_beginning
-    number_of_intervals = int(delta_epoch/interval)
-
-    # guardando um dicionário onde a chave é um indice incremental e os valores são os intervalos possíveis
-    interval_dict = {0 : [epoch_beginning, epoch_beginning + interval]}
-    for i in range(number_of_intervals - 1):
-        interval_dict[i+1] = [interval_dict[i][0] + interval, interval_dict[i][1] + interval]
-
-    # para cada registro no array_of_epochs, checar a qual intervalo ele pertence e adicioná-lo ao dicionário final, separado por intervalo
-    array_of_epochs_by_interval = {}
-    for epoch_value in array_of_epochs:
-        for i, interval in interval_dict.items():
-            if (epoch_value[0] >= interval[0] and epoch_value[0] < interval[1]):
-                if (i in array_of_epochs_by_interval):
-                    array_of_epochs_by_interval[i] += [epoch_value[1]]
-                else:
-                    array_of_epochs_by_interval[i] = [epoch_value[1]]
-                break;
-
-    # para cada intervalo, calcular a média, mínimo e máximo
-    result = []
-    for i, data_values in array_of_epochs_by_interval.items():
-        sum_interval  = sum(data_values)
-        mean_interval = float(sum_interval)/len(data_values)
-        max_interval  = max(data_values)
-        min_interval  = min(data_values)
-        label         = "{} - {}".format(datetime.fromtimestamp(interval_dict[i][0]).strftime("%d/%m/%Y %H:%M"),
-                                         datetime.fromtimestamp(interval_dict[i][1]).strftime("%d/%m/%Y %H:%M"))
-        result += [[label, mean_interval, min_interval, max_interval]]
-
-    print(result)
-    return result
 
 @app.route('/mostrar-relatorio/<id>/<nome>')
 def mostrar_relatorio(id, nome):
