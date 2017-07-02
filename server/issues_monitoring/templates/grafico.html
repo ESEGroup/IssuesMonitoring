@@ -16,6 +16,12 @@
 <script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-pt-BR.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- JS do grafico -->
 <script src="/static/js/grafico.js"></script>
+{% if data|len > 0 %}
+<script>
+    alert({{data|safe}});
+    drawIssuesChart({{data|safe}});
+</script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -92,7 +98,7 @@
 
     <div id="curve-chart" style="display:none;"></div>
 
-    {% if temp_data|len < 0%}
+    {% if data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">
         <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
             <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>

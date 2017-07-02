@@ -6,12 +6,11 @@ $(document).ready(function(){
 });
 
 //JS para o slider de handle unico:
-
 var rangeSlider = function(){
   var slider = $('.range-slider'),
       range = $('.range-slider__range'),
       value = $('.range-slider__value');
-    
+
   slider.each(function(){
 
     value.each(function(){
@@ -26,21 +25,19 @@ var rangeSlider = function(){
 };
 
 //JS pro restante da pagina:
-
 $(function() {
-    
     //Ativa o slider de handle unico:
     rangeSlider();
-    
+
     //Declara o objeto do datetimepicker (e faz com que o datepicker atualize os inputs correspondentes quando selecionado):
     var datetimepickerInit = {
         dateFormat: 'yy-m-d',
         timeFormat: "hh:mm tt",
         inline: true,
-        onSelect: function(dateText, inst) { 
+        onSelect: function(dateText, inst) {
             var date = $(this).datepicker('getDate'),
-                day  = date.getDate(),  
-                month = date.getMonth() + 1,              
+                day  = date.getDate(),
+                month = date.getMonth() + 1,
                 year =  date.getFullYear();
                 hours = date.getHours();
                 minutes = date.getMinutes();
@@ -52,14 +49,14 @@ $(function() {
             $('#daterange').val( $('#start-date').val() + " - " + $('#end-date').val() );
         }
     };
-    
+
     //Atribui os valores iniciais de hoje e ontem aos datepickers:
     $('#datepicker-end').datetimepicker(datetimepickerInit);
     datetimepickerInit["defaultDate"] = -1;
     $('#datepicker-start').datetimepicker(datetimepickerInit);
 
-    
-    //Inicializa o campo daterange com o intervalo entre hoje e ontem:    
+
+    //Inicializa o campo daterange com o intervalo entre hoje e ontem:
     var date = new Date();
     var today_string = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
     //Subtrai uma unidade do dia:
@@ -71,34 +68,37 @@ $(function() {
     $('#daterange').val( $('#start-date').val() + " - " + $('#end-date').val() );
     //Inicializa o date-picker de ontem:
     $("#datepicker-start").datetimepicker({ defaultDate: -1 });
-    
 
-    //JS referente ao grafico:
-    
 
-    var mydata = JSON.parse('{{temp_data}}' || "[]");
+
+});
+
+function drawIssuesChart(mydata){
+
+    alert(mydata);
 
     function drawChart() {
         $(".curve-chart").slideToggle(300);
-       var data = new google.visualization.DataTable();
-       data.addColumn('number', 'index');
-       data.addColumn('number', 'mean');
-       data.addColumn({id: 'min', type:'number', role: 'interval'});
-       data.addColumn({id: 'max', type:'number', role: 'interval'});
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'index');
+        data.addColumn('number', 'mean');
+        data.addColumn({id: 'min', type:'number', role: 'interval'});
+        data.addColumn({id: 'max', type:'number', role: 'interval'});
 
-       data.addRows(mydata);
+        data.addRows(mydata);
 
-       var options = {
-           title:'Grafico',
-           curveType:'function',
-           lineWidth: 4,
-           series: [{'color': '#D3362D'}],
-           intervals: { 'lineWidth':2, 'barWidth': 0.5 },
-           legend: 'none',
+        var options = {
+            title:'Gráfico',
+            curveType:'function',
+            lineWidth: 4,
+            series: [{'color': '#D3362D'}],
+            intervals: { 'lineWidth':2, 'barWidth': 0.5 },
+            legend: 'none',
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('curve-chart'));
 
+        document.getElementById('curve-chart').setAttribute('style','');
         chart.draw(data, options);
     }
 
@@ -109,6 +109,4 @@ $(function() {
         document.getElementById('curve-chart').remove();
         document.getElementById('warning-chart').style = "";
     }
-
-});
-
+}

@@ -200,17 +200,17 @@ def checar_condicoes_ambiente(lab_id):
         check_intervalo_sec = check_intervalo*60.
         sleep(check_intervalo_sec)
 
-def get_data_log(chart_type, start_date, end_date, lab_id):
-    json_string = json.dumps(get_chart_data(chart_type, start_date, end_date, lab_id))
-    return json_string
-
-def get_lab_log(start_date, end_date, lab_id):
-    json_string = json.dumps(get_environment_data(start_date, end_date, lab_id))
-    return json_string
-
-def get_equip_log(chart_type, chart_target, start_date, end_date, lab_id):
-    json_string = json.dumps(get_equip_chart_data(chart_type, chart_target, start_date, end_date, lab_id))
-    return json_string
+def get_data_log(chart_type, chart_target, start_date, end_date, lab_id):
+    if chart_type == "temperatura":
+        if chart_target == "laboratorio":
+            print("Entrou no get_data")
+            data = Laboratorio.obter_medias_entre_tempos_lab(start_date, end_date, lab_id)
+            print("Saiu do get_data")
+            return data
+        else:
+            pass
+    elif chart_type == "umidade":
+        pass
 
 def obter_anomalias(lab_id):
     return Laboratorio.obter_anomalias(lab_id)
