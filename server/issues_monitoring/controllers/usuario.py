@@ -5,6 +5,9 @@ from ..models import UsuarioSistema, UsuarioLab, AdministradorSistema
 def autenticar(usuario, senha):
     return UsuarioSistema.autenticar(usuario, senha)
 
+def alterar_senha(usuario, senha):
+    return UsuarioSistema.alterar_senha(usuario, senha)
+
 def obter_usuarios_sistema():
     return UsuarioSistema.obter_informacoes()
 
@@ -94,4 +97,4 @@ def data_evento_anterior_mydenox(lab_id, dia):
     return UsuarioLab.data_evento_anterior(lab_id, dia)
 
 def log_usuario(dateToday, dateTomorrow, lab_id):
-    return UsuarioLab.get_presence_data(dateToday, dateTomorrow, lab_id) 
+    return UsuarioLab.get_presence_data(dateToday, dateTomorrow, lab_id)

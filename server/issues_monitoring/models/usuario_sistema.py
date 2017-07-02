@@ -49,6 +49,14 @@ class UsuarioSistema(Usuario):
             (login, senha, email, nome, admin)
             VALUES (?, ?, ?, ?, ?);""", values)
 
+    def alterar_senha(login, senha):
+        db.execute("""
+            UPDATE User_Sys
+            SET senha = ?
+            WHERE login = ?""",
+            (UsuarioSistema.__hash_senha(senha), login))
+        return True
+
     def autenticar(login, senha):
         args = db.fetchone("""
             SELECT user_id, senha, admin, data_aprov

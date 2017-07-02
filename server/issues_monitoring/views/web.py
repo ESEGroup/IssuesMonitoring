@@ -293,10 +293,21 @@ def alterar_senha_post(user_id):
         kwargs = {"e" : "Nova senha e confirmação de nova senha não são iguais"}
         return redirect(url_for('alterar_senha', user_id=user_id, **kwargs))
 
-    #if controllers.alterar_senha(user_id, senha_atual, senha_nova)
+    usuario = UsuarioSistema.obter(user_id)
 
-    kwargs = {"c" : "Senha alterada com sucesso"}
-    return redirect(url_for('aprovar_usuario', **kwargs))
+    try:
+        controllers.autenticar(usuario.login, senha_atual)
+
+        if controllers.alterar_senha(usuario.login, senha_nova):
+            kwargs = {"c" : "Senha alterada com sucesso"}
+            return redirect(url_for('aprovar_usuario', **kwargs))
+        else:
+            kwargs = {"e" : "Não foi possível alterar a senha. Tente novamente"}
+            return redirect(url_for('alterar_senha', user_id=user_id, **kwargs))
+
+    except InformacoesIncorretas:
+        kwargs = {"e" : "Senha atual incorreta. Tente novamente"}
+        return redirect(url_for('alterar_senha', user_id=user_id, **kwargs))
 
 @app.route('/remover-usuario/<id>/', methods=["POST"])
 def remover_usuario_sistema(id):
