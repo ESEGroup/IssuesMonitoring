@@ -117,12 +117,15 @@
 
                     <div class="hidden-radio shrink-div hidden">
                         <div id="arduino-select">Selecione o Arduino ao qual o Computador será associado:</div>
-                        {% for arduino in lista_arduinos %}
-                        <div class="radio" id="select-radio">
-                            <input id="radio-arduino-{{arduino.id}}" name="radio-arduino" type="radio" value="{{arduino.id}}" class="inner-radio">
-                            <label for="radio-arduino-{{arduino.id}}" class="radio-label">{{arduino.nome}} - {{arduino.MAC}}</label>
-                        </div>
-                        {% endfor %}
+                        
+                        <select id="select-arduino">
+                            <optgroup label="Arduino - Endereço MAC">
+                                {% for arduino in lista_arduinos %}
+                                <option value="{{arduino.id}}">{{arduino.nome}} - {{arduino.MAC}}</option>
+                                {% endfor %}
+                            </optgroup>
+                        </select>        
+                                        
                     </div>
                     {% endif %}
                 </fieldset>

@@ -1,12 +1,21 @@
 //JS para os input radios escondidos dos arduinos:
 $(document).ready(function(){
+
+    //Mostra o submenu de cadastro de computador:
     $('input[type=radio][name=radio-1]').change(function() {
         $(".hidden-radio").slideToggle(300);
         $(".hidden-zona-conforto").slideToggle(300);
+        //Seta o id escolhid de acordo se for Arduino (0) ou Equipamento (id do equipamento):
+        if ( $("#parent-id").val() == "0" ){
+            $("#parent-id").val( $("#select-arduino").val() );
+        } else {
+            $("#parent-id").val("0");
+        };
     });
 
-    $('input[type=radio][name=radio-arduino]').change(function() {
-        $('#parent-id').val( $('input[name=radio-arduino]:checked', "#form").val() );
+    //Atualiza o parent id caso escolha outra opcao de arduino:
+    $('#select-arduino').change(function() {
+        $('#parent-id').val( $("#select-arduino").val() );
     });
 });
 
@@ -28,6 +37,7 @@ $(function() {
     $("#temp-max").val(40);
     $("#temp-lab").val($("#slider-temp").slider("values", 0) + "ºC a " + $("#slider-temp").slider("values", 1) + "ºC");
 
+    //Adiciona os on clicks no botao de deletar:
     var del = document.getElementsByClassName("delete-btn");
     for (var i = 0; i < del.length; ++i) {
         del[i].addEventListener("click", function(ev) {
@@ -39,8 +49,8 @@ $(function() {
         });
     }
 
+    //Adiciona os on clicks no botao de alterar:
     var alt = document.getElementsByClassName("alter-btn")
-    console.log(alt.length);
     for(var i = 0; i<alt.length; ++i){
         alt[i].addEventListener("click", function(ev){
             var mac = ev.target.getAttribute("data-mac"),
@@ -49,13 +59,5 @@ $(function() {
 
         });
     }
-
-    // JS para os radiobutton
-    var ardu_radio               = document.getElementById("ardu-radio");
-    var parent_id                = document.getElementById("parent-id");
-    var inner_radio_arduino_list = document.getElementsByClassName("inner-radio");
-    ardu_radio.addEventListener("click", function(ev) {
-        parent_id.value = 0;
-    });
 
 });
