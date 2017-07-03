@@ -13,6 +13,8 @@ if __name__ == "__main__":
         try:
             Popen(["gunicorn",
                    "issues_monitoring.server:app",
+                   "-k",
+                   "gevent",
                    "-b",
                    "{}:{}".format(host, port)]).wait()
         except KeyboardInterrupt:
