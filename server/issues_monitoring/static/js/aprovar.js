@@ -1,6 +1,6 @@
 $(function(){
     var salvar = document.getElementById("salvar")
-        
+
     if (salvar != null && typeof(salvar) != "undefined") {
         salvar.addEventListener("click", function(ev) {
             var checkboxes = document.getElementsByClassName("aprovar");
@@ -11,6 +11,10 @@ $(function(){
                     data: {"aprovar": checkboxes[i].checked}
                 });
             }
+            var path = location.pathname;
+            path = location.pathname.split("?")[0] + "?c=Informações salvas com sucesso!";
+            window.history.pushState('', '', path);
+            location.reload();
         });
     }
 });
