@@ -10,13 +10,19 @@
 // Pins
 #define esp8266_reset_pin 255
 const byte LDR_PIN = 4;
-const byte DHT_PIN = 2;
+const byte DHT_PIN = 5;
 
 // DHT sensor
 DHT dht(DHT_PIN, DHT11);
 
 // Wifi module
 ESP8266wifi wifi(Serial3, Serial3, esp8266_reset_pin, Serial);
+
+// Wifi config
+String SSID = "LENS-ESE";
+String PWD = "LensESE*789";
+String SERVER_IP = "52.67.192.182";
+String SERVER_PORT = "8080";
 
 // Timers
 Timer ldr_timer;
@@ -156,6 +162,7 @@ void send()
   // Check message is there
   if (msg.hasData) {
     // process the command
+    Serial.println("-------RESPOSTA-------");
     Serial.println(msg.message);
   }
 
@@ -198,8 +205,8 @@ void setup()
   wifi.setTransportToTCP();
   wifi.endSendWithNewline(true);
   wifi.begin();
-  wifi.connectToAP("LENS-ESE", "LensESE*789");
-  wifi.connectToServer("52.67.192.182", "8080");
+  wifi.connectToAP(SSID, PWD);
+  wifi.connectToServer(SERVER_IP, SERVER_PORT);
 
   // LDR setup
   pinMode(LDR_PIN, INPUT);
