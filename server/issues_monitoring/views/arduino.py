@@ -10,6 +10,7 @@ def arduino():
     if j is not None:
         try:
             lab_id = j["lab_id"]
+            print(j)
             if (controllers.registrar_medidas(j)):
                 return str(Laboratorio.obter_intervalo_arduino(lab_id))
             else:
