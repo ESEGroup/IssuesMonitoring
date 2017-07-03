@@ -781,7 +781,7 @@ def mostrar_relatorio_post(id, nome):
 
     css = './issues_monitoring/static/css/table.css'
     name = random_string(20)
-    kwargs["nome_pdf"] = '{}.pdf'.format(name)
+    kwargs["nome_pdf"] = name
     pdf_path = './issues_monitoring/reports/{}.pdf'.format(name)
     pdf_report = HeadlessPDFKit(page,
                                 'string',
