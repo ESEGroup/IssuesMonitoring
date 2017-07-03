@@ -35,15 +35,15 @@ class Arduino(Equipamento):
 
     def obter_todos():
         data = db.fetchall("""
-            SELECT lab_id, nome, descricao, temp_min, temp_max, end_mac, parent_id, equip_id
+            SELECT lab_id, nome, descricao, end_mac, equip_id
             FROM Equip
             WHERE parent_id = 0;""")
-        return data
+        return [Arduino(*d) for d in data]
 
     def obter_do_lab(lab_id):
         data = db.fetchall("""
-            SELECT lab_id, nome, descricao, temp_min, temp_max, end_mac, parent_id, equip_id
+            SELECT lab_id, nome, descricao, end_mac, equip_id
             FROM Equip
             WHERE parent_id = 0
                   AND lab_id = ?;""", (lab_id,))
-        return data
+        return [Arduino(*d) for d in data]
