@@ -12,7 +12,7 @@ $(function(){
                 });
             }
             var path = location.pathname;
-            path = location.pathname.split("?")[0]
+            path = location.pathname.split("?")[0] + "?c=Informações salvas com sucesso!";
             window.history.pushState('', '', path);
             location.reload();
         });
