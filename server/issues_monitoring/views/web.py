@@ -10,6 +10,10 @@ from ..             import app, Config, controllers
 import json
 import pdfkit
 
+class HeadlessPDFKit(pdfkit.PDFKit):
+    def command(self, path=None):
+        return ['xvfb-run', '--'] + super().command(path)
+
 @app.route('/')
 def root():
     return redirect(url_for('laboratorios'))
@@ -781,8 +785,11 @@ def mostrar_relatorio_post(id, nome):
     css = './issues_monitoring/static/css/table.css'
     name = random_string(20)
     kwargs["nome_pdf"] = name
-    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/{}.pdf'.format(name), css=css)
-
+    pdf_report = HeadlessPDFKit(page,
+                                'string',
+                                css=css,
+                                cover_first=False).to_pdf(
+                './issues_monitoring/reports/{}.pdf'.format(name))
     return render_template('relatorio.html',
                            **kwargs)
 
