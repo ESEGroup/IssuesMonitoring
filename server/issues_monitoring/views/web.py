@@ -789,6 +789,9 @@ def mostrar_relatorio_post(id, nome):
                                 'string',
                                 css=css,
                                 cover_first=False).to_pdf(pdf_path)
+    kwargs["admin"] = admin_autenticado()
+    kwargs["autenticado"] = True
+    kwargs["pagina"] = "mostrar_relatorio"
     return render_template('relatorio.html',
                            **kwargs)
 
