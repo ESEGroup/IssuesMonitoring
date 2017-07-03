@@ -51,9 +51,9 @@ $(function() {
     };
 
     //Atribui os valores iniciais de hoje e ontem aos datepickers:
-    $('#datepicker-end').datetimepicker(datetimepickerInit);
-    datetimepickerInit["defaultDate"] = -1;
     $('#datepicker-start').datetimepicker(datetimepickerInit);
+    datetimepickerInit["defaultDate"] = 1;
+    $('#datepicker-end').datetimepicker(datetimepickerInit);
 
 
     //Inicializa o campo daterange com o intervalo entre hoje e ontem:
