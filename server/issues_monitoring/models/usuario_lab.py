@@ -216,21 +216,21 @@ class UsuarioLab(Usuario):
             FROM User_Lab
             WHERE user_id in ({})""".format(values),
             user_ids)
-        return data
+        return [d[0] for d in data]
 
-def adicionar_ao_laboratorio(lab_id, user_id):
-    if db.fetchone("""
-        SELECT user_id
-        FROM Presenca
-        WHERE user_id = ?
-              AND lab_id = ?;""",
-              (user_id, lab_id)) is not None:
-        return
+    def adicionar_ao_laboratorio(lab_id, user_id):
+        if db.fetchone("""
+            SELECT user_id
+            FROM Presenca
+            WHERE user_id = ?
+                AND lab_id = ?;""",
+                (user_id, lab_id)) is not None:
+            return
 
-    db.execute("""
-        INSERT INTO Presenca
-        (lab_id, user_id, presente)
-        VALUES (?, ?, ?);""",
-        (lab_id,
-         user_id,
-         False))
+        db.execute("""
+            INSERT INTO Presenca
+            (lab_id, user_id, presente)
+            VALUES (?, ?, ?);""",
+            (lab_id,
+            user_id,
+            False))

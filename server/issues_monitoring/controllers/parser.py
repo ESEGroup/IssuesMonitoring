@@ -25,11 +25,8 @@ def registrar_presenca(dict_eventos):
                 pass
         UsuarioLab.registrar_presenca(eventos)
 
-        print (user_ids)
         registered_user_ids = UsuarioLab.user_ids_registradas(user_ids)
-        print(registered_user_ids)
         unregistered_user_ids = set(user_ids) - set(registered_user_ids)
-        print(unregistered_user_ids)
         enviar_email_usuarios_nao_cadastrados(unregistered_user_ids)
     return obter_intervalo_parser()
 
