@@ -107,20 +107,20 @@ def work():
     CREATE TABLE Log_MyDenox(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            evento CHAR(255));
+            evento CHAR(255) NOT NULL,
+            slug CHAR(255) NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE Sistema(
             ultima_analise INT NOT NULL,
-            intervalo_parser INT NOT NULL,
-            intervalo_arduino INT NOT NULL);
+            intervalo_parser INT NOT NULL);
     """)
 
     cursor.execute("""
     INSERT INTO Sistema
-    (ultima_analise, intervalo_parser, intervalo_arduino)
-    VALUES (0, 3, 3);
+    (ultima_analise, intervalo_parser)
+    VALUES (0, 3);
     """)
 
     cursor.execute("""

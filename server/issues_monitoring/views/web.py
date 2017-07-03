@@ -510,6 +510,7 @@ def log_eventos(id, nome, dia):
     if not autenticado():
         return redirect(url_for('login'))
 
+    mydenox = controllers.ultima_atualizacao_mydenox()
     usuarios_presentes = controllers.usuarios_presentes(id)
 
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
@@ -528,6 +529,7 @@ def log_eventos(id, nome, dia):
                            admin=admin_autenticado(),
                            lab_id=id,
                            lab_nome=nome,
+                           mydenox=mydenox,
                            dia=dia)
 
 @app.route('/aprovar-usuario')
