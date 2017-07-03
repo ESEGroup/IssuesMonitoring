@@ -141,13 +141,14 @@ def work():
      (4, "umid-max", "Umidade Acima", "Umidade {}% do laboratório acima do máximo da Zona de Conforto {}%"),
      (5, "temp-equip-min", "Temperatura de Equipamento Abaixo", "Temperatura {}ºC do Equipamento {} abaixo do mínimo da Zona de Conforto ({}ºC)"),
      (6, "temp-equip-max", "Temperatura de Equipamento Acima", "Temperatura {}ºC do Equipamento {} acima do máximo da Zona de Conforto ({}ºC)"),
-     (7, "luz", "Luz acesa sem pessoas presentes", "Luz do laboratório está acesa sem usuários presentes")])
+     (7, "luz", "Luz acesa sem pessoas presentes", "Luz do laboratório está acesa sem usuários presentes"),
+     (8, "imap", "Falha na conexão com servidor de e-mail", "Falha na comunicação com o servidor IMAP para ler os e-mails de registro de presença no laboratório"]) 
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
+            lab_id INTEGER REFERENCES Lab(lab_id),
             equip_id INTEGER,
             slug_anomalia CHAR(255) NOT NULL REFERENCES Anomalias(slug),
             valor INTEGER,

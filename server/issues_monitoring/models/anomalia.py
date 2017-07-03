@@ -61,6 +61,7 @@ class Anomalia:
                    LEFT JOIN Equip e
                      ON e.equip_id = log.equip_id
                    WHERE log.lab_id = ?
+                         OR log.lab_id IS NULL
                          AND log.resolvido = ? {};""".format(
                              "AND r.data > ? AND r.data < ?"
                              if dia is not None else "")

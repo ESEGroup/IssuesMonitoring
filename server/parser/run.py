@@ -8,10 +8,13 @@ def work():
     from .lib.parse import parse_messages
 
     try:
-        from server.issues_monitoring.controllers import (registrar_presenca, registrar_log_parser)
+        from server.issues_monitoring.controllers import (registrar_presenca,
+                                                          registrar_log_parser,
+                                                          registrar_anomalia)
     except:
         from issues_monitoring.controllers import (registrar_presenca,
-                                                   registrar_log_parser)
+                                                   registrar_log_parser,
+                                                   registrar_anomalia)
 
     DEBUG              = Config.debug
     WAIT_FOR           = Config.parser_default_delay
@@ -32,6 +35,7 @@ def work():
         except OSError:
             log("Failed to connect with e-mail server to parse messages.")
             ids, messages = [], []
+            registrar_anomalia("imap")
         except NoMessages:
             debug("No e-mails to parse. Update wait_for time")
             ids, messages = [], []
