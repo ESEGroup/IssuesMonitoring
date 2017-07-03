@@ -194,20 +194,20 @@ class UsuarioLab(Usuario):
         return dia
 
     def obter_dado_presenca(hoje, amanha, lab_id):
-      data = db.fetchall("""
-                SELECT User_Lab.user_id, User_Lab.nome, User_Lab.email, Log_Presenca.data, Log_Presenca.evento
-                FROM Log_Presenca
-                INNER JOIN User_Lab ON Log_Presenca.user_id = User_Lab.user_id
-                WHERE Log_Presenca.lab_id = ? AND Log_Presenca.data >= ? AND Log_Presenca.data <= ?
-                ORDER BY nome ASC, data ASC""",
+        data = db.fetchall("""
+                SELECT u.user_id, u.nome, u.email, l.data, l.evento
+                FROM Log_Presenca l
+                INNER JOIN User_Lab u
+                  ON l.user_id = u.user_id
+                WHERE l.lab_id = ?
+                      AND l.data >= ?
+                      AND l.data <= ?
+                ORDER BY data DESC""",
                 (lab_id, hoje, amanha))
-      log_presenca = []
-      log_presenca_set = set()
-      for d in data:
-        if d[0] not in log_presenca_set:
-          log_presenca_set.add(d[0])
-        log_presenca += [UsuarioLab(*d[:-2], data_evento=d[-2], evento=d[-1])]
-      return log_presenca
+        log_presenca = []
+        for d in data:
+            log_presenca += [UsuarioLab(*d[:-2], data_evento=d[-2], evento=d[-1])]
+        return log_presenca
 
     def user_ids_registradas(user_ids):
         values = ', '.join("?" for i in user_ids)
