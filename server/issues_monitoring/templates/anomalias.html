@@ -5,7 +5,6 @@
 {% block header %}
 <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="/static/css/anomalias.css" />
 {% endblock %}
 
 {% block js %}
@@ -99,7 +98,7 @@
         {% endif %}
 
         {% if dia_anterior != proximo_dia %}
-        <div class="div-botao-estilizado">
+        <div class="div-botao-estilizado trocar-view-btn">
             {% if dia_anterior != dia %}
                 <a href="{{url_for('anomalias', id=lab_id, nome=lab_nome, dia=dia_anterior|format_dia_url, _anchor='resolvidas')}}" class="btn-estilizado btn-estilizado-blue">Dia anterior ({{dia_anterior|dia_mes_ano}})</a>
             {% endif %}
