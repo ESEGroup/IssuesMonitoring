@@ -789,49 +789,6 @@ def mostrar_relatorio_post(id, nome):
     return render_template('relatorio.html',
                            **kwargs)
 
-#presence: comes in the form of [[name, date, event], ...], event = IN/OUT
-def organizePresenceList(currentDayEpoch, presence):
-    presenceList = []
-    currentIndex = 0
-    currentlyPresent = False
-    timeUserArrived = 0
-    currentName = presence[0].nome#gets currentName
-    while(currentIndex < len(presence)):
-        # we're still talking about the same person
-        if(currentName==presence[currentIndex].nome):
-            #if the user just got in, save the time it got in
-            if(currentlyPresent == False and presence[currentIndex].evento=="IN"):
-                currentlyPresent = True
-                timeUserArrived= presence[currentIndex].data_evento
-
-            #OR, if the user was present but just got out, save in list that IN-OUT cycle
-            elif(currentlyPresent == True and presence[currentIndex].evento=="OUT"):
-                currentlyPresent = False
-                presenceList+= [[presence[currentIndex].nome, timeUserArrived,presence[currentIndex].data_evento]]
-
-
-            #else, it's just a repetition of IN or OUT, so ignore
-            #jump to next entry on list
-            currentIndex+=1
-
-        #the person we are talking about is now another one
-        else:
-            #before moving on, check if last person on list got out; if they didn't, they forgot to punch out, so we need to...
-            #say that they punched out at the end of the day
-            if currentlyPresent:
-                currentlyPresent = False
-                #write their last IN-OUT cycle
-                presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
-            currentName = presence[currentIndex].nome
-
-    #EXCEPTION: In case the last user only got in and didn't punch out, we need to make sure we get their last IN-OUT cycle
-    if currentlyPresent:
-        currentlyPresent = False
-        #write their last IN-OUT cycle
-        presenceList+= [[currentName, timeUserArrived,currentDayEpoch + 86399]]#TODO: maybe this needs to be epoch from end of that day?
-
-    return presenceList
-
 @app.route('/anomalias/<id>/<nome>/')
 def anomalias_hoje(id, nome):
     if not autenticado():
