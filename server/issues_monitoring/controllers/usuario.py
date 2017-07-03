@@ -95,3 +95,6 @@ def data_evento_anterior_mydenox(lab_id, dia):
 
 def log_usuario(hoje, amanha, lab_id):
     return UsuarioLab.obter_dado_presenca(hoje, amanha, lab_id)
+
+def adicionar_usuario_lab(lab_id, user_id):
+    UsuarioLab.adicionar_ao_laboratorio(lab_id, user_id)
