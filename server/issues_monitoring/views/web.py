@@ -663,7 +663,7 @@ def mostrar_grafico_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     chart_type = request.form.get("chart_type") or ''
-    chart_target = request.form.get("equipamento") or 'laboratorio'
+    chart_target = request.form.get("target")
     date = request.form.get("daterange") or ''
     dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
