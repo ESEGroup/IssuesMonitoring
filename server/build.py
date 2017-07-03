@@ -6,6 +6,10 @@ from os.path import join, isfile
 from subprocess import Popen, DEVNULL
 from db.create_db import work as create_db
 
+Popen(["mkdir",
+       "issues_monitoring/reports"],
+       stderr=DEVNULL).wait()
+
 Popen(["virtualenv",
        "-p",
        "python3",
@@ -31,7 +35,8 @@ import bcrypt
 
 if not isfile("db/Issues.db"):
     Popen(["rm",
-           "Issues.db"]).wait() 
+           "Issues.db"],
+           stderr=DEVNULL).wait() 
     create_db()
     Popen(["mv",
            "Issues.db",

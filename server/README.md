@@ -10,11 +10,11 @@ HTTPS:
 
 `git clone https://github.com/ESEGroup/IssuesMonitoring.git`
 
-## Install python 3 and virtualenv
+## Install python 3, virtualenv and [wkhtmltopdf](https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf), xvfb
 
 Ubuntu:
 
-`sudo apt-get install python3 python3-pip virtualenv`
+`sudo apt-get install python3 python3-pip wkhtmltopdf xvfb virtualenv`
 
 ## Run build script
 

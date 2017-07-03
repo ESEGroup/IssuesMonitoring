@@ -1,0 +1,25 @@
+#curve-chart {
+    align-content: center;
+    border-bottom: solid white 20px;
+}
+
+.datepicker-class {
+    vertical-align: text-top;
+    margin-left: 12px;
+    margin-right: 12px;
+    display: inline-block !important;
+}
+
+.date-tools {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    position: relative;
+    left: 15px;
+}
+
+.shrink-div {
+    -webkit-transform:scale(0.9);
+    -moz-transform:scale(0.9);
+    -ms-transform:scale(0.9);
+    transform:scale(0.9);
+}

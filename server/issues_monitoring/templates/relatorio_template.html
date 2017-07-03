@@ -1,0 +1,183 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+        <title>Issues Monitoring</title>
+    <style>
+    .error-msg, .success-msg, .msg{
+        max-width: 520px;
+        padding: 10px 20px;
+        margin: 0 auto;
+        margin-top: -12px;
+        margin-bottom: 16px;
+        line-height: 120%;
+    }
+    .ui-state-warning {
+        border: 1px solid #aeb906;
+        background-color: #fbffb6;
+        color: #727e00;
+    }
+
+    .ui-icon {
+        color: #085c04;
+    }
+
+    .ui-state-warning .ui-icon {
+        background-image: url("{{path}}/static/jquery-ui/images/ui-icons_777620_256x240.png") !important;
+    }
+    .page-title h3 {
+        color: #4286f4;
+        font-size: 36px;
+        font-weight: 400;
+        font-style: normal;
+        font-family: "Roboto", helvetica, arial, sans-serif;
+        text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .page-title h4 {
+        position: relative;
+        bottom: 30px;
+        margin-bottom: 2px;
+        color: #4286f4;
+        font-size: 18px;
+        font-weight: 400;
+        font-style: normal;
+        font-family: "Roboto", helvetica, arial, sans-serif;
+        text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    </style>
+    </head>
+
+    <body>
+        <div class="page-title">
+            <h3>Relatório dos Eventos</h3>
+            <h4>{{lab_nome}}</h4>
+        </div>
+        <div>
+            <h3 style="text-align: center">Usuários Presentes</h3>
+            {% if usuarios_presentes|len > 0 %}
+            <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">E-mail</th>
+                        <th class="text-center">Hora de Entrada</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    {% for usuario in usuarios_presentes %}
+                    <tr>
+                        <td class="text-center" title="{{usuario.user_id}}">{{usuario.nome}}</td>
+                        <td class="text-center">{{usuario.email}}</td>
+                        <td class="text-center">{{usuario.data_entrada|hora_min}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="ui-widget msg">
+                <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                    Não há membros presentes neste momento.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <h3 style="text-align: center">Log de Presença</h3>
+            {% if eventos|len > 0 %}
+            <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Evento</th>
+                        <th class="text-center">Data</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    {% for evento in eventos %}
+                    <tr>
+                        <td class="text-center" title="{{evento.user_id}}">{{evento.nome}}</td>
+                        <td class="text-center">{{evento.evento|trans_evento}}</td>
+                        <td class="text-center">{{evento.data_evento|data}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="ui-widget msg">
+                <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                    Não há eventos registrados no sistema.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div>
+            <h3 style="text-align: center">Condições de ambiente do laboratório</h3>    
+            {% if condicoes_ambiente_lab|len > 0 %}
+            <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th class="text-left">Data</th>
+                        <th class="text-left">Temperatura</th>
+                        <th class="text-left">Umidade</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    {% for cond in condicoes_ambiente_lab %}
+                    <tr>
+                        <td class="text-left">{{cond[0]|data}}</td>
+                        <td class="text-left">{{cond[1]}}ºC</td>
+                        <td class="text-left">{{cond[2]}}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="ui-widget msg">
+                <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                    Não há eventos registrados no sistema.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            {% if condicoes_ambiente_equip|len > 0 %}
+            {% for key, value in condicoes_ambiente_equip.items() %}
+              <h3 style="text-align: center">Condições de ambiente do equipamento {{nome_equips[key]}}</h3>
+              {% if value|len > 0 %}
+              <table class="table-fill">
+                  <thead>
+                      <tr>
+                          <th class="text-left">Data</th>
+                          <th class="text-left">Temperatura</th>
+                      </tr>
+                  </thead>
+                  <tbody class="table-hover">
+                      {% for cond in value %}
+                      <tr>
+                          <td class="text-left">{{cond[0]|data}}</td>
+                          <td class="text-left">{{cond[1]}}ºC</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              {% else %}
+              <div class="ui-widget msg">
+                  <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                      <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                      Não há eventos registrados no sistema.</p>
+                  </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+            {% endif %}    
+        </div>
+    </body>
+</html>

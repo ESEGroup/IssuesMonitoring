@@ -13,7 +13,7 @@
 <script src="/static/js/switch_view.js"></script>
 <script src="/static/js/aprovar.js"></script>
 <script src="/static/js/ajax.js"></script>
-<script src="/static/js/lista_membros.js"></script>
+<script src="/static/js/gerenciar_usuarios.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -31,6 +31,7 @@
                     <th class="text-center">Nome</th>
                     <th class="text-center">E-mail</th>
                     <th class="text-center">Autorizado</th>
+                    <th class="text-center">Alterar</th>
                     <th class="text-center">Excluir</th>
                 </tr>
             </thead>
@@ -46,6 +47,13 @@
                         </label>
                     </td>
                     <td class="text-center">
+                        <input data-url = "{{url_for('alterar_usuario_lab', lab_id=lab_id, lab_nome=lab_nome,id=usuario.user_id)}}"
+                                data-nome="{{usuario.nome}}"
+                                type="image" src = "/static/img/pencil.png"
+                                alt="Alterar" class="delete-table-opt alter-btn">
+                    </td>
+
+                    <td class="text-center">
                         <input data-url="{{url_for('remover_usuario_lab', lab_id=lab_id, lab_nome=lab_nome, id=usuario.user_id)}}"
                                data-nome="{{usuario.nome}}"
                                type="image" src="/static/img/delete.png"
@@ -55,6 +63,10 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <div class="div-botao-estilizado div-btn-below">
+            <a id="salvar" href="#" class="btn-estilizado btn-estilizado-blue">Salvar</a>
+        </div>
         {% else %}
         <div class="ui-widget msg">
             <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
@@ -65,9 +77,9 @@
         {% endif %}
 
         <div class="div-botao-estilizado trocar-view-btn">
-            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Associar Usuário de Laboratório Existente</a>
+            <a href="#associar" class="btn-estilizado btn-estilizado-blue" id="switch-view-reload">Associar Usuário ao Laboratório Existente</a>
         </div>
-        
+
         <div class="div-botao-estilizado div-btn-below">
             <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar ao Laboratório</a>
         </div>
@@ -76,7 +88,7 @@
     <div anchor="associar" id="view2" style="display:none">
 
         <div class="page-title">
-            <h3>Associar Usuário de Laboratório</h3>
+            <h3>Associar Usuário ao Laboratório</h3>
             <h4>{{lab_nome}}</h4>
         </div>
 
@@ -91,7 +103,7 @@
                             {% for usuario in usuarios %}
                             <option value="{{usuario.user_id}}">{{usuario.nome}}</option>
                             {% endfor %}
-                        </optgroup>    
+                        </optgroup>
                     </select>
                 </fieldset>
                 <input type="submit" value="Associar Usuário do Laboratório" />
@@ -105,7 +117,7 @@
             </div>
         </div>
         {% endif %}
-        
+
         <div class="div-botao-estilizado trocar-view-btn">
             <a href="#" class="btn-estilizado btn-estilizado-blue" id="switch-back-reload">Ver Usuários do Laboratório Associados</a>
         </div>

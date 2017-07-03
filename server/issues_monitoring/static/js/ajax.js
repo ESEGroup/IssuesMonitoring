@@ -32,3 +32,21 @@ function ajax(url) {
     xml_http.open("POST", url, true);
     xml_http.send();
 }
+function ajax_get(url) {
+    var xml_http = new XMLHttpRequest();
+
+    xml_http.onreadystatechange = function() {
+        var READY = 4,
+            OK = 200;
+        
+        if (this.readyState === READY && this.status === OK) {
+            window.history.pushState('', '', this.responseURL);
+            location.reload();
+        } else if (this.status >= 500) {
+            location.reload();
+        }
+    };
+
+    xml_http.open("GET", url, true);
+    xml_http.send();
+}

@@ -12,7 +12,7 @@
     <div id = "escolher-lab">
 
         <div class="page-title">
-            <h3>{{laboratorio.nome}}</h3>
+            <h3>{{laboratorio.nome}} (id: {{laboratorio.id}})</h3>
         </div>
 
         <div class="lab-container">
@@ -54,7 +54,7 @@
             </span>
             
             <span class="lab-item">
-                <a href="{{url_for('anomalias', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/anomalia.png) no-repeat top; background-size: 130px 130px; background-position: 51% 17%;"><span class="lab-txt">Anomalias Registradas no Sistema</span></a>
+                <a href="{{url_for('anomalias_hoje', id=laboratorio.id, nome=laboratorio.nome)}}" class="lab-btn btn-blue" style="background: url(/static/img/anomalia.png) no-repeat top; background-size: 130px 130px; background-position: 51% 17%;"><span class="lab-txt">Anomalias Registradas no Sistema</span></a>
             </span>
             
         </div>

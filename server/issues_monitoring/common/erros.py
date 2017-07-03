@@ -3,3 +3,6 @@ class NaoAutorizado(Exception):
 
 class InformacoesIncorretas(Exception):
     pass
+
+class UsuarioLabJaCadastrado(Exception):
+    pass
