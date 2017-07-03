@@ -13,7 +13,6 @@ from .usuario_sistema import UsuarioSistema
 from .administrador_sistema import AdministradorSistema
 
 from .medida import Medida_Equip, Medida_Lab
-from .check_condicoes import *
 
 from .anomalia import Anomalia
 

@@ -17,6 +17,7 @@ def not_found_error(error):
 @app.errorhandler(Exception)
 @app.errorhandler(500)
 def server_error(error):
+    print(error)
     if Config.debug:
         raise error
     return render_template("500.html",

@@ -18,7 +18,7 @@
 <script src="/static/js/grafico.js"></script>
 {% if data|len > 0 %}
 <script>
-    drawIssuesChart({{data|safe}});
+    drawIssuesChart({{data|safe}}, "{{chart_title}}");
 </script>
 {% endif %}
 {% endblock %}
@@ -50,7 +50,7 @@
                     
                     
                     <div class="hidden-select hidden shrink-div">
-                        <select id="select-equip">
+                        <select id="select-equip" name="target">
                             <optgroup label="Temperatura">
                                 <option value="laboratorio">Laboratório</option>
                                 {% for equipamento in equipamentos %}
@@ -86,9 +86,9 @@
             <input type="submit" id="graphic" value="Gerar Gráfico" />
 
         </form>
+        <div id="curve-chart" style="display:none;"></div>
     </div>
 
-    <div id="curve-chart" style="display:none;"></div>
 
     {% if data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">

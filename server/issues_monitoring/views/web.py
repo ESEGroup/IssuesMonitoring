@@ -1,7 +1,6 @@
 from os import getcwd
 from os.path import join
-from flask          import render_template, request, redirect, url_for, session
-from flask          import send_file, current_app as app
+from flask          import render_template, request, redirect, url_for, session, make_response
 from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import (autenticado, admin_autenticado, hoje, agora,
@@ -9,6 +8,10 @@ from ..common.utils import (autenticado, admin_autenticado, hoje, agora,
 from ..             import app, Config, controllers
 import json
 import pdfkit
+
+class HeadlessPDFKit(pdfkit.PDFKit):
+    def command(self, path=None):
+        return ['xvfb-run', '--'] + super().command(path)
 
 @app.route('/')
 def root():
@@ -663,7 +666,7 @@ def mostrar_grafico_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     chart_type = request.form.get("chart_type") or ''
-    chart_target = request.form.get("equipamento") or 'laboratorio'
+    chart_target = request.form.get("target")
     date = request.form.get("daterange") or ''
     dates = date.split('-');
     intervalo_grafico = request.form.get("intervalo_grafico") or 60 #em min
@@ -681,6 +684,11 @@ def mostrar_grafico_post(id, nome):
     args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
     data = controllers.get_data_log(*args)
 
+    chart_type_dict = {"temperatura": "Temperatura",
+                        "umidade": "Umidade"}
+
+    chart_title = chart_type_dict[chart_type] + (" do equipamento" if chart_target != "laboratorio" else "")
+    
     if data == []:
         kwargs = {"e" : "Não existem dados para o período selecionado. Por favor, selecione outro período",
                   "id" : id,
@@ -704,6 +712,7 @@ def mostrar_grafico_post(id, nome):
                             pagina='mostrar_grafico',
                             autenticado=True,
                             lab_id=id,
+                            chart_title=chart_title,
                             lab_nome=nome,
                             data=result,
                             equipamentos=equipamentos,
@@ -731,7 +740,6 @@ def mostrar_relatorio_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     date = request.form.get("daterange") or ''
-    print(date)
     dates = date.split('-');
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
@@ -739,8 +747,7 @@ def mostrar_relatorio_post(id, nome):
 
     # tabela para log de temperatura e umidade
     args = [start_date_epoch, end_date_epoch, id]
-    lab_temp_umid = controllers.obter_dados_entre_tempos(*args)
-    print("lab temp e umid: ", lab_temp_umid)
+    lab_temp_umid = [[int(v[0]), int(v[1]), int(v[2])] for v in controllers.obter_dados_entre_tempos(*args)]
 
     # tabela de log de temperatura para equipamentos
     equipamentos = controllers.obter_ids_equipamentos(id)
@@ -748,7 +755,7 @@ def mostrar_relatorio_post(id, nome):
     for equipamento in equipamentos:
         args = [start_date_epoch, end_date_epoch, equipamento]
         equip_temp_umid = controllers.obter_dados_entre_tempos_equip(*args)
-        equip_dict[equipamento] = equip_temp_umid
+        equip_dict[equipamento] = [[int(v[0]), int(v[1])] for v in equip_temp_umid]
 
     nome_equips = controllers.obter_nome_equipamentos(id)
 
@@ -761,11 +768,8 @@ def mostrar_relatorio_post(id, nome):
 
     kwargs = {
               "lab_id": id,
-              "path": join(getcwd(), "issues_monitoring"),
               "lab_nome": nome,
-              "autenticado": True,
-              "admin": admin_autenticado(),
-              "pagina": 'mostrar_relatorio',
+              "path": join(getcwd(), "issues_monitoring"),
               "usuarios_presentes": presentes_list,
               "eventos": log_presenca_lista,
               "nome_equips": nome_equips,
@@ -777,8 +781,11 @@ def mostrar_relatorio_post(id, nome):
     css = './issues_monitoring/static/css/table.css'
     name = random_string(20)
     kwargs["nome_pdf"] = name
-    pdf_report = pdfkit.from_string(page, './issues_monitoring/reports/{}.pdf'.format(name), css=css)
-
+    pdf_path = './issues_monitoring/reports/{}.pdf'.format(name)
+    pdf_report = HeadlessPDFKit(page,
+                                'string',
+                                css=css,
+                                cover_first=False).to_pdf(pdf_path)
     return render_template('relatorio.html',
                            **kwargs)
 
@@ -905,4 +912,8 @@ def relatorio_pdf(nome):
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
-    return send_file('reports/{}.pdf'.format(nome))
+    with open(join('issues_monitoring', 'reports', '{}.pdf'.format(nome)), 'rb') as f:
+        response = make_response(f.read())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = 'inline; filename={}.pdf'.format(nome)
+        return response

@@ -46,15 +46,15 @@ while(True):
     else:
         sensacao_termica = random.gauss(23, 1)
 
-    #equipamento 1
+    #equipamento 5
     #pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
     equipamento1['temperatura'] = random.gauss(30, 1)
-    equipamento1['id'] = 2
+    equipamento1['id'] = 5
 
     #equipamento 2
     #pode passar de 55 graus (que eh a temperatura em que a maquina deve ser desligada)
     equipamento2['temperatura'] = random.gauss(20,1)
-    equipamento2['id'] = 4
+    equipamento2['id'] = 6
 
     r = requests.post("http://" + sys.argv[1], json={"MAC":"AB:BB:CC:DD:EE","lab_id":1,"dados":[{"luz":luz,"umidade":umidade,"sensacao_termica":sensacao_termica,"equipamentos":[equipamento1,equipamento2]}]})
     print("Medidas:\nSensação Térmica: {}\nEquipamento1:{}\nEquipamento2:{}\n".format(sensacao_termica, equipamento1['temperatura'], equipamento2['temperatura']))

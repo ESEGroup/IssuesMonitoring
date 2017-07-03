@@ -5,8 +5,13 @@ app.jinja_env.filters["existe"] = lambda x: x is not None
 app.jinja_env.filters["len"] = len
 app.jinja_env.filters["enumerate"] = enumerate
 app.jinja_env.filters["bool"] = lambda b: {True: "Sim", False: "Não"}.get(b, "-")
-app.jinja_env.filters["vazio"] = lambda texto: "-" if texto is None else texto
 app.jinja_env.filters["trans_evento"] = lambda evento: {"IN": "Entrada", "OUT": "Saída"}[evento.upper()]
+
+@app.template_filter("vazio")
+def vazio(texto):
+    if type(texto) not in [str, int]:
+        return "-"
+    return "-" if texto in [None, ""] else texto
 
 @app.template_filter("max_len20")
 def max_len20(text):
