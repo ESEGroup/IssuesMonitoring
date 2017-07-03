@@ -87,6 +87,8 @@ function drawIssuesChart(mydata, type){
 
         var options = {
             title:'Gráfico - ' + type,
+            width: 680,
+            height: 300,
             curveType:'function',
             lineWidth: 4,
             series: [{'color': '#D3362D'}],

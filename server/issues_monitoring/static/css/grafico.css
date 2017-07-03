@@ -1,7 +1,6 @@
 #curve-chart {
-    width: 900px;
-    height: 500px;
     align-content: center;
+    border-bottom: solid white 20px;
 }
 
 .datepicker-class {
