@@ -1,6 +1,7 @@
-from os import getcwd
+from os import getcwd, stat
 from os.path import join
-from flask          import render_template, request, redirect, url_for, session, make_response
+from flask          import render_template, request, redirect, url_for, session, Response
+from werkzeug.datastructures import Headers
 from datetime       import datetime, timedelta
 from ..common.erros import NaoAutorizado, InformacoesIncorretas
 from ..common.utils import (autenticado, admin_autenticado, hoje, agora,
@@ -780,7 +781,7 @@ def mostrar_relatorio_post(id, nome):
 
     css = './issues_monitoring/static/css/table.css'
     name = random_string(20)
-    kwargs["nome_pdf"] = name
+    kwargs["nome_pdf"] = '{}.pdf'.format(name)
     pdf_path = './issues_monitoring/reports/{}.pdf'.format(name)
     pdf_report = HeadlessPDFKit(page,
                                 'string',
@@ -863,14 +864,25 @@ def acao(id, nome):
                             nome=nome))
 
 
-@app.route('/relatorio/<nome>')
+@app.route('/relatorio/<nome>.pdf')
 def relatorio_pdf(nome):
     if not autenticado():
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
-    with open(join('issues_monitoring', 'reports', '{}.pdf'.format(nome)), 'rb') as f:
-        response = make_response(f.read())
-        response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = 'inline; filename={}.pdf'.format(nome)
-        return response
+    path = join('issues_monitoring', 'reports', '{}.pdf'.format(nome))
+    def stream():
+        with open(path, 'rb') as f:
+            while True:
+                piece = f.read(1024)
+                if not piece:
+                    break
+                yield piece
+
+
+    header = Headers()
+    header.add('Content-Disposition', 'inline', filename="Relatorio.pdf")
+    header.add('Content-Type', 'application/pdf; charset=utf-8')
+    header.add('Content-Length', '{}'.format(stat(path).st_size))
+    return Response(stream(),
+                    headers=header)

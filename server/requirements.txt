@@ -1,4 +1,5 @@
 flask
 bcrypt
 gunicorn
+gevent
 pdfkit
