@@ -15,6 +15,7 @@ def registrar_medidas(j):
         print("MAC não encontrado no JSON")
         return False
     except:
+        raise
         print("Erro não esperado")
         return False
 
@@ -42,15 +43,11 @@ def listar_todos_mac_arduino():
     mac_arduinos = []
 
     for a in data:
-        mac_arduinos += [a[5]]
+        mac_arduinos += [a.MAC]
     return str(mac_arduinos)
 
 def listar_todos_arduinos():
-    data         = Arduino.obter_todos()
-    arduinos     = []
-    for a in data:
-        arduinos += [Arduino(*a)]
-    return arduinos
+    return Arduino.obter_todos()
 
 def listar_arduinos_laboratorio(lab_id):
     return Arduino.obter_do_lab(lab_id)

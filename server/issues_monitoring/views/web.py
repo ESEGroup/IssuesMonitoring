@@ -741,7 +741,6 @@ def mostrar_relatorio_post(id, nome):
         return redirect(url_for('login', **kwargs))
 
     date = request.form.get("daterange") or ''
-    print(date)
     dates = date.split('-');
 
     start_date_epoch = int(datetime.strptime(dates[0], "%d/%m/%Y %H:%M:%S ").timestamp())
@@ -750,7 +749,6 @@ def mostrar_relatorio_post(id, nome):
     # tabela para log de temperatura e umidade
     args = [start_date_epoch, end_date_epoch, id]
     lab_temp_umid = controllers.obter_dados_entre_tempos(*args)
-    print("lab temp e umid: ", lab_temp_umid)
 
     # tabela de log de temperatura para equipamentos
     equipamentos = controllers.obter_ids_equipamentos(id)

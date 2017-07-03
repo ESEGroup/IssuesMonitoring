@@ -90,7 +90,6 @@ Pedimos que procure uma solução quanto a isso.
             temp_limite = zona_conforto.temp_max
 
         id, nao_repetida = Anomalia.nao_repetida(slug, anti_slug)
-        print(id, nao_repetida)
         if nao_repetida:
             Anomalia.registrar_anomalia(lab_id, slug, int(temperatura), temp_limite)
             send_email(subject, msg_content, emails)
