@@ -681,6 +681,11 @@ def mostrar_grafico_post(id, nome):
     args = [chart_type, chart_target, start_date_epoch, end_date_epoch, id]
     data = controllers.get_data_log(*args)
 
+    chart_type_dict = {"temperatura": "Temperatura",
+                        "umidade": "Umidade"}
+
+    chart_title = chart_type_dict[chart_type] + (" do equipamento" if chart_target != "laboratorio" else "")
+    
     if data == []:
         kwargs = {"e" : "Não existem dados para o período selecionado. Por favor, selecione outro período",
                   "id" : id,
@@ -704,6 +709,7 @@ def mostrar_grafico_post(id, nome):
                             pagina='mostrar_grafico',
                             autenticado=True,
                             lab_id=id,
+                            chart_title=chart_title,
                             lab_nome=nome,
                             data=result,
                             equipamentos=equipamentos,

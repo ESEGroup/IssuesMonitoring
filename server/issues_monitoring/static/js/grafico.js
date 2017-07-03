@@ -73,20 +73,20 @@ $(function() {
 
 });
 
-function drawIssuesChart(mydata){
+function drawIssuesChart(mydata, type){
 
     function drawChart() {
         $(".curve-chart").slideToggle(300);
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'index');
-        data.addColumn('number', 'mean');
+        data.addColumn('number', 'Média');
         data.addColumn({id: 'min', type:'number', role: 'interval'});
         data.addColumn({id: 'max', type:'number', role: 'interval'});
 
         data.addRows(mydata);
 
         var options = {
-            title:'Gráfico',
+            title:'Gráfico - ' + type,
             curveType:'function',
             lineWidth: 4,
             series: [{'color': '#D3362D'}],

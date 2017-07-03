@@ -18,7 +18,7 @@
 <script src="/static/js/grafico.js"></script>
 {% if data|len > 0 %}
 <script>
-    drawIssuesChart({{data|safe}});
+    drawIssuesChart({{data|safe}}, "{{chart_title}}");
 </script>
 {% endif %}
 {% endblock %}
@@ -86,9 +86,9 @@
             <input type="submit" id="graphic" value="Gerar Gráfico" />
 
         </form>
+        <div id="curve-chart" style="display:none;"></div>
     </div>
 
-    <div id="curve-chart" style="display:none;"></div>
 
     {% if data|len < 0%}
     <div class="ui-widget msg" id="warning-chart" style="display: hidden;">

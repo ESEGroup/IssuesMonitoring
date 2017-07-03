@@ -71,5 +71,4 @@ def get_interval_means(interval, array_of_epochs, epoch_beginning, epoch_ending)
                                          datetime.fromtimestamp(interval_dict[i][1]).strftime("%d/%m/%Y %H:%M"))
         result += [[label, mean_interval, min_interval, max_interval]]
 
-    print(result)
     return result
