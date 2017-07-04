@@ -3,6 +3,11 @@ $(document).ready(function(){
     $('input[type=radio][name=chart_type]').change(function() {
         $(".hidden-select").slideToggle(300);
     });
+    
+    //Tira a mensagem de erro do historico:
+    var path = location.pathname;
+    path = location.pathname.split("?")[0]
+    window.history.pushState('', '', path);
 });
 
 //JS para o slider de handle unico:
@@ -56,7 +61,7 @@ $(function() {
     $('#datepicker-end').datetimepicker(datetimepickerInit);
 
 
-    //Inicializa o campo daterange com o intervalo entre hoje e amanha:    
+    //Inicializa o campo daterange com o intervalo entre hoje e amanha:
     var date = new Date();
     var today_string = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
     //Adiciona uma unidade do dia:
@@ -67,11 +72,32 @@ $(function() {
     //Une os dois valores:
     $('#daterange').val( $('#start-date').val() + " - " + $('#end-date').val() );
 
-
-
 });
 
-function drawIssuesChart(mydata, type){
+function showModal()
+{
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    modal.style.display = "block";
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}
+
+function drawIssuesChart(mydata, title){
 
     function drawChart() {
         $(".curve-chart").slideToggle(300);
@@ -84,14 +110,13 @@ function drawIssuesChart(mydata, type){
         data.addRows(mydata);
 
         var options = {
-            title:'Gráfico - ' + type,
-            width: 680,
-            height: 300,
+            title:'Gráfico - ' + title,
+            height: 600,
             curveType:'function',
             lineWidth: 4,
             series: [{'color': '#D3362D'}],
             intervals: { 'lineWidth':2, 'barWidth': 0.5 },
-            legend: 'none',
+            legend: 'none'
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('curve-chart'));

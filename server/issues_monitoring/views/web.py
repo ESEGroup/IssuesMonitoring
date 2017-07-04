@@ -692,7 +692,10 @@ def mostrar_grafico_post(id, nome):
                         "umidade": "Umidade"}
 
     chart_title = chart_type_dict[chart_type] + (" do equipamento" if chart_target != "laboratorio" else "")
-    
+
+    chart_title += " - Período: {} a {}".format(datetime.fromtimestamp(start_date_epoch).strftime("%d/%m/%y %H:%M"),
+                                                datetime.fromtimestamp(end_date_epoch).strftime("%d/%m/%y %H:%M"))
+
     if data == []:
         kwargs = {"e" : "Não existem dados para o período selecionado. Por favor, selecione outro período",
                   "id" : id,

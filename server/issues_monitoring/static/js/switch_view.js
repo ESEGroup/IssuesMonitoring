@@ -10,11 +10,17 @@ function show_view() {
 
 $(document).ready(function(){
     $("#switch-view-reload").click(function(){
+        var path = location.pathname;
+        path = location.pathname.split("?")[0]
+        window.history.pushState('', '', path);
         var anchor = document.getElementById("view2");
         location.hash = "#" + anchor.getAttribute("anchor");
         location.reload();
     });
     $("#switch-back-reload").click(function(){
+        var path = location.pathname;
+        path = location.pathname.split("?")[0]
+        window.history.pushState('', '', path);
         location.hash = "";
         location.reload();
     });
