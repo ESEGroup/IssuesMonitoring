@@ -11,10 +11,15 @@
 
 <body>
     <ul class="nav-bar-ul">
-        {% if pagina != "login" %}
+        {% if autenticado %}
         <li class="nav-bar-li">
             <a class="nav-bar-li-link {% if pagina in ['laboratorios', 'gerenciar'] %}active{% endif %}"
                href="{{url_for('laboratorios')}}">Laboratório</a>
+        </li>
+        {% else %}
+        <li class="nav-bar-li">
+            <a class="nav-bar-li-link {% if pagina == 'login' %}active{% endif %}"
+               href="{{url_for('login')}}">Acesso ao sistema</a>
         </li>
         {% endif %}
 
