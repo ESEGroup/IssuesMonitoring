@@ -38,4 +38,4 @@ def arduino_get():
             return "-2"
         except KeyError:
             pass
-    return controllers.listar_todos_mac_arduino()
+    return "OK" 
