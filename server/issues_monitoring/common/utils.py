@@ -67,8 +67,7 @@ def get_interval_means(interval, array_of_epochs, epoch_beginning, epoch_ending)
         mean_interval = float(sum_interval)/len(data_values)
         max_interval  = max(data_values)
         min_interval  = min(data_values)
-        label         = "{} - {}".format(datetime.fromtimestamp(interval_dict[i][0]).strftime("%d/%m/%Y %H:%M"),
-                                         datetime.fromtimestamp(interval_dict[i][1]).strftime("%d/%m/%Y %H:%M"))
+        label         = "{} - {}".format(datetime.fromtimestamp(interval_dict[i][0]).strftime("%d/%m/%y %H:%M"), datetime.fromtimestamp(interval_dict[i][1]).strftime("%d/%m/%y %H:%M"))
         result += [[label, mean_interval, min_interval, max_interval]]
 
     return result
