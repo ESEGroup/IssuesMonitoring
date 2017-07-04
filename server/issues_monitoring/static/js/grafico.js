@@ -56,18 +56,16 @@ $(function() {
     $('#datepicker-end').datetimepicker(datetimepickerInit);
 
 
-    //Inicializa o campo daterange com o intervalo entre hoje e ontem:
+    //Inicializa o campo daterange com o intervalo entre hoje e amanha:    
     var date = new Date();
     var today_string = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
-    //Subtrai uma unidade do dia:
-    date.setDate(date.getDate() - 1);
-    var yesterday_string = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
-    $('#start-date').val(yesterday_string + ' 00:00:00')
-    $('#end-date').val(today_string + ' 00:00:00')
+    //Adiciona uma unidade do dia:
+    date.setDate(date.getDate() + 1);
+    var tomorrow_string = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
+    $('#start-date').val(today_string + ' 00:00:00')
+    $('#end-date').val(tomorrow_string + ' 00:00:00')
     //Une os dois valores:
     $('#daterange').val( $('#start-date').val() + " - " + $('#end-date').val() );
-    //Inicializa o date-picker de ontem:
-    $("#datepicker-start").datetimepicker({ defaultDate: -1 });
 
 
 

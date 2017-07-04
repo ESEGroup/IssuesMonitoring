@@ -1,6 +1,9 @@
 //JS para o toggle entre uma view e outra:
 
 function show_view() {
+    //Esconde mensagens de erro/sucesso/aviso:
+    $(".js-message").css("display", "none");
+    //Troca a view:
     $("#view1").toggle(400);
     $("#view2").toggle(400);
 }

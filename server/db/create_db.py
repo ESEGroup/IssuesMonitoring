@@ -34,7 +34,7 @@ def work():
     CREATE TABLE Log_Lab(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            lab_id INTEGER REFERENCES Lab(lab_id),
+            lab_id NOT NULL INTEGER REFERENCES Lab(lab_id),
             temp FLOAT NOT NULL,
             umid FLOAT NOT NULL,
             lum BOOLEAN NOT NULL);
@@ -82,7 +82,7 @@ def work():
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
             user_id CHAR(4) NOT NULL REFERENCES User_Labs(user_id),
-            lab_id INTEGER REFERENCES Lab(lab_id),
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             evento CHAR(3) NOT NULL);
     """)
 
@@ -107,20 +107,20 @@ def work():
     CREATE TABLE Log_MyDenox(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            evento CHAR(255));
+            evento CHAR(255) NOT NULL,
+            slug CHAR(255) NOT NULL);
     """)
 
     cursor.execute("""
     CREATE TABLE Sistema(
-            ultima_analise INT NOT NULL,
-            intervalo_parser INT NOT NULL,
-            intervalo_arduino INT NOT NULL);
+            ultima_analise INTEGER NOT NULL,
+            intervalo_parser INTEGER NOT NULL);
     """)
 
     cursor.execute("""
     INSERT INTO Sistema
-    (ultima_analise, intervalo_parser, intervalo_arduino)
-    VALUES (0, 3, 3);
+    (ultima_analise, intervalo_parser)
+    VALUES (0, 3);
     """)
 
     cursor.execute("""
@@ -141,13 +141,14 @@ def work():
      (4, "umid-max", "Umidade Acima", "Umidade {}% do laboratório acima do máximo da Zona de Conforto {}%"),
      (5, "temp-equip-min", "Temperatura de Equipamento Abaixo", "Temperatura {}ºC do Equipamento {} abaixo do mínimo da Zona de Conforto ({}ºC)"),
      (6, "temp-equip-max", "Temperatura de Equipamento Acima", "Temperatura {}ºC do Equipamento {} acima do máximo da Zona de Conforto ({}ºC)"),
-     (7, "luz", "Luz acesa sem pessoas presentes", "Luz do laboratório está acesa sem usuários presentes")])
+     (7, "luz", "Luz acesa sem pessoas presentes", "Luz do laboratório está acesa sem usuários presentes"),
+     (8, "imap", "Falha na conexão com servidor de e-mail", "Falha na comunicação com o servidor IMAP para ler os e-mails de registro de presença no laboratório")]) 
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
+            lab_id INTEGER REFERENCES Lab(lab_id),
             equip_id INTEGER,
             slug_anomalia CHAR(255) NOT NULL REFERENCES Anomalias(slug),
             valor INTEGER,

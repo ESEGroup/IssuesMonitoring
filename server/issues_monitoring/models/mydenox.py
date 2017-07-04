@@ -1,19 +1,20 @@
 from . import db
 
 class MyDenox:
-    def __init__(self, epoch, status):
+    def __init__(self, epoch, status, slug):
         self.ultima_atualizacao = epoch
         self.status = status
+        self.slug = slug
 
-    def log(epoch, status):
+    def log(epoch, status, slug):
         db.execute("""
             INSERT INTO Log_MyDenox
-            (data, evento)
-            VALUES (?, ?);""", (epoch, status))
+            (data, evento, slug)
+            VALUES (?, ?, ?);""", (epoch, status, slug))
 
     def ultima_atualizacao():
         data = db.fetchone("""
-            SELECT data, evento
+            SELECT data, evento, slug
             FROM Log_MyDenox
             ORDER by data DESC;""")
         if data is not None:

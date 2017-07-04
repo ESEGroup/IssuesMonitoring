@@ -4,17 +4,17 @@ from ..common.mail import send_email
 from ..models import (Laboratorio, Evento, UsuarioLab, MyDenox,
                       AdministradorSistema)
 
-def log_mydenox(epoch, message):
-    MyDenox.log(epoch, message)
+def log_mydenox(epoch, message, slug):
+    MyDenox.log(epoch, message, slug)
 
 def obter_intervalo_parser():
     return Laboratorio.obter_intervalo_parser()
 
-def registrar_presenca(dict_eventos):
-    if len(dict_eventos) > 0:
+def registrar_presenca(eventos_dict):
+    if len(eventos_dict) > 0:
         eventos = []
         user_ids = []
-        for e in dict_eventos:
+        for e in eventos_dict:
             try:
                 user_ids += [e['user_id']]
                 eventos += [Evento(e['epoch'],
