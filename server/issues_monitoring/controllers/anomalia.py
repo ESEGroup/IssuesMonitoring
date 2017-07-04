@@ -41,3 +41,7 @@ def data_proxima_anomalia_resolvida(lab_id, dia):
 
 def data_anomalia_resolvida_anterior(lab_id, dia):
     return Anomalia.data_resolvida_anterior(lab_id, dia)
+
+def registrar_anomalia(slug):
+    if Anomalia.nao_repetida(slug)[1]:
+        Anomalia.registrar_anomalia(None, slug)

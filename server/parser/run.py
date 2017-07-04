@@ -8,10 +8,13 @@ def work():
     from .lib.parse import parse_messages
 
     try:
-        from server.issues_monitoring.controllers import (registrar_presenca, registrar_log_parser)
+        from server.issues_monitoring.controllers import (registrar_presenca,
+                                                          registrar_log_parser,
+                                                          registrar_anomalia)
     except:
         from issues_monitoring.controllers import (registrar_presenca,
-                                                   registrar_log_parser)
+                                                   registrar_log_parser,
+                                                   registrar_anomalia)
 
     DEBUG              = Config.debug
     WAIT_FOR           = Config.parser_default_delay
@@ -32,6 +35,7 @@ def work():
         except OSError:
             log("Failed to connect with e-mail server to parse messages.")
             ids, messages = [], []
+            registrar_anomalia("imap")
         except NoMessages:
             debug("No e-mails to parse. Update wait_for time")
             ids, messages = [], []
@@ -39,26 +43,26 @@ def work():
             log("Unexpected Error.")
             ids, messages = [], []
 
-        if len(messages) > 0:
-            received_wait_for = -1
-            try:
-                data = parse_messages(messages)
-                received_wait_for = registrar_presenca(data)
-                debug("{} events registered.".format(len(data)))
-            except Exception as ex:
-                log("Unexpected Error.")
-                mark_as_unread(ids)
+        received_wait_for = -1
+        try:
+            data = parse_messages(messages)
+            received_wait_for = registrar_presenca(data)
+            debug("{} events registered.".format(len(data)))
+        except:
+            raise
+            log("Unexpected Error.")
+            mark_as_unread(ids)
 
-            debug("Received {} (minutes) from the DB, "
-                  "to wait until next execution.".format(
-                  received_wait_for))
+        debug("Received {} (minutes) from the DB, "
+              "to wait until next execution.".format(
+              received_wait_for))
 
-            if 0 < received_wait_for <= MAX_WAITING_PERIOD:
-                wait_for = received_wait_for
-            else:
-                debug("Ignoring {} as it's not between 1 and {}".format(
-                      received_wait_for,
-                      MAX_WAITING_PERIOD))
+        if 0 < received_wait_for <= MAX_WAITING_PERIOD:
+            wait_for = received_wait_for
+        else:
+            debug("Ignoring {} as it's not between 1 and {}".format(
+                  received_wait_for,
+                  MAX_WAITING_PERIOD))
 
         debug("Waiting for {} minutes before running again".format(
               wait_for))

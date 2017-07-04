@@ -372,7 +372,8 @@ def remover_usuario_lab(lab_id, lab_nome, id):
 @app.route('/aprovar-usuario-lab/<id>', methods=["POST"])
 def aprovar_usuario_lab(id):
     if not admin_autenticado():
-        return redirect(url_for('usuarios_laboratorio'))
+        return redirect(url_for('laboratorios',
+                                {"e": "Autorizaçã negada!"}))
 
     aprovar = request.form.get('aprovar') == 'true'
     controllers.aprovar_usuario_lab(id, aprovar)
@@ -510,6 +511,7 @@ def log_eventos(id, nome, dia):
     if not autenticado():
         return redirect(url_for('login'))
 
+    mydenox = controllers.ultima_atualizacao_mydenox()
     usuarios_presentes = controllers.usuarios_presentes(id)
 
     dia = int(datetime.strptime(dia, "%d-%m-%Y").timestamp())
@@ -528,6 +530,7 @@ def log_eventos(id, nome, dia):
                            admin=admin_autenticado(),
                            lab_id=id,
                            lab_nome=nome,
+                           mydenox=mydenox,
                            dia=dia)
 
 @app.route('/aprovar-usuario')
@@ -787,6 +790,9 @@ def mostrar_relatorio_post(id, nome):
                                 'string',
                                 css=css,
                                 cover_first=False).to_pdf(pdf_path)
+    kwargs["admin"] = admin_autenticado()
+    kwargs["autenticado"] = True
+    kwargs["pagina"] = "mostrar_relatorio"
     return render_template('relatorio.html',
                            **kwargs)
 

@@ -29,7 +29,8 @@ def parse_messages(messages):
 
             controllers.log_mydenox(
                     epoch,
-                    "Aviso de falta de energia (utilizando bateria interna)")
+                    "Aviso de falta de energia (utilizando bateria interna)",
+                    "bateria")
             continue
         except AttributeError:
             pass
@@ -43,7 +44,8 @@ def parse_messages(messages):
             epoch = dt.timestamp()
             controllers.log_mydenox(
                     epoch,
-                    "Aviso de falta de conexão com a Internet")
+                    "Aviso de falta de conexão com a Internet",
+                    "internet")
             continue
         except AttributeError:
             pass
@@ -74,7 +76,7 @@ def parse_messages(messages):
             _dict["lab_id"] = args[2]
 
         data += [_dict]
-        controllers.log_mydenox(epoch, "OK")
+        controllers.log_mydenox(epoch, "OK", "ok")
 
     debug("Messages parsed.")
     return data

@@ -115,7 +115,7 @@
 
     <div>
     {% if request.args.get('e') %}
-    <div class="ui-widget error-msg hidden">
+    <div class="ui-widget js-message error-msg hidden">
 	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Erro: </strong>{{request.args.get('e')}}</p>
@@ -124,7 +124,7 @@
     {% endif %}
 
     {% if request.args.get('w') %}
-    <div class="ui-widget msg hidden">
+    <div class="ui-widget js-message msg hidden">
 	    <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Aviso: </strong>{{request.args.get('w')}}</p>
@@ -133,7 +133,7 @@
     {% endif %}
 
     {% if request.args.get('c') %}
-    <div class="ui-widget success-msg hidden">
+    <div class="ui-widget js-message success-msg hidden">
 	    <div class="ui-state-success ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-circle-check" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Sucesso: </strong>{{request.args.get('c')}}</p>

@@ -88,3 +88,7 @@
 	font-size: 38px;
     text-shadow: 0 0 0.05em #87F, 0 0 0.03em #87F, 0 0 0.03em #87F;
 }
+
+#inner-title-text {
+    margin-bottom: -25px;
+}
