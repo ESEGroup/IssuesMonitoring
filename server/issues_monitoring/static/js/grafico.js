@@ -3,6 +3,11 @@ $(document).ready(function(){
     $('input[type=radio][name=chart_type]').change(function() {
         $(".hidden-select").slideToggle(300);
     });
+    
+    //Tira a mensagem de erro do historico:
+    var path = location.pathname;
+    path = location.pathname.split("?")[0]
+    window.history.pushState('', '', path);
 });
 
 //JS para o slider de handle unico:
