@@ -34,7 +34,7 @@ def work():
     CREATE TABLE Log_Lab(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            lab_id INTEGER REFERENCES Lab(lab_id),
+            lab_id NOT NULL INTEGER REFERENCES Lab(lab_id),
             temp FLOAT NOT NULL,
             umid FLOAT NOT NULL,
             lum BOOLEAN NOT NULL);
@@ -82,7 +82,7 @@ def work():
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
             user_id CHAR(4) NOT NULL REFERENCES User_Labs(user_id),
-            lab_id INTEGER REFERENCES Lab(lab_id),
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             evento CHAR(3) NOT NULL);
     """)
 
@@ -113,8 +113,8 @@ def work():
 
     cursor.execute("""
     CREATE TABLE Sistema(
-            ultima_analise INT NOT NULL,
-            intervalo_parser INT NOT NULL);
+            ultima_analise INTEGER NOT NULL,
+            intervalo_parser INTEGER NOT NULL);
     """)
 
     cursor.execute("""
