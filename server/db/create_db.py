@@ -142,7 +142,7 @@ def work():
      (5, "temp-equip-min", "Temperatura de Equipamento Abaixo", "Temperatura {}ºC do Equipamento {} abaixo do mínimo da Zona de Conforto ({}ºC)"),
      (6, "temp-equip-max", "Temperatura de Equipamento Acima", "Temperatura {}ºC do Equipamento {} acima do máximo da Zona de Conforto ({}ºC)"),
      (7, "luz", "Luz acesa sem pessoas presentes", "Luz do laboratório está acesa sem usuários presentes"),
-     (8, "imap", "Falha na conexão com servidor de e-mail", "Falha na comunicação com o servidor IMAP para ler os e-mails de registro de presença no laboratório"]) 
+     (8, "imap", "Falha na conexão com servidor de e-mail", "Falha na comunicação com o servidor IMAP para ler os e-mails de registro de presença no laboratório")]) 
 
     cursor.execute("""
     CREATE TABLE Log_Anomalias(

@@ -29,9 +29,11 @@
             </fieldset>
             <input type="submit" value="Alterar Senha" />
         </form>
-        <div class="div-botao-estilizado">
-            <a href="{{url_for('alterar_usuario_sistema', id=user_id)}}" class="btn-estilizado btn-estilizado-blue">Voltar</a>
-        </div>
     </div>
+    
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('alterar_usuario_sistema', id=user_id)}}" class="btn-estilizado btn-estilizado-blue">Voltar</a>
+    </div>
+    
 </div>
 {% endblock %}
