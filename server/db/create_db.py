@@ -34,7 +34,7 @@ def work():
     CREATE TABLE Log_Lab(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             data INTEGER NOT NULL,
-            lab_id NOT NULL INTEGER REFERENCES Lab(lab_id),
+            lab_id INTEGER NOT NULL REFERENCES Lab(lab_id),
             temp FLOAT NOT NULL,
             umid FLOAT NOT NULL,
             lum BOOLEAN NOT NULL);
