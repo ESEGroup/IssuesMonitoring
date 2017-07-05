@@ -240,16 +240,23 @@ def cadastro_post():
     nome = request.form.get('nome') or ''
     args = [login, senha, email, nome]
 
+    kwargs = {}
     if '' not in args:
         if not controllers.cadastro_usuario_sistema(login,
                                                     senha,
                                                     email,
                                                     nome):
-            kwargs = {"e": "Login ou e-mail já utilizados"}
+            kwargs["e"] = "Login ou e-mail já utilizados"
             return redirect(url_for("cadastro", **kwargs))
-    kwargs = {"c": "Usuário enviado para autorização!"}
-    return redirect(url_for('login', **kwargs))
+        else:
+            kwargs["c"] = "Usuário enviado para autorização!"
+    else:
+        kwargs["e"] = "Por favor preencha todos os campos"
 
+    if autenticado():
+        return redirect(url_for("cadastro", **kwargs))
+    else:
+        return redirect(url_for('login', **kwargs))
 
 @app.route('/alterar-usuario-sistema/<id>', methods=["GET", "POST"])
 def alterar_usuario_sistema(id):
@@ -805,11 +812,19 @@ def anomalias_hoje(id, nome):
         kwargs = {"e" : "Por favor, faça o login"}
         return redirect(url_for('login', **kwargs))
 
+    kwargs = {}
+    e = request.args.get('e')
+    if e is not None:
+        kwargs['e'] = e
+    c = request.args.get('c')
+    if c is not None:
+        kwargs['c'] = c
     _hoje = datetime.fromtimestamp(hoje()).strftime("%d-%m-%Y")
     return redirect(url_for('anomalias',
                             id=id,
                             nome=nome,
-                            dia=_hoje))
+                            dia=_hoje,
+                            **kwargs))
 
 @app.route('/anomalias/<id>/<nome>/<dia>')
 def anomalias(id, nome, dia):
@@ -867,10 +882,14 @@ def acao(id, nome):
                                                 descricao_acao,
                                                 tipo_anomalia,
                                                 user_id)
+        kwargs = {"c": "Anomalia resolvida com sucesso!"}
+    else:
+        kwargs = {"e": "Erro ao resolver anomalia!"}
 
     return redirect(url_for('anomalias_hoje',
                             id=id,
-                            nome=nome))
+                            nome=nome,
+                            **kwargs))
 
 
 @app.route('/relatorio/<nome>.pdf')
