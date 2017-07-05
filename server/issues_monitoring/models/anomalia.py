@@ -78,8 +78,8 @@ class Anomalia:
              slug_anomalia,
              0,
              equip_id,
-             valor,
-             valor_limite))
+             int(valor),
+             int(valor_limite)))
 
     def registrar_resolucao(id_log, descricao_acao, id_autor):
         db.execute("""
