@@ -43,7 +43,7 @@ class Anomalia:
             return Anomalia(*data)
 
     def obter_do_lab(lab_id, resolvido=False, dia=None):
-        args = [lab_id, resolvido]
+        args = [lab_id, int(resolvido)]
         if dia is not None:
             args += [dia, dia + 60 * 60 * 24]
         query = """SELECT a.tipo_anomalia, log.lab_id, a.descricao_anomalia,
@@ -60,11 +60,11 @@ class Anomalia:
                      ON u.user_id = r.autor
                    LEFT JOIN Equip e
                      ON e.equip_id = log.equip_id
-                   WHERE log.lab_id = ?
-                         OR log.lab_id IS NULL
-                         AND log.resolvido = ? {};""".format(
-                             "AND r.data > ? AND r.data < ?"
-                             if dia is not None else "")
+                   WHERE (log.lab_id = ?
+                          OR log.lab_id IS NULL)
+                          AND log.resolvido = ? {};""".format(
+                              "AND r.data > ? AND r.data < ?"
+                              if dia is not None else "")
         data = db.fetchall(query, args)
         return [Anomalia(*d) for d in data]
 
