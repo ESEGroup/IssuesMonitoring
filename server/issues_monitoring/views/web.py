@@ -380,7 +380,7 @@ def remover_usuario_lab(lab_id, lab_nome, id):
 def aprovar_usuario_lab(id):
     if not admin_autenticado():
         return redirect(url_for('laboratorios',
-                                {"e": "Autorizaçã negada!"}))
+                                {"e": "Autorização negada!"}))
 
     aprovar = request.form.get('aprovar') == 'true'
     controllers.aprovar_usuario_lab(id, aprovar)
