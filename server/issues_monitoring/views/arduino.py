@@ -10,6 +10,7 @@ def arduino():
     if j is not None:
         try:
             lab_id = j["lab_id"]
+            print(j)
             if (controllers.registrar_medidas(j)):
                 return str(Laboratorio.obter_intervalo_arduino(lab_id))
             else:
@@ -24,7 +25,7 @@ def arduino():
 
 @app.route('/arduino', methods=['GET'])
 def arduino_get():
-    json_str = request.args.get("json",None)
+    json_str = request.args.get("json", None)
     if json_str is not None:
         j = json.loads(json_str)
         try:
@@ -37,4 +38,4 @@ def arduino_get():
             return "-2"
         except KeyError:
             pass
-    return controllers.listar_todos_mac_arduino()
+    return "OK" 

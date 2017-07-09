@@ -3,7 +3,6 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 {% endblock %}
 
@@ -21,7 +20,7 @@
             <h3>Gerenciar Usuários do Sistema</h3>
             <h4>Os usuários do sistema cadastrados encontram-se abaixo.</h4>
         </div>
-        
+
         {% if usuarios|len > 0 %}
         <table class="table-fill">
             <thead>
@@ -30,6 +29,7 @@
                     <th class="text-center">E-mail</th>
                     <th class="text-center">Autorizado</th>
                     <th class="text-center">Administrador</th>
+                    <th class="text-center">Alterar</th>
                     <th class="text-center">Excluir</th>
                 </tr>
             </thead>
@@ -52,20 +52,38 @@
                             </label>
                         </td>
                         <td class="text-center">
+                            <input data-url="{{url_for('alterar_usuario_sistema', id=usuario.id)}}"
+                                   data-nome="{{usuario.nome}}"
+                                   type="image" src="/static/img/pencil.png"
+                                   alt="Alterar" class="delete-table-opt alter-btn">
+                        </td>
+                        <td class="text-center">
                             <input data-url="{{url_for('remover_usuario_sistema', id=usuario.id)}}"
                                    data-nome="{{usuario.nome}}"
                                    type="image" src="/static/img/delete.png"
                                    alt="Apagar" class="delete-table-opt delete-btn">
                         </td>
                     {% else %}
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="text-center one-word-per-line">-</td>
+                        <td class="text-center one-word-per-line">-</td>
+                        <td class="text-center">
+                            <input data-url="{{url_for('alterar_usuario_sistema', id=usuario.id)}}"
+                                   data-nome="{{usuario.nome}}"
+                                   type="image" src="/static/img/pencil.png"
+                                   alt="Alterar" class="delete-table-opt alter-btn">
+                        </td>
+                        <td class="text-center one-word-per-line">-</td>
                     {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        {% if (not (usuarios|len == 1 and usuarios[0] != session["id"])) %}
+        <div class="div-botao-estilizado trocar-view-btn">
+            <a id="salvar" href="#" class="btn-estilizado btn-estilizado-blue">Salvar</a>
+        </div>
+        {% endif %}
         {% else %}
         <div class="ui-widget msg">
             <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">

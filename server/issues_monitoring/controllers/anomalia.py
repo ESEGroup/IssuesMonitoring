@@ -7,6 +7,9 @@ def obter_anomalia(id):
 def obter_anomalias(lab_id):
     return Anomalia.obter_do_lab(lab_id)
 
+def obter_anomalias_resolvidas_dia(lab_id, dia):
+    return Anomalia.obter_do_lab(lab_id, True, dia)
+
 def resolver_anomalia(id_anomalia, descricao_acao, user_id):
     return Anomalia.registrar_resolucao(id_anomalia, descricao_acao,
                                         user_id)
@@ -32,3 +35,13 @@ def enviar_email_acao_realizada(lab_id, descricao_acao, tipo_anomalia, user_id):
                     tipo_anomalia,
                     descricao_acao)
     send_email(subject, msg_content, emails)
+
+def data_proxima_anomalia_resolvida(lab_id, dia):
+    return Anomalia.data_proxima_resolvida(lab_id, dia)
+
+def data_anomalia_resolvida_anterior(lab_id, dia):
+    return Anomalia.data_resolvida_anterior(lab_id, dia)
+
+def registrar_anomalia(slug):
+    if Anomalia.nao_repetida(slug)[1]:
+        Anomalia.registrar_anomalia(None, slug)

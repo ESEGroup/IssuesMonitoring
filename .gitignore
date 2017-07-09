@@ -12,3 +12,9 @@ __pycache__
 # files with secret
 config.py
 Issues.db
+
+# generated PDFs
+reports
+
+.cache
+log_parser.txt

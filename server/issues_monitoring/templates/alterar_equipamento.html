@@ -1,0 +1,84 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/radio_input.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/round_sliders.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/lista_equipamentos.css" />
+{% endblock %}
+
+
+{% block js %}
+<script src="/static/jquery-ui/jquery-ui.min.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script src="/static/js/lista_equipamentos.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<div id="nav-bar">
+
+    <div class="page-title">
+        <h3>Alterar Equipamento</h3>
+        <h4>{{lab_nome}}</h4>
+    </div>
+
+    <div class="neat-form" anchor="alterar" id="viewAlt">
+        <form method="POST" id="form">
+            <fieldset>
+                <legend><span class="number">1</span> Identificação do Equipamento</legend>
+                <input type="text" name="endereco-mac" id="endereco-mac" placeholder="Endereço MAC" value="{{equip.MAC}}">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Nome do Equipamento</legend>
+                <input type="text" name="nome" id="nome" placeholder="Nome" value="{{equip.nome}}">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">3</span> Descrição do Equipamento</legend>
+                <input type="text" name="descricao" id="descricao" placeholder="Descrição" value="{{equip.descricao}}">
+            </fieldset>
+            <div class="arduino-associado {% if equip.parent_id == 0 %}hidden{% endif %}">
+                <fieldset>
+                    <legend><span class="number">4</span> Arduino associado</legend>
+
+                    <input type="" name="parent_id" id="parent-id" value="{{equip.parent_id}}">
+
+                    {% if lista_arduinos|len > 0%}
+                    <div class="hidden-radio shrink-div {% if equip.parent_id == 0 %}hidden{% endif %}">
+                        <select id="select-arduino">
+                            <optgroup label="Arduino - Endereço MAC">
+                                {% for arduino in lista_arduinos %}
+                                <option value="{{arduino.id}}" {% if equip.parent_id == arduino.id %}selected="selected"{% endif %}>{{arduino.nome}} - {{arduino.MAC}}</option>
+                                {% endfor %}
+                            </optgroup>
+                        </select>   
+                    </div>
+                    {% endif %}
+                </fieldset>
+            </div>
+            <div class="hidden-zona-conforto shrink-div {% if equip.parent_id == 0 %}hidden{% endif %}">
+                <fieldset>
+                    <legend><span class="number">5</span> Zona de Conforto</legend>
+                    <div class="legenda-cadastro">Temperatura do Equipamento:</div>
+                    <div class="div-double-slider">
+                        <div id="slider-temp" class="double-slider"></div>
+                        <input type="hidden" name="temp-min" id="temp-min" value="{{equip.temp_min}}">
+                        <input type="hidden" name="temp-max" id="temp-max" value="{{equip.temp_max}}">
+                        <span class="double-slider-value"><input type="url" id="temp-lab" class="slider-bounds-lab" readonly></span>
+                    </div>
+                </fieldset>
+            </div>
+            <input type="submit" value="Salvar Alterações" />
+        </form>
+    </div>
+
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('equipamentos_laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar</a>
+    </div>
+</div>
+
+
+{% endblock %}

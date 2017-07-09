@@ -3,158 +3,174 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="/static/jquery-ui/addons/jquery-ui-timepicker-addon.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/relatorio.css" />
 {% endblock %}
 
 {% block js %}
 <script src="/static/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<script type="text/javascript">
-$(function() {
-    $('input[name="daterange"]').daterangepicker({
-        timePicker: true,
-        timePicker24Hour: true,
-        timePickerSeconds: true,
-        locale: {
-            format: 'DD/MM/YYYY HH:mm:ss'
-        }
-    });
-  });
-
+<script src="/static/jquery-ui/addons/jquery-ui-timepicker-addon.js"></script>
+<script src="/static/jquery-ui/addons/i18n/jquery-ui-timepicker-pt-BR.js"></script>
+<script src="/static/js/relatorio.js"></script>
+{% if nome_pdf %}
+<script>
+window.open("{{url_for('relatorio_pdf', nome=nome_pdf)}}", "_blank")
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <div id="nav-bar">
 
     <div class="page-title">
-        <h3>Relatório</h3>
+        <h3>Relatório dos Eventos</h3>
         <h4>{{lab_nome}}</h4>
     </div>
-    <div class="neat-form">
+    <div class="neat-form" style="max-width: 680px !important;">
         <form method="POST">
             <fieldset>
-                <div class="legenda-cadastro">Data de início e fim:</div>
-                <input type="text" name="daterange" value="17/06/2017 00:00:00 - 18/06/2017 12:00:03" />
+                <legend><span class="number">!</span> Datas de Início e Fim</legend>
+                <div class="date-tools">
+                    <input type="text" id="start-date" style="display:none;">
+                    <input type="text" id="end-date" style="display:none;">
+                    <input type="text" name="daterange" id="daterange" style="display:none">
+                    <div class="datepicker-class" id="datepicker-start"></div>
+                    <div class="datepicker-class" id="datepicker-end"></div>
+                </div>
             </fieldset>
-            <input type="submit" id="report" value="Gerar relatório" />           
+            <input type="submit" id="report" value="Gerar Relatório" />           
         </form>
     </div>
 
     <div id="view1">        
-        {% if usuarios_presentes|len > 0 %}
-        <h3 style="text-align: center">Usuários Presentes</h3>
-        <table class="table-fill">
-            <thead>
-                <tr>
-                    <th class="text-center">Nome</th>
-                    <th class="text-center">E-mail</th>
-                    <th class="text-center">Hora de Entrada</th>
-                </tr>
-            </thead>
-            <tbody class="table-hover">
-                {% for usuario in usuarios_presentes %}
-                <tr>
-                    <td class="text-center" title="{{usuario.user_id}}">{{usuario.nome}}</td>
-                    <td class="text-center">{{usuario.email}}</td>
-                    <td class="text-center">{{usuario.data_entrada|hora_min}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="ui-widget msg">
-            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
-                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-                Não há membros presentes neste momento.</p>
+        {% if request.method == "POST" %}
+        <div>
+            <h3 style="text-align: center">Usuários Presentes</h3>
+            {% if usuarios_presentes|len > 0 %}
+            <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">E-mail</th>
+                        <th class="text-center">Hora de Entrada</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    {% for usuario in usuarios_presentes %}
+                    <tr>
+                        <td class="text-center" title="{{usuario.user_id}}">{{usuario.nome}}</td>
+                        <td class="text-center">{{usuario.email}}</td>
+                        <td class="text-center">{{usuario.data_entrada|hora_min}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="ui-widget msg">
+                <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                    Não há membros presentes neste momento.</p>
+                </div>
             </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
-    
-    <div anchor="log" id="view2" style="display:block">
-        {% if eventos|len > 0 %}
-        <h3 style="text-align: center">Log de Presença</h3>
-        <table class="table-fill">
-            <thead>
-                <tr>
-                    <th class="text-center">Nome</th>
-                    <th class="text-center">Evento</th>
-                    <th class="text-center">Data</th>
-                </tr>
-            </thead>
-            <tbody class="table-hover">
-                {% for evento in eventos %}
-                <tr>
-                    <td class="text-center" title="{{evento.user_id}}">{{evento.nome}}</td>
-                    <td class="text-center">{{evento.evento|trans_evento}}</td>
-                    <td class="text-center">{{evento.data_evento|data}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="ui-widget msg">
-            <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
-                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
-                Não há eventos registrados no sistema.</p>
+
+        <div>
+            <h3 style="text-align: center">Log de Presença</h3>
+            {% if eventos|len > 0 %}
+            <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Evento</th>
+                        <th class="text-center">Data</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    {% for evento in eventos %}
+                    <tr>
+                        <td class="text-center" title="{{evento.user_id}}">{{evento.nome}}</td>
+                        <td class="text-center">{{evento.evento|trans_evento}}</td>
+                        <td class="text-center">{{evento.data_evento|data}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="ui-widget msg">
+                <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                    Não há eventos registrados no sistema.</p>
+                </div>
             </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
+        <div>
+            <h3 style="text-align: center">Condições de ambiente do laboratório</h3>    
+            {% if condicoes_ambiente_lab|len > 0 %}
+            <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th class="text-left">Data</th>
+                        <th class="text-left">Temperatura</th>
+                        <th class="text-left">Umidade</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    {% for cond in condicoes_ambiente_lab %}
+                    <tr>
+                        <td class="text-left">{{cond[0]|data}}</td>
+                        <td class="text-left">{{cond[1]}}ºC</td>
+                        <td class="text-left">{{cond[2]}}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="ui-widget msg">
+                <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                    Não há eventos registrados no sistema.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
 
-
-    <div>
-    {% if condicoes_ambiente_lab|len > 0 %}
-    <h3 style="text-align: center">Condições de ambiente do laboratório</h3>    
-    <table class="table-fill">
-        <thead>
-            <tr>
-                <th class="text-left">Data</th>
-                <th class="text-left">Temperatura</th>
-                <th class="text-left">Umidade</th>
-            </tr>
-        </thead>
-        <tbody class="table-hover">
-            {% for cond in condicoes_ambiente_lab %}
-            <tr>
-                <td class="text-left">{{cond[0]}}</td>
-                <td class="text-left">{{cond[1]}}</td>
-                <td class="text-left">{{cond[2]}}</td>
-            </tr>
+        <div>
+            {% if condicoes_ambiente_equip|len > 0 %}
+            {% for key, value in condicoes_ambiente_equip.items() %}
+              <h3 style="text-align: center">Condições de ambiente do equipamento {{nome_equips[key]}}</h3>
+              {% if value|len > 0 %}
+              <table class="table-fill">
+                  <thead>
+                      <tr>
+                          <th class="text-left">Data</th>
+                          <th class="text-left">Temperatura</th>
+                      </tr>
+                  </thead>
+                  <tbody class="table-hover">
+                      {% for cond in value %}
+                      <tr>
+                          <td class="text-left">{{cond[0]|data}}</td>
+                          <td class="text-left">{{cond[1]}}ºC</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              {% else %}
+              <div class="ui-widget msg">
+                  <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
+                      <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
+                      Não há eventos registrados no sistema.</p>
+                  </div>
+              </div>
+              {% endif %}
             {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-    </div>
-
-    <div>
-    {% if condicoes_ambiente_equip|len > 0 %}
-    {% for key, value in condicoes_ambiente_equip.items() %}
-      <h3 style="text-align: center">Condições de ambiente do equipamento {{key}}</h3>
-      <table class="table-fill">
-          <thead>
-              <tr>
-                  <th class="text-left">Data</th>
-                  <th class="text-left">Temperatura</th>
-              </tr>
-          </thead>
-          <tbody class="table-hover">
-              {% for cond in value %}
-              <tr>
-                  <td class="text-left">{{cond[0]}}</td>
-                  <td class="text-left">{{cond[1]}}</td>
-              </tr>
-              {% endfor %}
-          </tbody>
-      </table>
-    {% endfor %}
-    {% endif %}    
+            {% endif %}    
+        </div>
+        {% endif %}
     </div>
 
     <div class="div-botao-estilizado">

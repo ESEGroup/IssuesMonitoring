@@ -1,0 +1,36 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Alteração de Usuário do Laboratório</h3>
+    </div>
+
+    <div class="neat-form" id="hidden-form">
+        <form method="POST">
+            <fieldset>
+                <legend><span class="number">1</span> Identificação MyDenox</legend>
+                <input type="text" name="id-user" placeholder="Mesmo ID registrado no sistema MyDenox" value="{{user.user_id}}">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Dados do Usuário</legend>
+                <input type="text" name="nome" placeholder="Nome do usuário" value="{{user.nome}}">
+                <input type="text" name="email" placeholder="E-mail do usuário" value="{{user.email}}">
+            </fieldset>
+            <input type="submit" value="Salvar Alterações" />
+        </form>
+    </div>
+    
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('usuarios_laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Voltar</a>
+    </div>
+        
+</div>
+{% endblock %}

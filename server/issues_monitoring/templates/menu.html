@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 
+    <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/navbar.css" />
     {% block header %}
     {% endblock %}
@@ -11,10 +12,17 @@
 
 <body>
     <ul class="nav-bar-ul">
+        {% if autenticado %}
         <li class="nav-bar-li">
             <a class="nav-bar-li-link {% if pagina in ['laboratorios', 'gerenciar'] %}active{% endif %}"
                href="{{url_for('laboratorios')}}">Laboratório</a>
         </li>
+        {% else %}
+        <li class="nav-bar-li">
+            <a class="nav-bar-li-link {% if pagina == 'login' %}active{% endif %}"
+               href="{{url_for('login')}}">Acessar o sistema</a>
+        </li>
+        {% endif %}
 
         {% if lab_id %}
         <li class="nav-bar-suboption">
@@ -67,7 +75,7 @@
         </li>
         <li class="nav-bar-suboption">
             <a class="nav-bar-li-link {% if pagina == 'anomalias' %}active{% endif %}"
-               href="{{url_for('anomalias', id=lab_id, nome=lab_nome)}}">
+                href="{{url_for('anomalias_hoje', id=lab_id, nome=lab_nome)}}">
                 <div class="nav-bar-suboption-text">Anomalias</div>
             </a>
         </li>
@@ -80,7 +88,7 @@
                 <a id="cadastro-usuario" class="nav-bar-li-link" hred="#">Novos Usuários</a>
             {% endif %}
         </li>
-        <ul id="hidden-register" class="nav-bar-ul" {% if pagina not in ['cadastro', 'cadastro_usuario_lab', 'aprovar_usuario_sistema'] %}style="display:none"{% endif %}>
+        <ul id="hidden-register" class="nav-bar-ul" {% if pagina not in ['cadastro', 'cadastro_usuario_lab', 'aprovar_usuario'] %}style="display:none"{% endif %}>
             <li class="nav-bar-suboption">
                 <a class="nav-bar-li-link {% if pagina == 'cadastro' %}active{% endif %}"
                    href="{{url_for('cadastro')}}">
@@ -113,7 +121,7 @@
 
     <div>
     {% if request.args.get('e') %}
-    <div class="ui-widget error-msg hidden">
+    <div class="ui-widget js-message error-msg hidden">
 	    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Erro: </strong>{{request.args.get('e')}}</p>
@@ -122,7 +130,7 @@
     {% endif %}
 
     {% if request.args.get('w') %}
-    <div class="ui-widget msg hidden">
+    <div class="ui-widget js-message msg hidden">
 	    <div class="ui-state-warning ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Aviso: </strong>{{request.args.get('w')}}</p>
@@ -131,7 +139,7 @@
     {% endif %}
 
     {% if request.args.get('c') %}
-    <div class="ui-widget success-msg hidden">
+    <div class="ui-widget js-message success-msg hidden">
 	    <div class="ui-state-success ui-corner-all" style="padding: 0 .7em;">
 		    <p><span class="ui-icon ui-icon-circle-check" style="float: left; margin-right: .3em; margin-top: .04em"></span>
             <strong>Sucesso: </strong>{{request.args.get('c')}}</p>

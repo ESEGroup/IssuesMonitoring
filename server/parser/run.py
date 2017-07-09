@@ -1,42 +1,46 @@
 #!/bin/python3
 
 def work():
-    from . import Config
-    from time     import sleep
+    from .          import Config
+    from time       import sleep
     from .lib.log   import debug, log
     from .lib.email import fetch_new_emails, mark_as_unread, NoMessages
     from .lib.parse import parse_messages
 
     try:
-        from server.issues_monitoring.controllers import (registrar_presenca, registrar_log_parser)
+        from server.issues_monitoring.controllers import (registrar_presenca,
+                                                          registrar_log_parser,
+                                                          registrar_anomalia)
     except:
         from issues_monitoring.controllers import (registrar_presenca,
-                                                   registrar_log_parser)
+                                                   registrar_log_parser,
+                                                   registrar_anomalia)
 
-    DEBUG = Config.debug
-    WAIT_FOR = Config.parser_default_delay
+    DEBUG              = Config.debug
+    WAIT_FOR           = Config.parser_default_delay
     MAX_WAITING_PERIOD = Config.parser_max_delay
-    USERNAME = Config.email
-    PASSWORD = Config.email_password
-    wait_for = WAIT_FOR
+    USERNAME           = Config.email
+    PASSWORD           = Config.email_password
+    wait_for           = WAIT_FOR
 
     if "" in [USERNAME, PASSWORD]:
         log("Please provide the correct username and password to access the e-mail.")
         exit()
 
     while True:
-        registrar_log_parser()
+        wait_for = float(registrar_log_parser())
+        ids = []
         try:
             ids, messages = fetch_new_emails()
         except OSError:
             log("Failed to connect with e-mail server to parse messages.")
             ids, messages = [], []
+            registrar_anomalia("imap")
         except NoMessages:
             debug("No e-mails to parse. Update wait_for time")
             ids, messages = [], []
         except:
             log("Unexpected Error.")
-            mark_as_unread(ids)
             ids, messages = [], []
 
         received_wait_for = -1
@@ -45,6 +49,7 @@ def work():
             received_wait_for = registrar_presenca(data)
             debug("{} events registered.".format(len(data)))
         except:
+            raise
             log("Unexpected Error.")
             mark_as_unread(ids)
 

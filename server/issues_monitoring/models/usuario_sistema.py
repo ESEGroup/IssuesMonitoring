@@ -49,22 +49,29 @@ class UsuarioSistema(Usuario):
             (login, senha, email, nome, admin)
             VALUES (?, ?, ?, ?, ?);""", values)
 
+    def alterar_senha(login, senha):
+        db.execute("""
+            UPDATE User_Sys
+            SET senha = ?
+            WHERE login = ?""",
+            (UsuarioSistema.__hash_senha(senha), login))
+        return True
+
     def autenticar(login, senha):
         args = db.fetchone("""
             SELECT user_id, senha, admin, data_aprov
             FROM User_Sys
             WHERE login = ?;""", (login,))
-
         if args is None:
             raise InformacoesIncorretas
 
         (_id, _hash, _admin, data_aprov) = args
-
         if data_aprov is None:
             raise NaoAutorizado
-
         if UsuarioSistema.__hash_senha(senha, _hash) == _hash:
             return _id, _admin
+        else:
+            raise InformacoesIncorretas
 
     def existe(login, email):
         return db.fetchone("""
@@ -85,10 +92,10 @@ class UsuarioSistema(Usuario):
                     self.login,
                     self.id))
 
-    def remover(user_id):
+    def remover(id):
         db.execute("""DELETE FROM User_Sys
                    WHERE user_id = ?;""",
-                   (user_id,))
+                   (id,))
 
     def __hash_senha(senha, _hash = None):
         if isinstance(senha, str):

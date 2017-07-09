@@ -1,0 +1,38 @@
+{% extends 'menu.html' %}
+
+{% block title %}Issues Monitoring{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+{% endblock %}
+
+{% block content %}
+<div id="nav-bar">
+    <div class="page-title">
+        <h3>Alterar Senha</h3>
+    </div>
+
+    <div class="neat-form" id="hidden-form">
+        <form method="POST">
+            <fieldset>
+                <legend><span class="number">1</span> Senha Atual</legend>
+                <input type="password" name="senha_atual" placeholder="Senha Atual">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">2</span> Nova Senha</legend>
+                <input type="password" name="senha_nova" placeholder="Nova Senha">
+            </fieldset>
+            <fieldset>
+                <legend><span class="number">3</span> Confirme a Nova Senha</legend>
+                <input type="password" name="senha_nova_confirm" placeholder="Confirme a Nova Senha">
+            </fieldset>
+            <input type="submit" value="Alterar Senha" />
+        </form>
+    </div>
+    
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('alterar_usuario_sistema', id=user_id)}}" class="btn-estilizado btn-estilizado-blue">Voltar</a>
+    </div>
+    
+</div>
+{% endblock %}

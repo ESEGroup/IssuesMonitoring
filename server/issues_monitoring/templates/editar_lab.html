@@ -3,7 +3,6 @@
 {% block title %}Issues Monitoring{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
 {% endblock %}
 
@@ -16,7 +15,7 @@
 <div id="nav-bar">
 
     <div class="page-title">
-        <h3>Alterar Configurações do Laboratório</h3>
+        <h3>Alterar Dados do Laboratório</h3>
         <h4>{{lab_nome}}</h4>
     </div>
 
@@ -43,9 +42,9 @@
             </fieldset>
             <input type="submit" value="Salvar Informações" />
         </form>
-        <div class="div-botao-estilizado">
-            <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
-        </div>
+    </div>
+    <div class="div-botao-estilizado">
+        <a href="{{url_for('laboratorio', id=lab_id, nome=lab_nome)}}" class="btn-estilizado btn-estilizado-blue">Cancelar</a>
     </div>
 </div>
 {% endblock %}

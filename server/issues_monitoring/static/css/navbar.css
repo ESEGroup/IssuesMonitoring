@@ -2,6 +2,7 @@
 
 body {
     margin: 0;
+    overflow-x: hidden;
 }
 
 .nav-bar-li {
@@ -166,7 +167,7 @@ body {
 }
 
 .ui-state-success .ui-icon {
-    background-image: url("/static/jquery-ui/images/ui-icons_085c04_256x240.png") !important;
+    background-image: url("/static/img/ui-icons_085c04_256x240.png") !important;
 }
 
 .ui-state-warning .ui-icon {
@@ -177,6 +178,10 @@ body {
     display: none;
 }
 
+.trocar-view-btn {
+    margin-bottom: -70px;
+    margin-top: 30px;
+}
 
 /* CSS referente ao botao de logout: */
 
